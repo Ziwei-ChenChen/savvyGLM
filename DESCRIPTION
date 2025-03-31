@@ -1,0 +1,37 @@
+Package: ShrinkageGLMs
+Type: Package
+Title: Generalized Linear Models with Slab and Shrinkage Estimators and Specific Power Link Functions
+Version: 0.1.0
+Authors@R: 
+    c(
+      person(given = "Ziwei", family = "Chen", role = c("aut", "cre"), email = "Ziwei.Chen.3@bayes.city.ac.uk"),
+      person(given = "Vali", family = "Asimit", role = "aut", email = "asimit@city.ac.uk")
+    )
+Maintainer: Ziwei Chen <ziwei.chen.3@bayes.city.ac.uk>
+Description: This package provides functions for fitting Generalized Linear Models (GLMs) using advanced slab and shrinkage
+    estimators such as Stein (St), Diagonal Shrinkage (DSh), Shrinkage Ridge (SR), Generalized Slab Regression (GSR),
+    and Shrinkage (Sh). These methods improve the convergence and stability of the iteratively reweighted least squares (IRLS)
+    algorithm, addressing issues like multicollinearity and optimizing coefficient estimates. The best fitting model is
+    selected based on the Akaike Information Criterion (AIC), ensuring robust and accurate results across a wide range of scenarios.
+License: MIT + file LICENSE
+Encoding: UTF-8
+RoxygenNote: 7.3.2
+Imports:
+    stats,
+    MASS,
+    glmnet,
+    expm,
+    parallel,
+    glm2,
+    utils,
+    Matrix
+Suggests:
+    devtools,
+    testthat (>= 3.0.0),
+    knitr,
+    rmarkdown
+Config/testthat/edition: 3
+VignetteBuilder: knitr
+Depends: 
+    R (>= 2.10)
+LazyData: true

@@ -1,0 +1,9 @@
+pandoc: 3.2.1
+pkgdown: 2.1.1
+pkgdown_sha: ~
+articles:
+  ShrinkageGLMs: ShrinkageGLMs.html
+last_built: 2025-03-31T21:08Z
+urls:
+  reference: https://Ziwei-ChenChen.github.io/shrinkageGLMs/reference
+  article: https://Ziwei-ChenChen.github.io/shrinkageGLMs/articles
