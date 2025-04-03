@@ -1,6 +1,6 @@
-# ShrinkageGLMs: Shrinkage Methods for Generalized Linear Models
+# savvyGLM: Shrinkage Methods for Generalized Linear Models
 
-The `ShrinkageGLMs` package offers a complete framework for fitting shrinkage estimators in *generalized linear models (GLMs)*. 
+The `savvyGLM` package offers a complete framework for fitting shrinkage estimators in *generalized linear models (GLMs)*. 
 It integrates several shrinkage methods into the *Iteratively Reweighted Least Squares (IRLS)* algorithm to improve both convergence
 and estimation accuracy, particularly when standard maximum likelihood estimation is challenged by issues like multicollinearity or 
 a high number of predictors. Shrinkage estimators introduce a small bias that produces a large reduction in variance, 
@@ -12,23 +12,23 @@ This package builds on theoretical work discussed in:
 
 Asimit, V., Chen, Z., Dimitrova, D., Xie, Y., & Zhang, Y. (2025). [Shrinkage GLM Modeling](http//...).
 
-The official documentation site is available at: <https://Ziwei-ChenChen.github.io/ShrinkageGLMs>
+The official documentation site is available at: <https://Ziwei-ChenChen.github.io/savvyGLM>
 
 If you are interested in applying shrinkage methods within linear regression, 
 please refer to the companion package [`savvySh`](https://github.com/Ziwei-ChenChen/savvySh).
 
 ## Installation Guide
 
-You can install the development version of `ShrinkageGLMs` directly from GitHub:
+You can install the development version of `savvyGLM` directly from GitHub:
 
 ``` r
-remotes::install_github("Ziwei-ChenChen/ShrinkageGLMs")
+remotes::install_github("Ziwei-ChenChen/savvyGLM")
 ```
 
 Once installed, load the package:
 
 ``` r
-library(ShrinkageGLMs)
+library(savvyGLM)
 ```
 
 ## Features
