@@ -57,7 +57,7 @@ n <- 100
 p <- 5
 x1 <- matrix(rnorm(n * p), n, p)
 y1 <- rbinom(n, 1, prob = 0.5)
-fit1 <- glm.fit2_Shrink(cbind(1, x1), y1, model_class = c("DSh", "St"),
+fit1 <- savvy_glm.fit2(cbind(1, x1), y1, model_class = c("DSh", "St"),
                          family = binomial(link = "logit"))
 print(fit1$coefficients)
 print(fit1$chosen_fit)
