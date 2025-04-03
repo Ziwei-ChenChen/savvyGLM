@@ -1,6 +1,6 @@
-Package: ShrinkageGLMs
+Package: savvyGLM
 Type: Package
-Title: Generalized Linear Models with Slab and Shrinkage Estimators and Specific Power Link Functions
+Title: Generalized Linear Models with Slab and Shrinkage Estimators
 Version: 0.1.0
 Authors@R: 
     c(
@@ -29,7 +29,8 @@ Suggests:
     devtools,
     testthat (>= 3.0.0),
     knitr,
-    rmarkdown
+    rmarkdown,
+    CVXR
 Config/testthat/edition: 3
 VignetteBuilder: knitr
 Depends: 
