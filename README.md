@@ -48,11 +48,20 @@ This is a basic example that shows you how to solve a common problem:
 set.seed(123)
 n <- 100
 p <- 5
-x <- matrix(rnorm(n * p), n, p)
-y <- rnorm(n)
 
-fit <- savvy_glm.fit2(cbind(1,x), y, model_class = "SR", 
-family = gaussian(link="identity"), control = glm.control(trace=TRUE))
+x <- matrix(rnorm(n * p), n, p)
+beta_true <- c(1, 0.5, -0.5, 1, -1)
+eta <- x %*% beta_true
+prob <- 1 / (1 + exp(-eta))
+y <- rbinom(n, size = 1, prob = prob)
+
+fit <- savvy_glm.fit2(
+  x      = cbind(1, x), 
+  y      = y,
+  model_class = "SR",
+  family = binomial(link = "logit"),
+  control = glm.control(trace = TRUE)
+)
 
 print(fit$coefficients)
 print(fit$chosen_fit)
