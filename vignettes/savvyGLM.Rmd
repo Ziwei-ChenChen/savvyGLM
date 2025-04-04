@@ -48,14 +48,14 @@ Asimit, V., Chen, Z., Dimitrova, D., Xie, Y., & Zhang, Y. (2025). [Shrinkage GLM
 ## Key Argument and Output Summary
 
 | **Argument** | **Description** | **Default** |
-|--------------------|---------------------------------|-------------------|
+|----|----|----|
 | `x` | A numeric matrix of predictors. As for [`glm.fit`](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/glm.fit.html). | **No default; user must supply.** |
 | `y` | A numeric vector of responses. As for [`glm.fit`](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/glm.fit.html). | **No default; user must supply.** |
 | `weights` | An optional vector of weights to be used in the fitting process. | `rep(1, nobs)` |
 | `model_class` | A character vector specifying the shrinkage model(s) to be used. Allowed values are `"St"`, `"DSh"`, `"SR"`, `"GSR"`, and `"Sh"`. If multiple values are given, they are run in parallel and the best is chosen by AIC. If `"Sh"` is not included, it is omitted from the evaluation. | `c("St", "DSh", "SR", "GSR")` |
 | `start`, `etastart`, `mustart` | Optional starting values for the parameters, the linear predictor, and the mean, respectively. | `NULL` |
 | `offset` | An optional offset to be included in the model. | `rep(0, nobs)` |
-| `family` | A description of the error distribution and link function to be used in the model (e.g., `gaussian()`, `binomial()`, `poisson()`). | `gaussian()` |
+| `family` | A function specifying the conditional distribution of $Y \mid X$, e.g., $Y \mid X \sim \text{family}(g^{-1}(X\beta))$. (e.g., `gaussian()`, `binomial()`, `poisson()`). | `gaussian()` |
 | `control` | A list of parameters for controlling the fitting process (e.g., `maxit`, `epsilon`). Similar to [`glm.control`](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/glm.control.html). | `list()` |
 | `intercept` | A logical value indicating whether an intercept should be included in the model. | `TRUE` |
 | `use_parallel` | Logical. If `TRUE`, multiple methods in `model_class` are evaluated in parallel. If only one method is specified, it is run directly. The best model is chosen by the lowest AIC among the methods tested. | `TRUE` |
@@ -76,7 +76,7 @@ The underlying optimization methods in `savvyGLM` are designed to reduce the the
 Here, we just provide a table summary since for a detailed theoretical overview of the shrinkage estimators applied to GLMs, please refer to the [savvySh package](https://ziwei-chenchen.github.io/savvySh/), which covers many of the same shrinkage estimators used here, but in the context of linear regression. The methods in `savvyGLM` extend these ideas to generalized linear models, ensuring that the IRLS updates incorporate shrinkage at each iteration.
 
 | **Method** | **Shrinkage Approach** | **Simple Description** | **Extra Overhead?** | **Included by Default?** |
-|---------------|---------------|---------------|---------------|---------------|
+|----|----|----|----|----|
 | **OLS** | No shrinkage | Baseline estimator without any regularization. | No | No (baseline method) |
 | **St** | Scalar shrinkage | Scales all OLS coefficients by a common factor to reduce MSE. | No | **Yes** |
 | **DSh** | Diagonal matrix | Shrinks each OLS coefficient separately using individual factors. | No | **Yes** |

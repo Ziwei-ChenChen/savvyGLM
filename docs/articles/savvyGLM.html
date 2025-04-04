@@ -136,9 +136,9 @@ Information Criterion (AIC).</li>
 </h3>
 <table class="table">
 <colgroup>
-<col width="27%">
-<col width="45%">
-<col width="26%">
+<col width="33%">
+<col width="33%">
+<col width="33%">
 </colgroup>
 <thead><tr class="header">
 <th><strong>Argument</strong></th>
@@ -187,8 +187,11 @@ and the mean, respectively.</td>
 </tr>
 <tr class="odd">
 <td><code>family</code></td>
-<td>A description of the error distribution and link function to be used
-in the model (e.g., <code><a href="https://rdrr.io/r/stats/family.html" class="external-link">gaussian()</a></code>, <code><a href="https://rdrr.io/r/stats/family.html" class="external-link">binomial()</a></code>,
+<td>A function specifying the conditional distribution of
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>Y</mi><mo>∣</mo><mi>X</mi></mrow><annotation encoding="application/x-tex">Y \mid X</annotation></semantics></math>,
+e.g.,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>Y</mi><mo>∣</mo><mi>X</mi><mo>∼</mo><mtext mathvariant="normal">family</mtext><mrow><mo stretchy="true" form="prefix">(</mo><msup><mi>g</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup><mrow><mo stretchy="true" form="prefix">(</mo><mi>X</mi><mi>β</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">Y \mid X \sim \text{family}(g^{-1}(X\beta))</annotation></semantics></math>.
+(e.g., <code><a href="https://rdrr.io/r/stats/family.html" class="external-link">gaussian()</a></code>, <code><a href="https://rdrr.io/r/stats/family.html" class="external-link">binomial()</a></code>,
 <code><a href="https://rdrr.io/r/stats/family.html" class="external-link">poisson()</a></code>).</td>
 <td><code><a href="https://rdrr.io/r/stats/family.html" class="external-link">gaussian()</a></code></td>
 </tr>
