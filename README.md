@@ -1,12 +1,6 @@
 # savvyGLM: Shrinkage Methods for Generalized Linear Models
 
-The `savvyGLM` package offers a complete framework for fitting shrinkage estimators in *generalized linear models (GLMs)*. 
-It integrates several shrinkage methods into the *Iteratively Reweighted Least Squares (IRLS)* algorithm to improve both convergence
-and estimation accuracy, particularly when standard maximum likelihood estimation is challenged by issues like multicollinearity or 
-a high number of predictors. Shrinkage estimators introduce a small bias that produces a large reduction in variance, 
-making the IRLS estimates more reliable than those based solely on the traditional OLS update. 
-For further details on the shrinkage estimators employed in this package, 
-please refer to [*Slab and Shrinkage Linear Regression Estimation*](http//...).
+The `savvyGLM` package offers a complete framework for fitting shrinkage estimators in *generalized linear models (GLMs)*. It integrates several shrinkage methods into the *Iteratively Reweighted Least Squares (IRLS)* algorithm to improve both convergence and estimation accuracy, particularly when standard maximum likelihood estimation is challenged by issues like multicollinearity or a high number of predictors. Shrinkage estimators introduce a small bias that produces a large reduction in variance, making the IRLS estimates more reliable than those based solely on the traditional OLS update. For further details on the shrinkage estimators employed in this package, please refer to [*Slab and Shrinkage Linear Regression Estimation*](http//...).
 
 This package builds on theoretical work discussed in:
 
@@ -14,8 +8,7 @@ Asimit, V., Chen, Z., Dimitrova, D., Xie, Y., & Zhang, Y. (2025). [Shrinkage GLM
 
 The official documentation site is available at: <https://Ziwei-ChenChen.github.io/savvyGLM>
 
-If you are interested in applying shrinkage methods within linear regression, 
-please refer to the companion package [`savvySh`](https://github.com/Ziwei-ChenChen/savvySh).
+If you are interested in applying shrinkage methods within linear regression, please refer to the companion package [`savvySh`](https://github.com/Ziwei-ChenChen/savvySh).
 
 ## Installation Guide
 
@@ -69,10 +62,11 @@ print(fit1$chosen_fit)
 
 ## Authors
 
--   Ziwei Chen – [ziwei.chen.3\@bayes.city.ac.uk](mailto:ziwei.chen.3@bayes.city.ac.uk){.email}
+-   Ziwei Chen – [ziwei.chen.3\@citystgeorges.ac.uk](ziwei.chen.3@citystgeorges.ac.uk)
 
--   Vali Asimit – [asimit\@city.ac.uk](mailto:asimit@city.ac.uk){.email}
+-   Vali Asimit – [asimit\@citystgeorges.ac.uk](asimit@citystgeorges.ac.uk)
 
 ## License
 
 This package is licensed under the MIT License.
+
