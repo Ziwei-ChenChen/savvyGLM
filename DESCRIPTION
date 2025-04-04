@@ -4,10 +4,10 @@ Title: Generalized Linear Models with Slab and Shrinkage Estimators
 Version: 0.1.0
 Authors@R: 
     c(
-      person(given = "Ziwei", family = "Chen", role = c("aut", "cre"), email = "Ziwei.Chen.3@bayes.city.ac.uk"),
-      person(given = "Vali", family = "Asimit", role = "aut", email = "asimit@city.ac.uk")
+      person(given = "Ziwei", family = "Chen", role = c("aut", "cre"), email = "Ziwei.Chen.3@citystgeorges.ac.uk"),
+      person(given = "Vali", family = "Asimit", role = "aut", email = "asimit@citystgeorges.ac.uk")
     )
-Maintainer: Ziwei Chen <ziwei.chen.3@bayes.city.ac.uk>
+Maintainer: Ziwei Chen <ziwei.chen.3@citystgeorges.ac.uk>
 Description: This package provides functions for fitting Generalized Linear Models (GLMs) using advanced slab and shrinkage
     estimators such as Stein (St), Diagonal Shrinkage (DSh), Shrinkage Ridge (SR), Generalized Slab Regression (GSR),
     and Shrinkage (Sh). These methods improve the convergence and stability of the iteratively reweighted least squares (IRLS)
@@ -15,6 +15,7 @@ Description: This package provides functions for fitting Generalized Linear Mode
     selected based on the Akaike Information Criterion (AIC), ensuring robust and accurate results across a wide range of scenarios.
 License: MIT + file LICENSE
 Encoding: UTF-8
+URL: https://Ziwei-ChenChen.github.io/savvyGLM
 RoxygenNote: 7.3.2
 Imports:
     stats,

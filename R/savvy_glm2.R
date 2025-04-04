@@ -49,6 +49,9 @@
 #' \item{method}{the name of the fitter function used, which by default is \code{savvy_glm.fit2}.}
 #' \item{chosen_fit}{the name of the chosen fitting method based on AIC.}
 #'
+#' @author Ziwei Chen and Vali Asimit\cr
+#' Maintainer: Ziwei Chen <ziwei.chen.3@citystgeorges.ac.uk>
+#'
 #' @references
 #' The custom optimization methods used in this function are designed to improve the convergence properties of the GLM fitting process.
 #' Marschner, I.C. (2011) glm2: Fitting generalized linear models with convergence problems. The R Journal, Vol. 3/2, pp.12-15.

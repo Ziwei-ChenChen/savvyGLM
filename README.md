@@ -69,4 +69,3 @@ print(fit1$chosen_fit)
 ## License
 
 This package is licensed under the MIT License.
-

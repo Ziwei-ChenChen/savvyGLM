@@ -120,7 +120,7 @@ Marschner, I.C. (2011) glm2: Fitting generalized linear models with convergence 
 }
 \author{
 Ziwei Chen and Vali Asimit\cr
-Maintainer: Ziwei Chen <ziwei.chen.3@bayes.city.ac.uk>
+Maintainer: Ziwei Chen <ziwei.chen.3@citystgeorges.ac.uk>
 }
 \keyword{models}
 \keyword{regression}

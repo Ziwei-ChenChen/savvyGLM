@@ -97,7 +97,7 @@ utils::globalVariables("n", add = TRUE)
 #' \item{chosen_fit}{the name of the chosen fitting method based on AIC.}
 #'
 #' @author Ziwei Chen and Vali Asimit\cr
-#' Maintainer: Ziwei Chen <ziwei.chen.3@bayes.city.ac.uk>
+#' Maintainer: Ziwei Chen <ziwei.chen.3@citystgeorges.ac.uk>
 #'
 #' @references
 #' The custom optimization methods used in this function are designed to improve the convergence properties of the GLM fitting process.
@@ -378,7 +378,7 @@ savvy_glm.fit2 <- function (x, y, weights = rep(1, nobs),
     if (identical(Sys.getenv("_R_CHECK_PACKAGE_NAME_"), "savvyGLM")) {
       use_parallel <- FALSE
     }
-    if (use_parallel) {
+    if (use_parallel && length(fit_functions) > 1) {
       if (.Platform$OS.type == "windows") {
         cl <- parallel::makeCluster(num_cores)
         parallel::clusterExport(cl,

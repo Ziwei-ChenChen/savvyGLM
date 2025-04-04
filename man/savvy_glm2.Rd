@@ -81,3 +81,7 @@ Marschner, I.C. (2011) glm2: Fitting generalized linear models with convergence 
 \seealso{
 \code{\link{glm}}, \code{\link{glm2}}, \code{\link{savvy_glm.fit2}}
 }
+\author{
+Ziwei Chen and Vali Asimit\cr
+Maintainer: Ziwei Chen <ziwei.chen.3@citystgeorges.ac.uk>
+}
