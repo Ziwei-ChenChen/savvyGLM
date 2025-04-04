@@ -787,8 +787,8 @@ calculate_mse <- function(true_values, predicted_values) {
 
 for (yr in years) {
   cat("Processing year:", yr, "\n")
-  data_name <- sprintf("LA_data_%d", yr)
-  data_year <- get(data_name)
+  filename <- sprintf("LA_data_%d.csv", yr)
+  data_year <- read.csv(filename, header = TRUE, stringsAsFactors = FALSE)
   
   ratio_mat <- matrix(NA, nrow = N, ncol = length(model_names)-1)
   colnames(ratio_mat) <- model_names[-1]
