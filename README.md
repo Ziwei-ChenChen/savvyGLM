@@ -48,16 +48,14 @@ This is a basic example that shows you how to solve a common problem:
 set.seed(123)
 n <- 100
 p <- 5
-x1 <- matrix(rnorm(n * p), n, p)
-X <- cbind(1, x1)
-beta_true <- c(0.2, 0.1, -0.3, 0.05, 0.2, -0.1)
-lambda <- exp(X %*% beta_true)
-y1 <- rpois(n, lambda)
+x <- matrix(rnorm(n * p), n, p)
+y <- rnorm(n)
 
-fit1 <- savvy_glm.fit2(X, y1, model_class = c("DSh", "St"),
-                         family = poisson(link = "log"))
-print(fit1$coefficients)
-print(fit1$chosen_fit)
+fit <- savvy_glm.fit2(cbind(1,x), y, model_class = "SR", 
+family = gaussian(link="identity"), control = glm.control(trace=TRUE))
+
+print(fit$coefficients)
+print(fit$chosen_fit)
 ```
 
 ## Authors
