@@ -19,9 +19,9 @@ knitr::opts_chunk$set(
 
 However, IRLS can be sensitive to convergence issues—especially when using the standard *Ordinary Least Squares (OLS)* update in each iteration. In cases of model mis-specification or high variability in the data, the OLS estimator may yield significant estimation error. The `glm2` package improves upon the standard `glm` by incorporating a step-halving strategy to better handle convergence challenges. This robust framework is implemented in its `glm.fit2` function.
 
-In the `savvyGLM` package, we build on the robust framework provided by the `glm2` package (and its function `glm.fit2`) by replacing the standard OLS update in the IRLS algorithm with a shrinkage estimator. The rationale is that shrinkage estimation introduces a small bias to substantially reduce the *Mean Squared Error (MSE)* of the OLS estimates, resulting in more reliable parameter estimates and enhanced convergence stability. The corresponding shrinkage paper can be find in [Slab and Shrinkage Linear Regression Estimation](http//...).
+In the `savvyGLM` package, we build on the robust framework provided by the `glm2` package (and its function `glm.fit2`) by replacing the standard OLS update in the IRLS algorithm with a shrinkage estimator. The rationale is that shrinkage estimation introduces a small bias to substantially reduce the *Mean Squared Error (MSE)* of the OLS estimates, resulting in more reliable parameter estimates and enhanced convergence stability. The corresponding shrinkage paper can be find in [Slab and Shrinkage Linear Regression Estimation](https://openaccess.city.ac.uk/id/eprint/35005/).
 
-[Simulation studies](#...) and [real-data applications](#...) demonstrate that replacing the OLS update in IRLS with a shrinkage estimator improves the convergence and overall performance of GLM estimation compared to the traditional non-penalized implementation.
+[Simulation studies](#simulation-examples) and [real-data applications](#real-data-analysis) demonstrate that replacing the OLS update in IRLS with a shrinkage estimator improves the convergence and overall performance of GLM estimation compared to the traditional non-penalized implementation.
 
 In summary, our package modifies `glm.fit2` from `glm2` to:
 
@@ -39,16 +39,16 @@ Asimit, V., Chen, Z., Dimitrova, D., Xie, Y., & Zhang, Y. (2025). [Shrinkage GLM
 
 `savvyGLM` provides five classes of shrinkage methods for GLMs, although by default four are evaluated unless the user explicitly includes `Sh`(since Sh is time-consuming):
 
-1.  [Custom Optimization Methods:](#) Implements shrinkage estimators (`St_ost`, `DSh_ost`, `SR_ost`, `GSR_ost`, and optionally `Sh_ost`) that replace the standard OLS update in IRLS.
+1.  **Custom Optimization Methods:** Implements shrinkage estimators (`St_ost`, `DSh_ost`, `SR_ost`, `GSR_ost`, and optionally `Sh_ost`) that replace the standard OLS update in IRLS.
 
-2.  [Flexible Model Choice:](#) The model_class argument allows users to choose one or more shrinkage methods. By default, only `"St"`, `"DSh"`, `"SR"`, and `"GSR"` are evaluated. Including `"Sh"` is optional because solving the Sylvester equation required by `Sh_ost` is computationally intensive.
+2.  **Flexible Model Choice:** The model_class argument allows users to choose one or more shrinkage methods. By default, only `"St"`, `"DSh"`, `"SR"`, and `"GSR"` are evaluated. Including `"Sh"` is optional because solving the Sylvester equation required by `Sh_ost` is computationally intensive.
 
--   [Parallel Evaluation:](#) When multiple candidate methods are specified, the function evaluates them in parallel (if use_parallel = TRUE) and selects the final model based on the lowest Akaike Information Criterion (AIC).
+-   **Parallel Evaluation:** When multiple candidate methods are specified, the function evaluates them in parallel (if use_parallel = TRUE) and selects the final model based on the lowest Akaike Information Criterion (AIC).
 
 ## Key Argument and Output Summary
 
 | **Argument** | **Description** | **Default** |
-|----|----|----|
+|------------------------|------------------------|------------------------|
 | `x` | A numeric matrix of predictors. As for [`glm.fit`](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/glm.fit.html). | **No default; user must supply.** |
 | `y` | A numeric vector of responses. As for [`glm.fit`](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/glm.fit.html). | **No default; user must supply.** |
 | `weights` | An optional vector of weights to be used in the fitting process. | `rep(1, nobs)` |
@@ -76,7 +76,7 @@ The underlying optimization methods in `savvyGLM` are designed to reduce the the
 Here, we just provide a table summary since for a detailed theoretical overview of the shrinkage estimators applied to GLMs, please refer to the [savvySh package](https://ziwei-chenchen.github.io/savvySh/), which covers many of the same shrinkage estimators used here, but in the context of linear regression. The methods in `savvyGLM` extend these ideas to generalized linear models, ensuring that the IRLS updates incorporate shrinkage at each iteration.
 
 | **Method** | **Shrinkage Approach** | **Simple Description** | **Extra Overhead?** | **Included by Default?** |
-|----|----|----|----|----|
+|---------------|---------------|---------------|---------------|---------------|
 | **OLS** | No shrinkage | Baseline estimator without any regularization. | No | No (baseline method) |
 | **St** | Scalar shrinkage | Scales all OLS coefficients by a common factor to reduce MSE. | No | **Yes** |
 | **DSh** | Diagonal matrix | Shrinks each OLS coefficient separately using individual factors. | No | **Yes** |
@@ -144,7 +144,7 @@ By iterating this WLS problem until convergence (or until a maximum number of it
 
 This section presents simulation studies to compare the performance of the shrinkage estimators implemented in the `savvyGLM` package. We compare the standard IRLS update (as implemented in `glm.fit2`) with various shrinkage methods implemented in `savvyGLM` by measuring the $L_2$ distance between the estimated and true coefficients. Lower $L_2$ values indicate better estimation accuracy.
 
-The following *data-generating processes (DGPs)* are considered for logistic regression (LR), Poisson, and Gamma GLMs with *log* link and *sqrt* link:
+The following *data-generating processes (DGPs)* are considered for *logistic regression (LR)*, Poisson, and Gamma GLMs with *log* link and *sqrt* link:
 
 1.  **Covariate Matrix**: The covariate matrix $\mathbf{X} \in \Re^{n \times p}$ is drawn from a multivariate normal distribution with mean zero, unit variances, and a Toeplitz covariance matrix $\Sigma$ where $\text{Cov}(X_{i,j}, X_{k,j}) = \rho^{|i-k|}$ with $\rho \in (-1,1)$.
 
@@ -152,7 +152,7 @@ The following *data-generating processes (DGPs)* are considered for logistic reg
 
 3.  **Response Generation**:
 
-    -   **Logistic Regression (LR)**: Compute the linear predictor: $\eta_i = \beta_0 + \sum_{j=1}^p \beta_j x_{ij}$ and generate $Y_i \sim \text{Binomial}\left(1, \frac{1}{1+e^{-\eta_i}}\right)$.
+    -   **LR**: Compute the linear predictor: $\eta_i = \beta_0 + \sum_{j=1}^p \beta_j x_{ij}$ and generate $Y_i \sim \text{Binomial}\left(1, \frac{1}{1+e^{-\eta_i}}\right)$.
 
     -   **Poisson GLM**:Two link functions are considered:For the *log* link: $\mu_i = e^{\eta_i}$; for the *sqrt* link: $\mu_i = \eta_i^2$. Then, generate $Y_i \sim \text{Poisson}(\mu_i)$.
 
@@ -248,7 +248,7 @@ kable(l2_table, digits = 4, caption = "L2 Distance Between Estimated and True Co
 
 ### Imbalanced Data
 
-For imbalanced logistic regression, the simulation settings are similar except that the target proportion for the negative class is reduced (for example, only 5% of the responses are 0's). This results in a skewed binary response, which allows us to evaluate the robustness of the shrinkage estimators under class imbalance. As before, models are fit using both the standard GLM and the various shrinkage-based GLM.
+For imbalanced LR, the simulation settings are similar except that the target proportion for the negative class is reduced (for example, only 5% of the responses are 0's). This results in a skewed binary response, which allows us to evaluate the robustness of the shrinkage estimators under class imbalance. As before, models are fit using both the standard GLM and the various shrinkage-based GLM.
 
 ```{r, warning=FALSE}
 # Load packages
@@ -409,7 +409,7 @@ kable(l2_table, digits = 4, caption = "L2 Distance Between Estimated and True Co
 
 ### *sqrt* Link Function
 
-For the Poisson GLM with the square-root link, the mean response is defined as $\mu = \eta^2$ with $\eta = X_{\text{intercept}} \, \beta_{\text{true}}$. The simulation procedure is similar to the log link case; however, the responses are generated with Poission distribution with $\lambda$ $\mu=\eta^2$. To address potential numerical issues (such as non-positive responses). Models are then fit using both the standard GLM (via `glm.fit2`) and the shrinkage-based GLM (via `savvy_glm.fit2`in `savvyGLM` package).
+For the Poisson GLM with the sqrt link, the mean response is defined as $\mu = \eta^2$ with $\eta = X_{\text{intercept}} \, \beta_{\text{true}}$. The simulation procedure is similar to the log link case; however, the responses are generated with Poission distribution with $\lambda$ $\mu=\eta^2$. To address potential numerical issues (such as non-positive responses). Models are then fit using both the standard GLM (via `glm.fit2`) and the shrinkage-based GLM (via `savvy_glm.fit2`in `savvyGLM` package).
 
 ```{r,warning=FALSE}
 # Load packages
@@ -568,7 +568,7 @@ kable(l2_table, digits = 4, caption = "L2 Distance Between Estimated and True Co
 
 ### *sqrt* Link Function
 
-For Gamma GLMs with the square-root link, the mean response is modeled as $\mu = \eta^2$ with $\eta = X_{\text{intercept}} \, \beta_{\text{true}}$. Covariates are generated as before, and responses are drawn from a Gamma distribution with *shape* $\mu =\eta^2$, including a retry mechanism to ensure all response values are positive. Fitting the models using both the standard GLM (via `glm.fit2`) and the shrinkage-based GLM (via `savvy_glm.fit2`in `savvyGLM` package).
+For Gamma GLMs with the sqrt link, the mean response is modeled as $\mu = \eta^2$ with $\eta = X_{\text{intercept}} \, \beta_{\text{true}}$. Covariates are generated as before, and responses are drawn from a Gamma distribution with *shape* $\mu =\eta^2$, including a retry mechanism to ensure all response values are positive. Fitting the models using both the standard GLM (via `glm.fit2`) and the shrinkage-based GLM (via `savvy_glm.fit2`in `savvyGLM` package).
 
 ```{r,warning=FALSE}
 # Load packages
@@ -656,9 +656,9 @@ For each year, the dataset is split into a 70% training set and a 30% test set. 
 
 -   For Gamma GLMs with the **log link**, the mean response is modeled as $\mu = \exp(\eta)$.
 
--   For Gamma GLMs with the **square-root link**, the mean response is modeled as $\mu = \eta^2$.
+-   For Gamma GLMs with the **sqrt link**, the mean response is modeled as $\mu = \eta^2$.
 
-For each replication, the Mean Squared Error (MSE) on the test set is computed. For each shrinkage-based GLM, we calculate the ratio
+For each replication, the MSE on the test set is computed. For each shrinkage-based GLM, we calculate the ratio
 
 $$
 \text{MSE Ratio} = \frac{\text{MSE}_{\text{Baseline (OLS)}}}{\text{MSE}_{\text{Shrinkage}}}.

@@ -84,12 +84,12 @@ algorithm with a shrinkage estimator. The rationale is that shrinkage
 estimation introduces a small bias to substantially reduce the <em>Mean
 Squared Error (MSE)</em> of the OLS estimates, resulting in more
 reliable parameter estimates and enhanced convergence stability. The
-corresponding shrinkage paper can be find in <a href="http//...">Slab
-and Shrinkage Linear Regression Estimation</a>.</p>
-<p><a href="#id_...">Simulation studies</a> and <a href="#id_...">real-data applications</a> demonstrate that replacing the
-OLS update in IRLS with a shrinkage estimator improves the convergence
-and overall performance of GLM estimation compared to the traditional
-non-penalized implementation.</p>
+corresponding shrinkage paper can be find in <a href="https://openaccess.city.ac.uk/id/eprint/35005/" class="external-link">Slab and Shrinkage
+Linear Regression Estimation</a>.</p>
+<p><a href="#simulation-examples">Simulation studies</a> and <a href="#real-data-analysis">real-data applications</a> demonstrate that
+replacing the OLS update in IRLS with a shrinkage estimator improves the
+convergence and overall performance of GLM estimation compared to the
+traditional non-penalized implementation.</p>
 <p>In summary, our package modifies <code>glm.fit2</code> from
 <code>glm2</code> to:</p>
 <ul>
@@ -111,12 +111,12 @@ specified.</p></li>
 GLMs, although by default four are evaluated unless the user explicitly
 includes <code>Sh</code>(since Sh is time-consuming):</p>
 <ol style="list-style-type: decimal">
-<li><p><a href="#">Custom Optimization Methods:</a> Implements shrinkage
-estimators (<code>St_ost</code>, <code>DSh_ost</code>,
+<li><p><strong>Custom Optimization Methods:</strong> Implements
+shrinkage estimators (<code>St_ost</code>, <code>DSh_ost</code>,
 <code>SR_ost</code>, <code>GSR_ost</code>, and optionally
 <code>Sh_ost</code>) that replace the standard OLS update in
 IRLS.</p></li>
-<li><p><a href="#">Flexible Model Choice:</a> The model_class argument
+<li><p><strong>Flexible Model Choice:</strong> The model_class argument
 allows users to choose one or more shrinkage methods. By default, only
 <code>"St"</code>, <code>"DSh"</code>, <code>"SR"</code>, and
 <code>"GSR"</code> are evaluated. Including <code>"Sh"</code> is
@@ -125,10 +125,10 @@ optional because solving the Sylvester equation required by
 </ol>
 <ul>
 <li>
-<a href="#">Parallel Evaluation:</a> When multiple candidate methods
-are specified, the function evaluates them in parallel (if use_parallel
-= TRUE) and selects the final model based on the lowest Akaike
-Information Criterion (AIC).</li>
+<strong>Parallel Evaluation:</strong> When multiple candidate
+methods are specified, the function evaluates them in parallel (if
+use_parallel = TRUE) and selects the final model based on the lowest
+Akaike Information Criterion (AIC).</li>
 </ul>
 </div>
 <div class="section level3">
@@ -445,8 +445,8 @@ distance between the estimated and true coefficients. Lower
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>L</mi><mn>2</mn></msub><annotation encoding="application/x-tex">L_2</annotation></semantics></math>
 values indicate better estimation accuracy.</p>
 <p>The following <em>data-generating processes (DGPs)</em> are
-considered for logistic regression (LR), Poisson, and Gamma GLMs with
-<em>log</em> link and <em>sqrt</em> link:</p>
+considered for <em>logistic regression (LR)</em>, Poisson, and Gamma
+GLMs with <em>log</em> link and <em>sqrt</em> link:</p>
 <ol style="list-style-type: decimal">
 <li><p><strong>Covariate Matrix</strong>: The covariate matrix
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>𝐗</mi><mo>∈</mo><msup><mi>ℜ</mi><mrow><mi>n</mi><mo>×</mo><mi>p</mi></mrow></msup></mrow><annotation encoding="application/x-tex">\mathbf{X} \in \Re^{n \times p}</annotation></semantics></math>
@@ -467,8 +467,7 @@ link, a smaller scaling is used to avoid numerical issues.</p></li>
 <li>
 <p><strong>Response Generation</strong>:</p>
 <ul>
-<li><p><strong>Logistic Regression (LR)</strong>: Compute the linear
-predictor:
+<li><p><strong>LR</strong>: Compute the linear predictor:
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>η</mi><mi>i</mi></msub><mo>=</mo><msub><mi>β</mi><mn>0</mn></msub><mo>+</mo><msubsup><mo>∑</mo><mrow><mi>j</mi><mo>=</mo><mn>1</mn></mrow><mi>p</mi></msubsup><msub><mi>β</mi><mi>j</mi></msub><msub><mi>x</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub></mrow><annotation encoding="application/x-tex">\eta_i = \beta_0 + \sum_{j=1}^p \beta_j x_{ij}</annotation></semantics></math>
 and generate
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>Y</mi><mi>i</mi></msub><mo>∼</mo><mtext mathvariant="normal">Binomial</mtext><mrow><mo stretchy="true" form="prefix">(</mo><mn>1</mn><mo>,</mo><mfrac><mn>1</mn><mrow><mn>1</mn><mo>+</mo><msup><mi>e</mi><mrow><mi>−</mi><msub><mi>η</mi><mi>i</mi></msub></mrow></msup></mrow></mfrac><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">Y_i \sim \text{Binomial}\left(1, \frac{1}{1+e^{-\eta_i}}\right)</annotation></semantics></math>.</p></li>
@@ -675,12 +674,12 @@ LR)</caption>
 <div class="section level4">
 <h4 id="imbalanced-data">Imbalanced Data<a class="anchor" aria-label="anchor" href="#imbalanced-data"></a>
 </h4>
-<p>For imbalanced logistic regression, the simulation settings are
-similar except that the target proportion for the negative class is
-reduced (for example, only 5% of the responses are 0’s). This results in
-a skewed binary response, which allows us to evaluate the robustness of
-the shrinkage estimators under class imbalance. As before, models are
-fit using both the standard GLM and the various shrinkage-based GLM.</p>
+<p>For imbalanced LR, the simulation settings are similar except that
+the target proportion for the negative class is reduced (for example,
+only 5% of the responses are 0’s). This results in a skewed binary
+response, which allows us to evaluate the robustness of the shrinkage
+estimators under class imbalance. As before, models are fit using both
+the standard GLM and the various shrinkage-based GLM.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Load packages</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://Ziwei-ChenChen.github.io/savvyGLM">savvyGLM</a></span><span class="op">)</span></span>
@@ -976,8 +975,8 @@ for Poisson GLM)</caption>
 <h4 id="sqrt-link-function">
 <em>sqrt</em> Link Function<a class="anchor" aria-label="anchor" href="#sqrt-link-function"></a>
 </h4>
-<p>For the Poisson GLM with the square-root link, the mean response is
-defined as
+<p>For the Poisson GLM with the sqrt link, the mean response is defined
+as
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>μ</mi><mo>=</mo><msup><mi>η</mi><mn>2</mn></msup></mrow><annotation encoding="application/x-tex">\mu = \eta^2</annotation></semantics></math>
 with
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>η</mi><mo>=</mo><msub><mi>X</mi><mtext mathvariant="normal">intercept</mtext></msub><mspace width="0.167em"></mspace><msub><mi>β</mi><mtext mathvariant="normal">true</mtext></msub></mrow><annotation encoding="application/x-tex">\eta = X_{\text{intercept}} \, \beta_{\text{true}}</annotation></semantics></math>.
@@ -1283,8 +1282,7 @@ for Gamma GLM)</caption>
 <h4 id="sqrt-link-function-1">
 <em>sqrt</em> Link Function<a class="anchor" aria-label="anchor" href="#sqrt-link-function-1"></a>
 </h4>
-<p>For Gamma GLMs with the square-root link, the mean response is
-modeled as
+<p>For Gamma GLMs with the sqrt link, the mean response is modeled as
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>μ</mi><mo>=</mo><msup><mi>η</mi><mn>2</mn></msup></mrow><annotation encoding="application/x-tex">\mu = \eta^2</annotation></semantics></math>
 with
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>η</mi><mo>=</mo><msub><mi>X</mi><mtext mathvariant="normal">intercept</mtext></msub><mspace width="0.167em"></mspace><msub><mi>β</mi><mtext mathvariant="normal">true</mtext></msub></mrow><annotation encoding="application/x-tex">\eta = X_{\text{intercept}} \, \beta_{\text{true}}</annotation></semantics></math>.
@@ -1455,12 +1453,12 @@ and optionally Sh) using two different link functions:</p>
 <li><p>For Gamma GLMs with the <strong>log link</strong>, the mean
 response is modeled as
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>μ</mi><mo>=</mo><mo>exp</mo><mrow><mo stretchy="true" form="prefix">(</mo><mi>η</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\mu = \exp(\eta)</annotation></semantics></math>.</p></li>
-<li><p>For Gamma GLMs with the <strong>square-root link</strong>, the
-mean response is modeled as
+<li><p>For Gamma GLMs with the <strong>sqrt link</strong>, the mean
+response is modeled as
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>μ</mi><mo>=</mo><msup><mi>η</mi><mn>2</mn></msup></mrow><annotation encoding="application/x-tex">\mu = \eta^2</annotation></semantics></math>.</p></li>
 </ul>
-<p>For each replication, the Mean Squared Error (MSE) on the test set is
-computed. For each shrinkage-based GLM, we calculate the ratio</p>
+<p>For each replication, the MSE on the test set is computed. For each
+shrinkage-based GLM, we calculate the ratio</p>
 <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mtext mathvariant="normal">MSE Ratio</mtext><mo>=</mo><mfrac><msub><mtext mathvariant="normal">MSE</mtext><mtext mathvariant="normal">Baseline (OLS)</mtext></msub><msub><mtext mathvariant="normal">MSE</mtext><mtext mathvariant="normal">Shrinkage</mtext></msub></mfrac><mi>.</mi></mrow><annotation encoding="application/x-tex">
 \text{MSE Ratio} = \frac{\text{MSE}_{\text{Baseline (OLS)}}}{\text{MSE}_{\text{Shrinkage}}}.
 </annotation></semantics></math></p>
