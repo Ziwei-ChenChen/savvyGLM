@@ -5,9 +5,10 @@ RR_est <- function(x, y) {
   cv_fit <- cv.glmnet(x, y, alpha = 0, lambda = lambda_grid, intercept = FALSE)
   lambda_min <- cv_fit$lambda.min
   theta_rr <- as.vector(coef(cv_fit, s = "lambda.min")[-1, 1])
-  fitted <- predict(cv_fit, newx = x, s = lambda_min)
-  resid <- y - fitted
-  sigma_rr <- sqrt(sum(resid^2) / (length(y) - ncol(x)))
+  fitted_values <- as.vector(predict(cv_fit, newx = x, s = lambda_min))
+  df_eff <- sum((svd(x)$d)^2 / ((svd(x)$d)^2 + lambda_min))
+  RSS <- sum((y - fitted_values)^2)
+  sigma_rr <- sqrt(sum((RSS / (length(y) - df_eff))^2))
   list(est = theta_rr, sigma = sigma_rr, optimal_lambda = lambda_min)
 }
 
@@ -105,7 +106,9 @@ GSR_ost <- function(x, y) {
 
 # Sylvester equation solver.
 # Solves the Sylvester equation A * X + X * B = C using a Schur decomposition method.
-# Adapted from: https://github.com/sakuramomo1005/biADMM/blob/master/R/sylvester.R
+# This code for solving the Sylvester equation was adapted from the biADMM R code,
+# available at: https://github.com/sakuramomo1005/biADMM/blob/master/R/sylvester.R
+# Original Author: sakuramomo1005
 sylvester <- function(A, B, C, tol = 1e-4) {
   A1 <- Schur(A)
   Q1 <- A1$Q
@@ -153,15 +156,6 @@ sylvester <- function(A, B, C, tol = 1e-4) {
   Q1 %*% X %*% t(Q2)
 }
 
-# Main Sh function.
-# Computes the Shrinkage (Sh) estimator by solving a Sylvester equation to obtain
-# a targeted shrinkage solution.
-# Parameters:
-#   est              - Initial coefficient estimate vector.
-#   sigma_square     - Variance of noise.
-#   Sigma_lambda_inv - Inverse of the regularized covariance matrix.
-# Returns:
-#   A vector representing the Sh estimator.
 Sh_ost <- function(x, y) {
   ols <- OLS_est(x, y)
   est <- ols$est
