@@ -189,27 +189,32 @@ By default, the function considers only <code>St_ost</code>, <code>DSh_ost</code
 If the user explicitly includes <code>"Sh"</code> in <code>model_class</code> (for example, <code>model_class = c("St", "DSh", "SR", "GSR", "Sh")</code>), then the method <code>Sh_ost</code> is also evaluated.
 The fitting process starts with initial parameter values and iterates through the IRLS algorithm. In each iteration, the coefficients are computed using the specified custom methods.
 The method with the lowest AIC is chosen as the final model, ensuring that the model converges to the best solution given the data and the specified family.</p>
-<p><strong>Custom Optimization Methods:</strong></p><ul><li><p><strong>Stein Estimator (St):</strong>
-    </p><ul><li><p>Applies a global multiplicative shrinkage factor to all coefficients.</p></li>
+<p><strong>Custom Optimization Methods:</strong></p><dl><dt><strong>Stein Estimator (St)</strong></dt>
+<dd><p></p><ol><li><p>Applies a global multiplicative shrinkage factor to all coefficients.</p></li>
 <li><p>The factor is chosen to reduce MSE based on the overall signal-to-noise ratio.</p></li>
 <li><p>Simple and fast; works well when all coefficients can be shrunk similarly.</p></li>
-</ul></li>
-<li><p><strong>Diagonal Shrinkage (DSh):</strong>
-    </p><ul><li><p>Extends the St approach by assigning a separate shrinkage factor to each coefficient.</p></li>
+</ol><p></p></dd>
+
+  <dt><strong>Diagonal Shrinkage (DSh)</strong></dt>
+<dd><p></p><ol><li><p>Extends the St approach by assigning a separate shrinkage factor to each coefficient.</p></li>
 <li><p>Each factor is computed from the coefficient size and its associated variance.</p></li>
 <li><p>More flexible than St, especially when coefficients vary in scale or importance.</p></li>
-</ul></li>
-<li><p><strong>Generalized Slab Regression (GSR):</strong>
-    </p><ul><li><p>Extends SR by shrinking along multiple directions based on the data.</p></li>
+</ol><p></p></dd>
+
+  <dt><strong>Generalized Slab Regression (GSR)</strong></dt>
+<dd><p></p><ol><li><p>Extends SR by shrinking along multiple directions based on the data.</p></li>
 <li><p>These directions are usually chosen as leading principal components of the design matrix.</p></li>
 <li><p>Provides adaptive regularization in settings with collinearity or factor structure.</p></li>
-</ul></li>
-<li><p><strong>Shrinkage Estimator (Sh):</strong>
-    </p><ul><li><p>Uses a non-diagonal shrinkage matrix derived from solving a Sylvester equation.</p></li>
+</ol><p></p></dd>
+
+  <dt><strong>Shrinkage Estimator (Sh)</strong></dt>
+<dd><p></p><ol><li><p>Uses a non-diagonal shrinkage matrix derived from solving a Sylvester equation.</p></li>
 <li><p>Applies shrinkage by transforming the OLS estimator through a matrix that minimizes the MSE.</p></li>
 <li><p>Included only when <code>"Sh"</code> is specified in the <code>model_class</code> argument.</p></li>
-</ul></li>
-</ul></div>
+</ol><p></p></dd>
+
+
+</dl></div>
     <div class="section level2">
     <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a></h2>
     <p>The custom optimization methods used in this function are designed to improve the convergence properties of the GLM fitting process.

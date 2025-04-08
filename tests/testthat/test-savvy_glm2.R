@@ -1,5 +1,5 @@
 library(testthat)
-library(ShrinkageGLMs)
+library(savvyGLM)
 
 test_that("Logistic regression with intercept", {
   set.seed(123)

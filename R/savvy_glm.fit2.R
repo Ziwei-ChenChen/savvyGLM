@@ -41,33 +41,33 @@ utils::globalVariables("n", add = TRUE)
 #' The method with the lowest AIC is chosen as the final model, ensuring that the model converges to the best solution given the data and the specified family.
 #'
 #' \strong{Custom Optimization Methods:}
-#' \itemize{
-#'   \item{\strong{Stein Estimator (St):}}{
-#'     \itemize{
-#'       \item{Applies a global multiplicative shrinkage factor to all coefficients.}
-#'       \item{The factor is chosen to reduce MSE based on the overall signal-to-noise ratio.}
-#'       \item{Simple and fast; works well when all coefficients can be shrunk similarly.}
+#' \describe{
+#'   \item{\strong{Stein Estimator (St)}}{
+#'     \enumerate{
+#'       \item Applies a global multiplicative shrinkage factor to all coefficients.
+#'       \item The factor is chosen to reduce MSE based on the overall signal-to-noise ratio.
+#'       \item Simple and fast; works well when all coefficients can be shrunk similarly.
 #'     }
 #'   }
-#'   \item{\strong{Diagonal Shrinkage (DSh):}}{
-#'     \itemize{
-#'       \item{Extends the St approach by assigning a separate shrinkage factor to each coefficient.}
-#'       \item{Each factor is computed from the coefficient size and its associated variance.}
-#'       \item{More flexible than St, especially when coefficients vary in scale or importance.}
+#'   \item{\strong{Diagonal Shrinkage (DSh)}}{
+#'     \enumerate{
+#'       \item Extends the St approach by assigning a separate shrinkage factor to each coefficient.
+#'       \item Each factor is computed from the coefficient size and its associated variance.
+#'       \item More flexible than St, especially when coefficients vary in scale or importance.
 #'     }
 #'   }
-#'   \item{\strong{Generalized Slab Regression (GSR):}}{
-#'     \itemize{
-#'       \item{Extends SR by shrinking along multiple directions based on the data.}
-#'       \item{These directions are usually chosen as leading principal components of the design matrix.}
-#'       \item{Provides adaptive regularization in settings with collinearity or factor structure.}
+#'   \item{\strong{Generalized Slab Regression (GSR)}}{
+#'     \enumerate{
+#'       \item Extends SR by shrinking along multiple directions based on the data.
+#'       \item These directions are usually chosen as leading principal components of the design matrix.
+#'       \item Provides adaptive regularization in settings with collinearity or factor structure.
 #'     }
 #'   }
-#'   \item{\strong{Shrinkage Estimator (Sh):}}{
-#'     \itemize{
-#'       \item{Uses a non-diagonal shrinkage matrix derived from solving a Sylvester equation.}
-#'       \item{Applies shrinkage by transforming the OLS estimator through a matrix that minimizes the MSE.}
-#'       \item{Included only when \code{"Sh"} is specified in the \code{model_class} argument.}
+#'   \item{\strong{Shrinkage Estimator (Sh)}}{
+#'     \enumerate{
+#'       \item Uses a non-diagonal shrinkage matrix derived from solving a Sylvester equation.
+#'       \item Applies shrinkage by transforming the OLS estimator through a matrix that minimizes the MSE.
+#'       \item Included only when \code{"Sh"} is specified in the \code{model_class} argument.
 #'     }
 #'   }
 #' }
