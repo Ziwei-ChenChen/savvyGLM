@@ -4,15 +4,21 @@ Title: Generalized Linear Models with Slab and Shrinkage Estimators
 Version: 0.1.0
 Authors@R: 
     c(
-      person(given = "Ziwei", family = "Chen", role = c("aut", "cre"), email = "Ziwei.Chen.3@citystgeorges.ac.uk"),
-      person(given = "Vali", family = "Asimit", role = "aut", email = "asimit@citystgeorges.ac.uk")
+      person(given = "Ziwei", family = "Chen", role = c("aut", "cre"), 
+             email = "Ziwei.Chen.3@citystgeorges.ac.uk", 
+             comment = c("0009-0009-6376-3850")),
+      person(given = "Vali", family = "Asimit", role = "aut", 
+             email = "asimit@citystgeorges.ac.uk", 
+             comment = c("0000-0002-7706-0066"))
     )
 Maintainer: Ziwei Chen <ziwei.chen.3@citystgeorges.ac.uk>
-Description: This package provides functions for fitting Generalized Linear Models (GLMs) using advanced slab and shrinkage
-    estimators such as Stein (St), Diagonal Shrinkage (DSh), Shrinkage Ridge (SR), Generalized Slab Regression (GSR),
-    and Shrinkage (Sh). These methods improve the convergence and stability of the iteratively reweighted least squares (IRLS)
-    algorithm, addressing issues like multicollinearity and optimizing coefficient estimates. The best fitting model is
-    selected based on the Akaike Information Criterion (AIC), ensuring robust and accurate results across a wide range of scenarios.
+Description: This package provides an advanced framework for fitting Generalized Linear Models (GLMs)
+    using custom slab and shrinkage estimators. The implemented methods include the Stein estimator (St), 
+    Diagonal Shrinkage (DSh), Shrinkage Ridge (SR), Generalized Slab Regression (GSR), and Shrinkage (Sh).
+    These estimators are integrated into the iteratively reweighted least squares (IRLS) algorithm 
+    to enhance estimation accuracy, convergence properties, and robustness, particularly in the presence 
+    of multicollinearity. The optimal model is chosen based on the Akaike Information Criterion (AIC), 
+    ensuring reliable inference across a broad range of applications.
 License: GPL (>= 3)
 Encoding: UTF-8
 URL: https://Ziwei-ChenChen.github.io/savvyGLM
@@ -34,5 +40,5 @@ Suggests:
     CVXR
 Config/testthat/edition: 3
 VignetteBuilder: knitr
-Depends: 
-    R (>= 2.10)
+Depends:
+    R (>= 3.6.0)

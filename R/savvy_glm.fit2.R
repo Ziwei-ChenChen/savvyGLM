@@ -2,11 +2,10 @@ utils::globalVariables("n", add = TRUE)
 
 #' @title Generalized Linear Models Fitting with Slab and Shrinkage Estimators
 #'
-#' @description \code{savvy_glm.fit2} is a modified version of \code{glm.fit} in the stats package,
-#' incorporating custom optimization functions (\code{St_ost}, \code{DSh_ost}, \code{SR_ost}, \code{GSR_ost}, and \code{Sh_ost}).
-#' The user can specify a preferred shrinkage model via the \code{model_class} argument.
-#' When the user does not explicitly supply a value for \code{model_class}, the function defaults to running only \code{"St"}, \code{"DSh"}, \code{"SR"}, and \code{"GSR"}.
-#' If the user explicitly includes \code{"Sh"} (e.g. \code{model_class = c("St", "DSh", "SR", "GSR", "Sh")}), then \code{Sh_ost} is also evaluated.
+#' @description
+#' \code{savvy_glm.fit2} is a modified version of \code{glm.fit} that enhances the standard iteratively reweighted least squares (IRLS) algorithm by incorporating a set of shrinkage estimator functions.
+#' These functions (namely \code{St_ost}, \code{DSh_ost}, \code{SR_ost}, \code{GSR_ost}, and optionally \code{Sh_ost}) provide alternative coefficient updates based on shrinkage principles.
+#' The function allows the user to select one or more of these methods via the \code{model_class} argument.
 #'
 #' @usage savvy_glm.fit2(x, y, weights = rep(1, nobs),
 #'                         model_class = c("St", "DSh", "SR", "GSR", "Sh"),
@@ -18,8 +17,10 @@ utils::globalVariables("n", add = TRUE)
 #' @param x A numeric matrix of predictors. As for \code{\link{glm.fit}}.
 #' @param y A numeric vector of responses. As for \code{\link{glm.fit}}.
 #' @param weights An optional vector of weights to be used in the fitting process. As for \code{\link{glm.fit}}.
-#' @param model_class A character vector specifying the shrinkage model(s) to be used. Allowed values are \code{"St"}, \code{"DSh"}, \code{"SR"}, \code{"GSR"}, and \code{"Sh"}.
-#' If a single value is provided, only that method is run. If multiple values are provided, the function runs the specified methods in parallel and returns the best one based on AIC.
+#' @param model_class A character vector specifying the shrinkage model(s) to be used.
+#' Allowed values are \code{"St"}, \code{"DSh"}, \code{"SR"}, \code{"GSR"}, and \code{"Sh"}.
+#' If a single value is provided, only that method is run. If multiple values are provided,
+#' the function runs the specified methods in parallel (if \code{use_parallel = TRUE}) and returns the best one based on Akaike Information Criterion (AIC).
 #' When the user does not explicitly supply a value for \code{model_class}, the default is \code{c("St", "DSh", "SR", "GSR")} (i.e. \code{"Sh"} is not considered).
 #' @param start Starting values for the parameters. As for \code{\link{glm.fit}}.
 #' @param etastart Starting values for the linear predictor. As for \code{\link{glm.fit}}.
@@ -27,47 +28,58 @@ utils::globalVariables("n", add = TRUE)
 #' @param offset An optional offset to be included in the model. As for \code{\link{glm.fit}}.
 #' @param family A description of the error distribution and link function to be used in the model. As for \code{\link{glm.fit}}.
 #' @param control A list of parameters for controlling the fitting process. As for \code{\link{glm.fit}}.
-#' @param intercept A logical value indicating whether an intercept should be included in the model. As for \code{\link{glm.fit}}.
-#' @param use_parallel Logical. If TRUE, enables parallel execution of the fitting process.
-#'   Defaults to TRUE. Set to FALSE for serial execution.
+#' @param intercept A logical value indicating whether an intercept should be included in the model, defalut is \code{TRUE}. As for \code{\link{glm.fit}}.
+#' @param use_parallel Logical. If \code{TRUE}, enables parallel execution of the fitting process.
+#'   Defaults to \code{TRUE}. Set to \code{FALSE} for serial execution.
 #'
 #' @details
-#' \code{savvy_glm.fit2} extends \code{glm.fit} by using custom optimization functions to improve the convergence properties of the iteratively reweighted least squares (IRLS) algorithm.
-#' The user may choose to run a specific shrinkage method by supplying a single value to the \code{model_class} argument.
-#' If multiple values are provided (or if the default is used), the function evaluates a set of custom optimization methods and selects the final model based on the Akaike Information Criterion (AIC).
-#' By default, the function considers only \code{St_ost}, \code{DSh_ost}, \code{SR_ost}, and \code{GSR_ost} (i.e. \code{model_class = c("St", "DSh", "SR", "GSR")}).
-#' If the user explicitly includes \code{"Sh"} in \code{model_class} (for example, \code{model_class = c("St", "DSh", "SR", "GSR", "Sh")}), then the method \code{Sh_ost} is also evaluated.
-#' The fitting process starts with initial parameter values and iterates through the IRLS algorithm. In each iteration, the coefficients are computed using the specified custom methods.
-#' The method with the lowest AIC is chosen as the final model, ensuring that the model converges to the best solution given the data and the specified family.
+#' \code{savvy_glm.fit2} extends the classical Generalized Linear Model (GLM) fitting procedure by evaluating a collection of shrinkage-based updates during each iteration of the IRLS algorithm.
+#' When multiple shrinkage methods are specified in \code{model_class} (default is \code{c("St", "DSh", "SR", "GSR")}, thereby excluding \code{"Sh"} unless explicitly provided),
+#' that is if the user explicitly includes \code{"Sh"} in \code{model_class} (for example, \code{model_class = c("St", "DSh", "SR", "GSR", "Sh")} or \code{model_class = c("St", "Sh")}),
+#' then the method \code{Sh_ost} is also evaluated. The function can run the methods in parallel (if \code{use_parallel = TRUE}), and selects the final model based on the lowest AIC.
 #'
-#' \strong{Custom Optimization Methods:}
+#' In essence, the function starts with initial estimates (via \code{start}, \code{etastart}, or \code{mustart}) and iteratively updates the coefficients using the chosen shrinkage method(s).
+#' The incorporation of these shrinkage estimators aims to improve convergence properties and potentially yield more stable or parsimonious models under various data scenarios.
+#'
+#' \strong{Shrinkage Estimators Used in the IRLS Algorithm:}
 #' \describe{
 #'   \item{\strong{Stein Estimator (St)}}{
 #'     \enumerate{
-#'       \item Applies a global multiplicative shrinkage factor to all coefficients.
-#'       \item The factor is chosen to reduce MSE based on the overall signal-to-noise ratio.
-#'       \item Simple and fast; works well when all coefficients can be shrunk similarly.
+#'       \item Computes a single multiplicative shrinkage factor applied uniformly to all coefficients.
+#'       \item The factor is chosen to minimize the overall mean squared error (MSE) of the OLS estimator.
+#'       \item Best suited when the predictors are similarly scaled so that uniform shrinkage is appropriate.
 #'     }
 #'   }
+#'
 #'   \item{\strong{Diagonal Shrinkage (DSh)}}{
 #'     \enumerate{
-#'       \item Extends the St approach by assigning a separate shrinkage factor to each coefficient.
-#'       \item Each factor is computed from the coefficient size and its associated variance.
-#'       \item More flexible than St, especially when coefficients vary in scale or importance.
+#'       \item Extends the Stein estimator by calculating an individual shrinkage factor for each coefficient.
+#'       \item Each factor is derived from the magnitude and variance of the corresponding coefficient.
+#'       \item Provides enhanced flexibility when predictor scales or contributions differ.
 #'     }
 #'   }
+#'
+#'   \item{\strong{Simple Slab Regression (SR)}}{
+#'     \enumerate{
+#'       \item Penalizes the projection of the OLS estimator along a fixed, predefined direction.
+#'       \item Uses a closed-form solution under a slab (fixed-penalty) constraint.
+#'       \item Suitable when prior information suggests shrinking the coefficients along a known direction.
+#'     }
+#'   }
+#'
 #'   \item{\strong{Generalized Slab Regression (GSR)}}{
 #'     \enumerate{
-#'       \item Extends SR by shrinking along multiple directions based on the data.
-#'       \item These directions are usually chosen as leading principal components of the design matrix.
-#'       \item Provides adaptive regularization in settings with collinearity or factor structure.
+#'       \item Generalizes SR by incorporating multiple, data-adaptive shrinkage directions.
+#'       \item Typically employs the leading eigenvectors of the design matrix as the directions.
+#'       \item Provides adaptive regularization that effectively handles multicollinearity.
 #'     }
 #'   }
+#'
 #'   \item{\strong{Shrinkage Estimator (Sh)}}{
 #'     \enumerate{
-#'       \item Uses a non-diagonal shrinkage matrix derived from solving a Sylvester equation.
-#'       \item Applies shrinkage by transforming the OLS estimator through a matrix that minimizes the MSE.
-#'       \item Included only when \code{"Sh"} is specified in the \code{model_class} argument.
+#'       \item Computes a non-diagonal shrinkage matrix by solving a \emph{Sylvester equation}.
+#'       \item Transforms the OLS estimator to achieve a lower mean squared error.
+#'       \item This estimator is evaluated only when \code{"Sh"} is explicitly included in the \code{model_class} argument.
 #'     }
 #'   }
 #' }
@@ -96,12 +108,15 @@ utils::globalVariables("n", add = TRUE)
 #' \item{time}{the time taken for the fitting process.}
 #' \item{chosen_fit}{the name of the chosen fitting method based on AIC.}
 #'
-#' @author Ziwei Chen and Vali Asimit\cr
-#' Maintainer: Ziwei Chen <ziwei.chen.3@citystgeorges.ac.uk>
-#'
 #' @references
-#' The custom optimization methods used in this function are designed to improve the convergence properties of the GLM fitting process.
-#' Marschner, I.C. (2011) glm2: Fitting generalized linear models with convergence problems. The R Journal, Vol. 3/2, pp.12-15.
+#' Marschner, I. C. (2011). \emph{glm2: Fitting Generalized Linear Models with Convergence Problems}.
+#' The R Journal, 3(2), 12–15. doi:10.32614/RJ-2011-012. Available at:
+#' \url{https://doi.org/10.32614/RJ-2011-012}.
+#'
+#' Asimit, V., Cidota, M. A., Chen, Z., & Asimit, J. (2025). \emph{Slab and Shrinkage Linear Regression Estimation}.
+#' Retrieved from \url{https://openaccess.city.ac.uk/id/eprint/35005/}.
+#'
+#' SavvyGLM article. \url{https://ziwei-chenchen.github.io/savvyGLM}.
 #'
 #' @importFrom stats model.matrix model.response gaussian binomial poisson
 #' @importFrom MASS ginv
