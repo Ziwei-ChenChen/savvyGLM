@@ -4,7 +4,7 @@
 #' \code{savvy_glm2} extends the classical \code{glm2} function from the \code{glm2} package by embedding a set of shrinkage-based methods within the iteratively reweighted least squares (IRLS) algorithm.
 #' These shrinkage methods (implemented via \code{savvy_glm.fit2}) are designed to improve convergence and estimation accuracy.
 #' The user can specify one or more methods through the \code{model_class} argument. When multiple methods are provided (default is \code{c("St", "DSh", "SR", "GSR")}),
-#' the function can evaluate them in parallel (controlled by the \code{use_parallel} argument) and selects the final model based on the lowest Akaike Information Criterion (AIC).
+#' the function can evaluate them in parallel (controlled by the \code{use_parallel} argument) and selects the final model based on criterion.
 #'
 #' @usage savvy_glm2(formula, family = gaussian, data, weights,
 #'                model_class = c("St", "DSh", "SR", "GSR"), subset,
@@ -40,11 +40,13 @@
 #' @param ... Additional arguments to be passed to the low level regression fitting functions. As for \code{\link{glm2}}.
 #'
 #' @details
-#' \code{savvy_glm2} improves upon the standard Generalized Linear Model (GLM) fitting process by incorporating shrinkage estimator functions
-#' (\code{St_ost}, \code{DSh_ost}, \code{SR_ost}, \code{GSR_ost}, and optionally \code{Sh_ost}) within the IRLS algorithm.
-#' The function begins with initial parameter estimates and updates the coefficients using the specified shrinkage methods.
-#' When multiple methods are specified in \code{model_class}, the function may evaluate them in parallel (when \code{use_parallel = TRUE})
-#' and then selects the final model based on the lowest AIC, ensuring that the model converges to the best possible solution given the data and specified family.
+#' \code{savvy_glm2} improves upon the standard Generalized Linear Model (GLM) fitting process by incorporating
+#' shrinkage estimator functions (\code{St_ost}, \code{DSh_ost}, \code{SR_ost}, \code{GSR_ost}, and optionally \code{Sh_ost})
+#' within the IRLS algorithm. The function begins with initial parameter estimates and iteratively updates the coefficients using the
+#' specified shrinkage methods. When multiple methods are specified in \code{model_class}, they may be evaluated in parallel (if
+#' \code{use_parallel = TRUE}), and the final model is selected based on the lowest AIC. In cases where any candidate model returns an \code{NA}
+#' or non-finite AIC (such as when using quasi-likelihood families), the deviance is used uniformly as the selection criterion.
+#' This approach ensures that the chosen model represents the best trade-off between fit and complexity given the data and the specified family.
 #'
 #' @return The value returned by \code{savvy_glm2} has exactly the same structure as that returned by \code{glm2}, except for:
 #' \item{method}{the name of the fitter function used, which by default is \code{savvy_glm.fit2}.}
@@ -76,11 +78,11 @@
 #'
 #' @export
 savvy_glm2 <- function(formula, family = gaussian, data, weights,
-                       model_class = c("St", "DSh", "SR", "GSR"), subset,
-                       na.action, start = NULL, etastart, mustart, offset,
-                       control = list(...), model = TRUE,
-                       method = "savvy_glm.fit2", x = FALSE, y = TRUE,
-                       contrasts = NULL, use_parallel = TRUE, ...) {
+                        model_class = c("St", "DSh", "SR", "GSR"), subset,
+                        na.action, start = NULL, etastart, mustart, offset,
+                        control = list(...), model = TRUE,
+                        method = "savvy_glm.fit2", x = FALSE, y = TRUE,
+                        contrasts = NULL, use_parallel = TRUE, ...) {
   call <- match.call()
   if (is.character(family))
     family <- get(family, mode = "function", envir = parent.frame())

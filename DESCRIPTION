@@ -12,13 +12,13 @@ Authors@R:
              comment = c("0000-0002-7706-0066"))
     )
 Maintainer: Ziwei Chen <ziwei.chen.3@citystgeorges.ac.uk>
-Description: This package provides an advanced framework for fitting Generalized Linear Models (GLMs)
-    using custom slab and shrinkage estimators. The implemented methods include the Stein estimator (St), 
-    Diagonal Shrinkage (DSh), Shrinkage Ridge (SR), Generalized Slab Regression (GSR), and Shrinkage (Sh).
-    These estimators are integrated into the iteratively reweighted least squares (IRLS) algorithm 
-    to enhance estimation accuracy, convergence properties, and robustness, particularly in the presence 
-    of multicollinearity. The optimal model is chosen based on the Akaike Information Criterion (AIC), 
-    ensuring reliable inference across a broad range of applications.
+Description: Provides a flexible framework for fitting generalized linear models (GLMs) 
+    with slab and shrinkage estimators. Methods include the Stein estimator (St), 
+    Diagonal Shrinkage (DSh), Shrinkage Ridge (SR), Generalized Slab Regression (GSR), 
+    and Shrinkage (Sh), all integrated into the iteratively reweighted least squares (IRLS) 
+    algorithm. This approach enhances estimation accuracy, convergence, and robustness 
+    in the presence of multicollinearity. The best-fitting model is selected based on 
+    the Akaike Information Criterion (AIC).
 License: GPL (>= 3)
 Encoding: UTF-8
 URL: https://Ziwei-ChenChen.github.io/savvyGLM

@@ -178,13 +178,17 @@ Defaults to <code>TRUE</code>. Set to <code>FALSE</code> for serial execution.</
 </dl></div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p><code>savvy_glm.fit2</code> extends the classical Generalized Linear Model (GLM) fitting procedure by evaluating a collection of shrinkage-based updates during each iteration of the IRLS algorithm.
-When multiple shrinkage methods are specified in <code>model_class</code> (default is <code>c("St", "DSh", "SR", "GSR")</code>, thereby excluding <code>"Sh"</code> unless explicitly provided),
-that is if the user explicitly includes <code>"Sh"</code> in <code>model_class</code> (for example, <code>model_class = c("St", "DSh", "SR", "GSR", "Sh")</code> or <code>model_class = c("St", "Sh")</code>),
-then the method <code>Sh_ost</code> is also evaluated. The function can run the methods in parallel (if <code>use_parallel = TRUE</code>), and selects the final model based on the lowest AIC.</p>
-<p>In essence, the function starts with initial estimates (via <code>start</code>, <code>etastart</code>, or <code>mustart</code>) and iteratively updates the coefficients using the chosen shrinkage method(s).
-The incorporation of these shrinkage estimators aims to improve convergence properties and potentially yield more stable or parsimonious models under various data scenarios.</p>
-<p><strong>Shrinkage Estimators Used in the IRLS Algorithm:</strong></p><dl><dt><strong>Stein Estimator (St)</strong></dt>
+    <p><code>savvy_glm.fit2</code> extends the classical Generalized Linear Model (GLM) fitting procedure by evaluating a collection of shrinkage‐based updates during each iteration of the IRLS algorithm.
+When multiple shrinkage methods are specified in <code>model_class</code> (the default is <code>c("St", "DSh", "SR", "GSR")</code>, thereby excluding <code>"Sh"</code> unless explicitly provided),
+if the user explicitly includes <code>"Sh"</code> (for example, <code>model_class = c("St", "DSh", "SR", "GSR", "Sh")</code> or <code>model_class = c("St", "Sh")</code>),
+then the method <code>Sh_ost</code> is also evaluated.</p>
+<p>The function can run these candidate methods in parallel (if <code>use_parallel = TRUE</code>). The final model is selected based on the lowest AIC.
+In cases where any candidate model returns an <code>NA</code> or non-finite AIC (which may occur when using quasi-likelihood families),
+the deviance is used uniformly as the model-selection criterion instead.</p>
+<p>In essence, the function starts with initial estimates (via <code>start</code>, <code>etastart</code>, or <code>mustart</code>)
+and iteratively updates the coefficients using the chosen shrinkage method(s).
+The incorporation of these shrinkage estimators aims to improve convergence properties and to yield more stable or parsimonious models under various data scenarios.
+<strong>Shrinkage Estimators Used in the IRLS Algorithm:</strong></p><dl><dt><strong>Stein Estimator (St)</strong></dt>
 <dd><p></p><ol><li><p>Computes a single multiplicative shrinkage factor applied uniformly to all coefficients.</p></li>
 <li><p>The factor is chosen to minimize the overall mean squared error (MSE) of the OLS estimator.</p></li>
 <li><p>Best suited when the predictors are similarly scaled so that uniform shrinkage is appropriate.</p></li>
@@ -232,6 +236,11 @@ Retrieved from <a href="https://openaccess.city.ac.uk/id/eprint/35005/" class="e
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
     <div class="dont-index"><p><code><a href="https://rdrr.io/r/stats/glm.html" class="external-link">glm.fit</a></code>, <code><a href="https://rdrr.io/r/stats/glm.html" class="external-link">glm</a></code>, <code>glm.fit2</code></p></div>
+    </div>
+    <div class="section level2">
+    <h2 id="author">Author<a class="anchor" aria-label="anchor" href="#author"></a></h2>
+    <p>Ziwei Chen and Vali Asimit<br>
+Maintainer: Ziwei Chen &lt;ziwei.chen.3@citystgeorges.ac.uk&gt;</p>
     </div>
 
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

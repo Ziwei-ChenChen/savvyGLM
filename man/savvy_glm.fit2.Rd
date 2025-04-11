@@ -71,14 +71,18 @@ These functions (namely \code{St_ost}, \code{DSh_ost}, \code{SR_ost}, \code{GSR_
 The function allows the user to select one or more of these methods via the \code{model_class} argument.
 }
 \details{
-\code{savvy_glm.fit2} extends the classical Generalized Linear Model (GLM) fitting procedure by evaluating a collection of shrinkage-based updates during each iteration of the IRLS algorithm.
-When multiple shrinkage methods are specified in \code{model_class} (default is \code{c("St", "DSh", "SR", "GSR")}, thereby excluding \code{"Sh"} unless explicitly provided),
-that is if the user explicitly includes \code{"Sh"} in \code{model_class} (for example, \code{model_class = c("St", "DSh", "SR", "GSR", "Sh")} or \code{model_class = c("St", "Sh")}),
-then the method \code{Sh_ost} is also evaluated. The function can run the methods in parallel (if \code{use_parallel = TRUE}), and selects the final model based on the lowest AIC.
+\code{savvy_glm.fit2} extends the classical Generalized Linear Model (GLM) fitting procedure by evaluating a collection of shrinkage‐based updates during each iteration of the IRLS algorithm.
+When multiple shrinkage methods are specified in \code{model_class} (the default is \code{c("St", "DSh", "SR", "GSR")}, thereby excluding \code{"Sh"} unless explicitly provided),
+if the user explicitly includes \code{"Sh"} (for example, \code{model_class = c("St", "DSh", "SR", "GSR", "Sh")} or \code{model_class = c("St", "Sh")}),
+then the method \code{Sh_ost} is also evaluated.
 
-In essence, the function starts with initial estimates (via \code{start}, \code{etastart}, or \code{mustart}) and iteratively updates the coefficients using the chosen shrinkage method(s).
-The incorporation of these shrinkage estimators aims to improve convergence properties and potentially yield more stable or parsimonious models under various data scenarios.
+The function can run these candidate methods in parallel (if \code{use_parallel = TRUE}). The final model is selected based on the lowest AIC.
+In cases where any candidate model returns an \code{NA} or non-finite AIC (which may occur when using quasi-likelihood families),
+the deviance is used uniformly as the model-selection criterion instead.
 
+In essence, the function starts with initial estimates (via \code{start}, \code{etastart}, or \code{mustart})
+and iteratively updates the coefficients using the chosen shrinkage method(s).
+The incorporation of these shrinkage estimators aims to improve convergence properties and to yield more stable or parsimonious models under various data scenarios.
 \strong{Shrinkage Estimators Used in the IRLS Algorithm:}
 \describe{
   \item{\strong{Stein Estimator (St)}}{
@@ -134,6 +138,10 @@ SavvyGLM article. \url{https://ziwei-chenchen.github.io/savvyGLM}.
 }
 \seealso{
 \code{\link{glm.fit}}, \code{\link{glm}}, \code{\link{glm.fit2}}
+}
+\author{
+Ziwei Chen and Vali Asimit\cr
+Maintainer: Ziwei Chen <ziwei.chen.3@citystgeorges.ac.uk>
 }
 \keyword{models}
 \keyword{regression}

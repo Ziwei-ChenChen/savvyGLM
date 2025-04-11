@@ -33,14 +33,19 @@ utils::globalVariables("n", add = TRUE)
 #'   Defaults to \code{TRUE}. Set to \code{FALSE} for serial execution.
 #'
 #' @details
-#' \code{savvy_glm.fit2} extends the classical Generalized Linear Model (GLM) fitting procedure by evaluating a collection of shrinkage-based updates during each iteration of the IRLS algorithm.
-#' When multiple shrinkage methods are specified in \code{model_class} (default is \code{c("St", "DSh", "SR", "GSR")}, thereby excluding \code{"Sh"} unless explicitly provided),
-#' that is if the user explicitly includes \code{"Sh"} in \code{model_class} (for example, \code{model_class = c("St", "DSh", "SR", "GSR", "Sh")} or \code{model_class = c("St", "Sh")}),
-#' then the method \code{Sh_ost} is also evaluated. The function can run the methods in parallel (if \code{use_parallel = TRUE}), and selects the final model based on the lowest AIC.
+#' \code{savvy_glm.fit2} extends the classical Generalized Linear Model (GLM) fitting procedure by evaluating a collection of shrinkage‐based updates during each iteration of the IRLS algorithm.
+#' When multiple shrinkage methods are specified in \code{model_class} (the default is \code{c("St", "DSh", "SR", "GSR")}, thereby excluding \code{"Sh"} unless explicitly provided),
+#' if the user explicitly includes \code{"Sh"} (for example, \code{model_class = c("St", "DSh", "SR", "GSR", "Sh")} or \code{model_class = c("St", "Sh")}),
+#' then the method \code{Sh_ost} is also evaluated.
 #'
-#' In essence, the function starts with initial estimates (via \code{start}, \code{etastart}, or \code{mustart}) and iteratively updates the coefficients using the chosen shrinkage method(s).
-#' The incorporation of these shrinkage estimators aims to improve convergence properties and potentially yield more stable or parsimonious models under various data scenarios.
+#' The function can run these candidate methods in parallel (if \code{use_parallel = TRUE}). The final model is selected based on the lowest AIC.
+#' In cases where any candidate model returns an \code{NA} or non-finite AIC (which may occur when using quasi-likelihood families),
+#' the deviance is used uniformly as the model-selection criterion instead.
 #'
+#' In essence, the function starts with initial estimates (via \code{start}, \code{etastart}, or \code{mustart})
+#' and iteratively updates the coefficients using the chosen shrinkage method(s).
+#' The incorporation of these shrinkage estimators aims to improve convergence properties and to yield more stable or parsimonious models under various data scenarios.
+
 #' \strong{Shrinkage Estimators Used in the IRLS Algorithm:}
 #' \describe{
 #'   \item{\strong{Stein Estimator (St)}}{
@@ -107,6 +112,9 @@ utils::globalVariables("n", add = TRUE)
 #' \item{boundary}{a logical value indicating whether the algorithm stopped at a boundary value.}
 #' \item{time}{the time taken for the fitting process.}
 #' \item{chosen_fit}{the name of the chosen fitting method based on AIC.}
+#'
+#' @author Ziwei Chen and Vali Asimit\cr
+#' Maintainer: Ziwei Chen <ziwei.chen.3@citystgeorges.ac.uk>
 #'
 #' @references
 #' Marschner, I. C. (2011). \emph{glm2: Fitting Generalized Linear Models with Convergence Problems}.
@@ -416,14 +424,20 @@ savvy_glm.fit2 <- function (x, y, weights = rep(1, nobs),
         fit_model_parallel(fit_functions[[i]], fit_names[i])
       })
     }
-    valid_results <- Filter(function(res) !is.na(res$aic) && is.finite(res$aic), results)
-
-    if (length(valid_results) == 0) {
+    aics <- sapply(results, function(res) {
+      if (is.na(res$aic) || !is.finite(res$aic)) NA_real_ else res$aic
+    })
+    if (any(is.na(aics))) {
+      criteria <- unlist(lapply(results, function(res) as.numeric(res$dev)))
+    } else {
+      criteria <- aics
+    }
+    if (all(is.na(criteria) | !is.finite(criteria))) {
       combined_errors <- unlist(lapply(results, function(res) res$errors))
       stop("No valid set of coefficients found for any fitting function. Errors encountered:\n",
            paste(combined_errors, collapse = "\n"))
     }
-    best_result <- valid_results[[which.min(sapply(valid_results, function(res) res$aic))]]
+    best_result <- results[[which.min(criteria)]]
 
     best_fit <- list(coefficients = best_result$coef,
                      fitted.values = best_result$mu,

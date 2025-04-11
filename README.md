@@ -42,13 +42,12 @@ These methods build on the robust features of the `glm2` package—such as step-
 
 ## Usage
 
-This is a basic example that shows you how to solve a common problem:
+This are two basic examples that shows you how to solve a common/non-common problem:
 
 ``` r
 set.seed(123)
 n <- 100
 p <- 5
-
 x <- matrix(rnorm(n * p), n, p)
 beta_true <- c(1, 0.5, -0.5, 1, -1)
 eta <- x %*% beta_true
@@ -62,9 +61,19 @@ fit <- savvy_glm.fit2(
   family = binomial(link = "logit"),
   control = glm.control(trace = TRUE)
 )
-
 print(fit$coefficients)
 print(fit$chosen_fit)
+```
+
+``` r
+set.seed(124)
+x <- rnorm(100)
+y <- rbinom(100, 1, plogis(x))
+# need to set a starting value for the next fit
+fit <- savvy_glm2(y ~ x, family = quasi(variance = "mu(1-mu)", 
+                 link = "logit"), start = c(0,1))
+summary(fit)
+coef(fit)
 ```
 
 ## Authors
