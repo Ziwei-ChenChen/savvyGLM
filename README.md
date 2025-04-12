@@ -66,6 +66,28 @@ print(fit$chosen_fit)
 ```
 
 ``` r
+library(statmod)
+set.seed(12123)
+n <- 100
+p <- 3
+x <- matrix(rnorm(n * p), n, p)
+beta_true <- c(0.5, 0.3, 0.8)
+eta <- x %*% beta_true
+mu <- exp(eta) 
+y <- statmod::rinvgauss(n, mean = mu, shape = 2)
+
+fit <- savvy_glm.fit2(
+  x = cbind(1, x),
+  y = y,
+  family = inverse.gaussian(link = "log"),
+  model_class = c("SR", "DSh"),
+  control = glm.control(trace = TRUE)
+)
+coef(fit)
+print(fit$chosen_fit)
+```
+
+``` r
 set.seed(124)
 x <- rnorm(100)
 y <- rbinom(100, 1, plogis(x))
@@ -74,6 +96,7 @@ fit <- savvy_glm2(y ~ x, family = quasi(variance = "mu(1-mu)",
                  link = "logit"), start = c(0,1))
 summary(fit)
 coef(fit)
+print(fit$chosen_fit)
 ```
 
 ## Authors
