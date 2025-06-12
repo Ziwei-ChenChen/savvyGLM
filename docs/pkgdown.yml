@@ -1,0 +1,9 @@
+pandoc: 3.2.1
+pkgdown: 2.1.1
+pkgdown_sha: ~
+articles:
+  savvyGLM: savvyGLM.html
+last_built: 2025-04-12T10:37Z
+urls:
+  reference: https://Ziwei-ChenChen.github.io/savvyGLM/reference
+  article: https://Ziwei-ChenChen.github.io/savvyGLM/articles
