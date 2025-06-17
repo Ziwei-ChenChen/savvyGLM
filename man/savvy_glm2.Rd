@@ -5,7 +5,7 @@
 \title{Generalized Linear Models with Slab and Shrinkage Estimators}
 \usage{
 savvy_glm2(formula, family = gaussian, data, weights,
-               model_class = c("St", "DSh", "SR", "GSR"), subset,
+               model_class = c("St", "DSh", "SR", "GSR", "Sh"), subset,
                na.action, start = NULL, etastart, mustart, offset,
                control = list(...), model = TRUE,
                method = "savvy_glm.fit2", x = FALSE, y = TRUE,
@@ -64,7 +64,7 @@ The value returned by \code{savvy_glm2} has exactly the same structure as that r
 \description{
 \code{savvy_glm2} extends the classical \code{glm2} function from the \code{glm2} package by embedding a set of shrinkage-based methods within the iteratively reweighted least squares (IRLS) algorithm.
 These shrinkage methods (implemented via \code{savvy_glm.fit2}) are designed to improve convergence and estimation accuracy.
-The user can specify one or more methods through the \code{model_class} argument. When multiple methods are provided (default is \code{c("St", "DSh", "SR", "GSR")}),
+The user can specify one or more methods through the \code{model_class} argument. When multiple methods are provided (default is \code{c("St", "DSh", "SR", "GSR", "Sh")}),
 the function can evaluate them in parallel (controlled by the \code{use_parallel} argument) and selects the final model based on criterion.
 }
 \details{

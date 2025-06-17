@@ -86,7 +86,7 @@ The incorporation of these shrinkage estimators aims to improve convergence prop
 \strong{Shrinkage Estimators Used in the IRLS Algorithm:}
 \describe{
   \item{\strong{Stein Estimator (St)}}{
-    \enumerate{
+    \itemize{
       \item Computes a single multiplicative shrinkage factor applied uniformly to all coefficients.
       \item The factor is chosen to minimize the overall mean squared error (MSE) of the OLS estimator.
       \item Best suited when the predictors are similarly scaled so that uniform shrinkage is appropriate.
@@ -94,7 +94,7 @@ The incorporation of these shrinkage estimators aims to improve convergence prop
   }
 
   \item{\strong{Diagonal Shrinkage (DSh)}}{
-    \enumerate{
+    \itemize{
       \item Extends the Stein estimator by calculating an individual shrinkage factor for each coefficient.
       \item Each factor is derived from the magnitude and variance of the corresponding coefficient.
       \item Provides enhanced flexibility when predictor scales or contributions differ.
@@ -102,7 +102,7 @@ The incorporation of these shrinkage estimators aims to improve convergence prop
   }
 
   \item{\strong{Simple Slab Regression (SR)}}{
-    \enumerate{
+    \itemize{
       \item Penalizes the projection of the OLS estimator along a fixed, predefined direction.
       \item Uses a closed-form solution under a slab (fixed-penalty) constraint.
       \item Suitable when prior information suggests shrinking the coefficients along a known direction.
@@ -110,7 +110,7 @@ The incorporation of these shrinkage estimators aims to improve convergence prop
   }
 
   \item{\strong{Generalized Slab Regression (GSR)}}{
-    \enumerate{
+    \itemize{
       \item Generalizes SR by incorporating multiple, data-adaptive shrinkage directions.
       \item Typically employs the leading eigenvectors of the design matrix as the directions.
       \item Provides adaptive regularization that effectively handles multicollinearity.
@@ -118,7 +118,7 @@ The incorporation of these shrinkage estimators aims to improve convergence prop
   }
 
   \item{\strong{Shrinkage Estimator (Sh)}}{
-    \enumerate{
+    \itemize{
       \item Computes a non-diagonal shrinkage matrix by solving a \emph{Sylvester equation}.
       \item Transforms the OLS estimator to achieve a lower mean squared error.
       \item This estimator is evaluated only when \code{"Sh"} is explicitly included in the \code{model_class} argument.

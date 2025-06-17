@@ -189,38 +189,38 @@ the deviance is used uniformly as the model-selection criterion instead.</p>
 and iteratively updates the coefficients using the chosen shrinkage method(s).
 The incorporation of these shrinkage estimators aims to improve convergence properties and to yield more stable or parsimonious models under various data scenarios.
 <strong>Shrinkage Estimators Used in the IRLS Algorithm:</strong></p><dl><dt><strong>Stein Estimator (St)</strong></dt>
-<dd><p></p><ol><li><p>Computes a single multiplicative shrinkage factor applied uniformly to all coefficients.</p></li>
+<dd><p></p><ul><li><p>Computes a single multiplicative shrinkage factor applied uniformly to all coefficients.</p></li>
 <li><p>The factor is chosen to minimize the overall mean squared error (MSE) of the OLS estimator.</p></li>
 <li><p>Best suited when the predictors are similarly scaled so that uniform shrinkage is appropriate.</p></li>
-</ol><p></p></dd>
+</ul><p></p></dd>
 
 
   <dt><strong>Diagonal Shrinkage (DSh)</strong></dt>
-<dd><p></p><ol><li><p>Extends the Stein estimator by calculating an individual shrinkage factor for each coefficient.</p></li>
+<dd><p></p><ul><li><p>Extends the Stein estimator by calculating an individual shrinkage factor for each coefficient.</p></li>
 <li><p>Each factor is derived from the magnitude and variance of the corresponding coefficient.</p></li>
 <li><p>Provides enhanced flexibility when predictor scales or contributions differ.</p></li>
-</ol><p></p></dd>
+</ul><p></p></dd>
 
 
   <dt><strong>Simple Slab Regression (SR)</strong></dt>
-<dd><p></p><ol><li><p>Penalizes the projection of the OLS estimator along a fixed, predefined direction.</p></li>
+<dd><p></p><ul><li><p>Penalizes the projection of the OLS estimator along a fixed, predefined direction.</p></li>
 <li><p>Uses a closed-form solution under a slab (fixed-penalty) constraint.</p></li>
 <li><p>Suitable when prior information suggests shrinking the coefficients along a known direction.</p></li>
-</ol><p></p></dd>
+</ul><p></p></dd>
 
 
   <dt><strong>Generalized Slab Regression (GSR)</strong></dt>
-<dd><p></p><ol><li><p>Generalizes SR by incorporating multiple, data-adaptive shrinkage directions.</p></li>
+<dd><p></p><ul><li><p>Generalizes SR by incorporating multiple, data-adaptive shrinkage directions.</p></li>
 <li><p>Typically employs the leading eigenvectors of the design matrix as the directions.</p></li>
 <li><p>Provides adaptive regularization that effectively handles multicollinearity.</p></li>
-</ol><p></p></dd>
+</ul><p></p></dd>
 
 
   <dt><strong>Shrinkage Estimator (Sh)</strong></dt>
-<dd><p></p><ol><li><p>Computes a non-diagonal shrinkage matrix by solving a <em>Sylvester equation</em>.</p></li>
+<dd><p></p><ul><li><p>Computes a non-diagonal shrinkage matrix by solving a <em>Sylvester equation</em>.</p></li>
 <li><p>Transforms the OLS estimator to achieve a lower mean squared error.</p></li>
 <li><p>This estimator is evaluated only when <code>"Sh"</code> is explicitly included in the <code>model_class</code> argument.</p></li>
-</ol><p></p></dd>
+</ul><p></p></dd>
 
 
 </dl></div>

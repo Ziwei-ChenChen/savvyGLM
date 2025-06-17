@@ -259,7 +259,7 @@ test_that("Handling offsets", {
   x <- matrix(rnorm(n * p), n, p)
   y <- rbinom(n, 1, prob = 0.5)
   offset <- runif(n)
-  fit <- suppressWarnings(savvy_glm2(y ~ ., family = binomial(link = "logit"), data = data.frame(y, x), offset = offset))
+  fit <- suppressWarnings(savvy_glm2(y ~ ., model_class = c("Sh"), family = binomial(link = "logit"), data = data.frame(y, x), offset = offset))
 
   expect_true(is.numeric(fit$coefficients), info = "Coefficients should be numeric")
   expect_true(is.character(fit$chosen_fit), info = "Chosen fitting method should be character")
