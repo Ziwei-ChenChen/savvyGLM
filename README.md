@@ -4,7 +4,7 @@ The `savvyGLM` package offers a complete framework for fitting shrinkage estimat
 
 This package builds on theoretical work discussed in:
 
-Asimit, V., Chen, Z., Dimitrova, D., Xie, Y., & Zhang, Y. (2025). [Shrinkage GLM Modeling](http//...).
+Asimit, V., Chen, Z., Dimitrova, D., Xie, Y., & Zhang, Y. (2025). [Shrinkage GLM Modeling](https://openaccess.city.ac.uk/id/eprint/35099/).
 
 The official documentation site is available at: <https://Ziwei-ChenChen.github.io/savvyGLM>
 
