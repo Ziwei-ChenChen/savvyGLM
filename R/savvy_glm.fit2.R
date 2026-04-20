@@ -4,48 +4,55 @@ utils::globalVariables("n", add = TRUE)
 #'
 #' @description
 #' \code{savvy_glm.fit2} is a modified version of \code{glm.fit} that enhances the standard iteratively reweighted least squares (IRLS) algorithm by incorporating a set of shrinkage estimator functions.
-#' These functions (namely \code{St_ost}, \code{DSh_ost}, \code{SR_ost}, \code{GSR_ost}, and optionally \code{Sh_ost}) provide alternative coefficient updates based on shrinkage principles.
-#' The function allows the user to select one or more of these methods via the \code{model_class} argument.
+#' These functions (namely \code{St_ost}, \code{DSh_ost}, \code{SR_ost}, \code{GSR_ost}, \code{LW_est}, \code{QIS_est}, and optionally \code{Sh_ost}) provide alternative coefficient updates based on shrinkage principles.
+#' The function allows the user to select one or more of these methods via the \code{model_class} argument. Additionally, it optionally implements a robust optimization-based method to find starting values for fragile link functions.
 #'
 #' @usage savvy_glm.fit2(x, y, weights = rep(1, nobs),
-#'                         model_class = c("St", "DSh", "SR", "GSR", "Sh"),
+#'                         model_class = c("St", "DSh", "SR", "GSR", "LW", "QIS", "Sh"),
 #'                         start = NULL, etastart = NULL, mustart = NULL,
 #'                         offset = rep(0, nobs), family = gaussian(),
 #'                         control = list(), intercept = TRUE,
-#'                         use_parallel = TRUE)
+#'                         use_parallel = TRUE, use_robust_start = FALSE)
 #'
 #' @param x A numeric matrix of predictors. As for \code{\link{glm.fit}}.
 #' @param y A numeric vector of responses. As for \code{\link{glm.fit}}.
 #' @param weights An optional vector of weights to be used in the fitting process. As for \code{\link{glm.fit}}.
 #' @param model_class A character vector specifying the shrinkage model(s) to be used.
-#' Allowed values are \code{"St"}, \code{"DSh"}, \code{"SR"}, \code{"GSR"}, and \code{"Sh"}.
+#' Allowed values are \code{"St"}, \code{"DSh"}, \code{"SR"}, \code{"GSR"}, \code{"LW"}, \code{"QIS"}, and \code{"Sh"}.
 #' If a single value is provided, only that method is run. If multiple values are provided,
 #' the function runs the specified methods in parallel (if \code{use_parallel = TRUE}) and returns the best one based on Akaike Information Criterion (AIC).
-#' When the user does not explicitly supply a value for \code{model_class}, the default is \code{c("St", "DSh", "SR", "GSR")} (i.e. \code{"Sh"} is not considered).
-#' @param start Starting values for the parameters. As for \code{\link{glm.fit}}.
+#' When the user does not explicitly supply a value for \code{model_class}, the default is \code{c("St", "DSh", "SR", "GSR", "LW", "QIS")} (i.e. \code{"Sh"} is not considered).
+#' @param start Starting values for the parameters. As for \code{\link{glm.fit}}. If \code{NULL} and \code{use_robust_start = TRUE}, robust starting values may be calculated automatically (see Details).
 #' @param etastart Starting values for the linear predictor. As for \code{\link{glm.fit}}.
 #' @param mustart Starting values for the mean. As for \code{\link{glm.fit}}.
 #' @param offset An optional offset to be included in the model. As for \code{\link{glm.fit}}.
 #' @param family A description of the error distribution and link function to be used in the model. As for \code{\link{glm.fit}}.
 #' @param control A list of parameters for controlling the fitting process. As for \code{\link{glm.fit}}.
-#' @param intercept A logical value indicating whether an intercept should be included in the model, defalut is \code{TRUE}. As for \code{\link{glm.fit}}.
+#' @param intercept A logical value indicating whether an intercept should be included in the model, default is \code{TRUE}. As for \code{\link{glm.fit}}.
 #' @param use_parallel Logical. If \code{TRUE}, enables parallel execution of the fitting process.
 #'   Defaults to \code{TRUE}. Set to \code{FALSE} for serial execution.
+#' @param use_robust_start Logical. If \code{TRUE}, uses an optimization-based approach (via the \pkg{CVXR} package) to calculate robust starting values for fragile link functions (e.g., "log", "sqrt"). Defaults to \code{FALSE} to save computational time, as standard initialization works well for most typical datasets.
 #'
 #' @details
 #' \code{savvy_glm.fit2} extends the classical Generalized Linear Model (GLM) fitting procedure by evaluating a collection of shrinkage‐based updates during each iteration of the IRLS algorithm.
-#' When multiple shrinkage methods are specified in \code{model_class} (the default is \code{c("St", "DSh", "SR", "GSR")}, thereby excluding \code{"Sh"} unless explicitly provided),
-#' if the user explicitly includes \code{"Sh"} (for example, \code{model_class = c("St", "DSh", "SR", "GSR", "Sh")} or \code{model_class = c("St", "Sh")}),
+#' When multiple shrinkage methods are specified in \code{model_class} (the default is \code{c("St", "DSh", "SR", "GSR", "LW", "QIS")}, thereby excluding \code{"Sh"} unless explicitly provided),
+#' if the user explicitly includes \code{"Sh"} (for example, \code{model_class = c("St", "DSh", "SR", "GSR", "LW", "QIS", "Sh")} or \code{model_class = c("St", "Sh")}),
 #' then the method \code{Sh_ost} is also evaluated.
 #'
 #' The function can run these candidate methods in parallel (if \code{use_parallel = TRUE}). The final model is selected based on the lowest AIC.
 #' In cases where any candidate model returns an \code{NA} or non-finite AIC (which may occur when using quasi-likelihood families),
 #' the deviance is used uniformly as the model-selection criterion instead.
 #'
-#' In essence, the function starts with initial estimates (via \code{start}, \code{etastart}, or \code{mustart})
+#' \strong{Robust Starting Values:}
+#' In situations where the user does not provide \code{start}, \code{etastart}, or \code{mustart}, and the chosen \code{family} utilizes a fragile link function
+#' (specifically \code{"log"}, \code{"sqrt"}, \code{"inverse"}, \code{"1/mu^2"}, or bounded links like \code{"logit"}), standard GLM initialization can lead to infinite deviance or immediate divergence.
+#' If \code{use_robust_start = TRUE}, \code{savvy_glm.fit2} employs a novel, data-driven optimization approach using the \pkg{CVXR} package to calculate stable starting coefficients (\code{start}).
+#' This process minimizes the squared difference between the linear predictor and a safely transformed target mean, enforcing positivity constraints strictly when required by the link function.
+#'
+#' In essence, the function starts with initial estimates (either robustly generated or user-supplied)
 #' and iteratively updates the coefficients using the chosen shrinkage method(s).
 #' The incorporation of these shrinkage estimators aims to improve convergence properties and to yield more stable or parsimonious models under various data scenarios.
-
+#'
 #' \strong{Shrinkage Estimators Used in the IRLS Algorithm:}
 #' \describe{
 #'   \item{\strong{Stein Estimator (St)}}{
@@ -77,6 +84,22 @@ utils::globalVariables("n", add = TRUE)
 #'       \item Generalizes SR by incorporating multiple, data-adaptive shrinkage directions.
 #'       \item Typically employs the leading eigenvectors of the design matrix as the directions.
 #'       \item Provides adaptive regularization that effectively handles multicollinearity.
+#'     }
+#'   }
+#'
+#'   \item{\strong{Ledoit-Wolf Linear Shrinkage (LW)}}{
+#'     \itemize{
+#'       \item Implements linear shrinkage towards a one-parameter matrix where all variances are equal and all covariances are zero.
+#'       \item Provides a well-conditioned estimator for large-dimensional covariance matrices.
+#'       \item Based on the methodology of Ledoit and Wolf (2004b).
+#'     }
+#'   }
+#'
+#'   \item{\strong{Quadratic-Inverse Shrinkage (QIS)}}{
+#'     \itemize{
+#'       \item A nonlinear shrinkage estimator derived under Frobenius loss, Inverse Stein's loss, and Minimum Variance loss.
+#'       \item Highly effective for large covariance matrices.
+#'       \item Based on the quadratic shrinkage approach of Ledoit and Wolf (2022).
 #'     }
 #'   }
 #'
@@ -124,6 +147,12 @@ utils::globalVariables("n", add = TRUE)
 #' Asimit, V., Cidota, M. A., Chen, Z., & Asimit, J. (2025). \emph{Slab and Shrinkage Linear Regression Estimation}.
 #' Retrieved from \url{https://openaccess.city.ac.uk/id/eprint/35005/}.
 #'
+#' Ledoit, O. and Wolf, M. (2004b). \emph{A well-conditioned estimator for large-dimensional covariance matrices}.
+#' Journal of Multivariate Analysis, 88(2):365–411.
+#'
+#' Ledoit, O. and Wolf, M. (2022). \emph{Quadratic shrinkage for large covariance matrices}.
+#' Bernoulli, 28(3): 1519-1547.
+#'
 #' SavvyGLM article. \url{https://ziwei-chenchen.github.io/savvyGLM}.
 #'
 #' @importFrom stats model.matrix model.response gaussian binomial poisson
@@ -134,24 +163,59 @@ utils::globalVariables("n", add = TRUE)
 #' @importFrom parallel mclapply makeCluster parLapply stopCluster detectCores
 #' @importFrom Matrix rankMatrix Schur
 #' @importFrom stats lm coef predict
+#' @importFrom CVXR Variable Minimize Problem solve sum_squares
 #'
 #' @seealso
 #' \code{\link{glm.fit}}, \code{\link{glm}}, \code{\link{glm.fit2}}
 #'
 #' @keywords models regression
 #'
+#' @examples
+#' # Example 1: Standard Poisson regression with log link
+#' set.seed(123)
+#' n <- 100
+#' p <- 5
+#' X <- cbind(1, matrix(rnorm(n * p), n, p))
+#' true_beta <- c(0.5, -0.2, 0.1, 0, 0, 0)
+#'
+#' mu <- exp(X %*% true_beta)
+#' y <- rpois(n, lambda = mu)
+#'
+#' # Fit using savvy_glm.fit2 with the Stein (St) estimator
+#' fit1 <- savvy_glm.fit2(x = X, y = y,
+#'                        family = poisson(link = "log"),
+#'                        model_class = "St")
+#'
+#' print(fit1$coefficients)
+#'
+#' # Example 2: Demonstrating Robust Starting Values for a Quadratic Link
+#' eta <- abs(X %*% true_beta) + 1
+#' mu_quad <- eta^2
+#'
+#' # Generate Poisson data using the quadratic mean
+#' y_quad <- rpois(n, lambda = mu_quad)
+#' fit2 <- savvy_glm.fit2(x = X, y = y_quad,
+#'                        family = poisson(link = "sqrt"),
+#'                        model_class = c("SR", "St", "LW"),
+#'                        use_robust_start = TRUE)
+#'
+#' print(fit2$chosen_fit)
+#' print(fit2$coefficients)
+#'
 #' @export
 savvy_glm.fit2 <- function (x, y, weights = rep(1, nobs),
-                             model_class = c("St", "DSh", "SR", "GSR", "Sh"),
-                             start = NULL, etastart = NULL, mustart = NULL,
-                             offset = rep(0, nobs), family = gaussian(), control = list(),
-                             intercept = TRUE, use_parallel = TRUE) {
+                            model_class = c("St", "DSh", "SR", "GSR", "LW", "QIS", "Sh"),
+                            start = NULL, etastart = NULL, mustart = NULL,
+                            offset = rep(0, nobs), family = gaussian(), control = list(),
+                            intercept = TRUE, use_parallel = TRUE, use_robust_start = FALSE) {
 
   start_time <- Sys.time()
   control <- do.call("glm.control", control)
 
   x <- as.matrix(x)
   xnames <- dimnames(x)[[2L]]
+  if(is.null(xnames)) xnames <- paste0("V", seq_len(ncol(x)))
+
   ynames <- if (is.matrix(y)) rownames(y) else names(y)
   nobs <- NROW(y)
   nvars <- ncol(x)
@@ -169,6 +233,64 @@ savvy_glm.fit2 <- function (x, y, weights = rep(1, nobs),
   unless.null <- function(x, if.null) if (is.null(x)) if.null else x
   valideta <- unless.null(family$valideta, function(eta) TRUE)
   validmu <- unless.null(family$validmu, function(mu) TRUE)
+
+  ##------------- Handle Starting Values Before Initialization -----------
+  if (use_robust_start && is.null(start) && is.null(etastart) && is.null(mustart)) {
+    needs_robust_start <- FALSE
+    fragile_links <- c("log", "sqrt", "inverse", "1/mu^2", "logit", "probit", "cauchit", "cloglog")
+    is_custom_power <- grepl("^mu\\^", family$link)
+    if (family$link %in% fragile_links || is_custom_power) {
+      needs_robust_start <- TRUE
+    } else if (family$link == "identity" && family$family %in% c("Gamma", "inverse.gaussian", "poisson", "quasipoisson", "quasi")) {
+      needs_robust_start <- TRUE
+    }
+    if (needs_robust_start) {
+      if (!requireNamespace("CVXR", quietly = TRUE))
+        stop("CVXR package is required for finding robust starting values.")
+      findStartingValuesOpt <- function(x, target, constraint_type = "none", epsilon = 1e-4) {
+        beta_var <- CVXR::Variable(ncol(x))
+        eta_var  <- x %*% beta_var
+        objective <- CVXR::Minimize(CVXR::sum_squares(target - eta_var))
+        constraints <- list()
+        if (constraint_type == "positive") {
+          constraints <- list(eta_var >= epsilon)
+        }
+        problem <- CVXR::Problem(objective, constraints)
+        result <- CVXR::solve(problem, solver = "SCS",
+                              reltol = 1e-7, abstol = 1e-7, feastol = 1e-7,
+                              silent = TRUE)
+        val <- result$getValue(beta_var)
+        if (is.null(val) || any(is.na(val))) {
+          fallback <- rep(0, ncol(x))
+          fallback[1] <- mean(target, na.rm = TRUE)
+          if (constraint_type == "positive" && fallback[1] <= epsilon) {
+            fallback[1] <- max(0.1, epsilon)
+          }
+          return(fallback)
+        }
+        return(as.numeric(val))
+      }
+      y_adj <- y
+      if ((family$link %in% c("log", "1/mu^2") || is_custom_power) && any(y <= 0)) y_adj <- pmax(y, 0.1)
+      if (family$link == "sqrt" && any(y < 0)) y_adj <- pmax(y, 0)
+      if (family$link == "inverse" && any(y == 0)) y_adj <- y + 0.1
+      if (family$link == "identity" && any(y <= 0) && family$family %in% c("Gamma", "inverse.gaussian", "poisson", "quasipoisson", "quasi")) y_adj <- pmax(y, 0.1)
+      if (family$link %in% c("logit", "probit", "cauchit", "cloglog")) {
+        y_adj <- (y + 0.5) / 2
+      }
+      eta_target <- family$linkfun(y_adj)
+      c_type <- "none"
+      if (family$link %in% c("sqrt", "1/mu^2", "inverse") || is_custom_power) {
+        c_type <- "positive"
+      } else if (family$link == "identity" && family$family %in% c("Gamma", "inverse.gaussian", "poisson", "quasipoisson", "quasi")) {
+        c_type <- "positive"
+      }
+
+      start <- findStartingValuesOpt(x, eta_target, constraint_type = c_type, epsilon = 1e-4)
+    }
+  }
+
+  ##------------- Standard Initialization -----------
   if (is.null(mustart)) {
     eval(family$initialize)
   } else {
@@ -176,8 +298,10 @@ savvy_glm.fit2 <- function (x, y, weights = rep(1, nobs),
     eval(family$initialize)
     mustart <- mukeep
   }
+
   chosen_fit <- NULL
   best_fit <- list()
+
   if (EMPTY) {
     eta <- rep.int(0, nobs) + offset
     if (!valideta(eta))
@@ -195,6 +319,7 @@ savvy_glm.fit2 <- function (x, y, weights = rep(1, nobs),
     coef <- numeric()
     iter <- 0L
   } else {
+
     coefold <- NULL
     eta <- if (!is.null(etastart))
       etastart
@@ -208,6 +333,7 @@ savvy_glm.fit2 <- function (x, y, weights = rep(1, nobs),
       offset + as.vector(if (NCOL(x) == 1L) x * start else x %*% start)
     }
     else family$linkfun(mustart)
+
     mu <- linkinv(eta)
     if (!(validmu(mu) && valideta(eta)))
       stop("cannot find valid starting values: please specify some",
@@ -217,12 +343,12 @@ savvy_glm.fit2 <- function (x, y, weights = rep(1, nobs),
 
     ##------------- THE Iteratively Reweighted L.S. iteration -----------
     if (missing(model_class)) {
-      model_class <- c("St", "DSh", "SR", "GSR")
+      model_class <- c("St", "DSh", "SR", "GSR", "LW", "QIS")
     }
-    all_fit_functions <- list("St" = St_ost, "DSh" = DSh_ost, "SR" = SR_ost, "GSR" = GSR_ost, "Sh" = Sh_ost)
+    all_fit_functions <- list("St" = St_ost, "DSh" = DSh_ost, "SR" = SR_ost, "GSR" = GSR_ost, "LW" = LW_est, "QIS" = QIS_est, "Sh" = Sh_ost)
     model_class <- match.arg(model_class, choices = names(all_fit_functions), several.ok = TRUE)
     if (!("Sh" %in% model_class)) {
-      all_fit_functions <- all_fit_functions[c("St", "DSh", "SR", "GSR")]
+      all_fit_functions <- all_fit_functions[c("St", "DSh", "SR", "GSR", "LW", "QIS")]
     }
     fit_functions <- all_fit_functions[model_class]
     fit_names <- names(fit_functions)
@@ -266,9 +392,23 @@ savvy_glm.fit2 <- function (x, y, weights = rep(1, nobs),
           }
           z <- (eta - offset)[good] + (y - mu)[good] / mu.eta.val[good]
           w <- sqrt((weights[good] * mu.eta.val[good]^2) / variance(mu)[good])
+          if (any(!is.finite(z)) || any(!is.finite(w)) || any(w > 1e10)) {
+            conv <- FALSE
+            warnings <- c(warnings, sprintf("non-finite or extreme weights at iteration %d", iter))
+            break
+          }
           fit_coefficients <- fit_func(x[good, , drop = FALSE] * w, z * w)
+          if (all(is.na(fit_coefficients))) {
+            conv <- FALSE
+            warnings <- c(warnings, sprintf("fit mathematically failed at iteration %d", iter))
+            break
+          }
           fit_coefficients[is.na(fit_coefficients)] <- 0
-
+          if (any(!is.finite(fit_coefficients))) {
+            conv <- FALSE
+            warnings <- c(warnings, sprintf("non-finite coefficients at iteration %d", iter))
+            break
+          }
           X_good <- x[good, , drop = FALSE] * w
           QR_decomp <- qr(X_good)
           fit_rank <- QR_decomp$rank
@@ -392,7 +532,8 @@ savvy_glm.fit2 <- function (x, y, weights = rep(1, nobs),
              fit_name = fit_name)
       }, error = function(e) {
         errors <- c(errors, e$message)
-        list(aic = Inf, errors = errors)
+        # CRITICAL FIX 1: Safely return explicit dev = Inf to prevent index loss
+        list(aic = Inf, dev = Inf, errors = errors)
       })
       result
     }
@@ -424,19 +565,29 @@ savvy_glm.fit2 <- function (x, y, weights = rep(1, nobs),
         fit_model_parallel(fit_functions[[i]], fit_names[i])
       })
     }
+
+    # CRITICAL FIX 2: Use safe sapply to guarantee extraction keeps original list length
     aics <- sapply(results, function(res) {
-      if (is.na(res$aic) || !is.finite(res$aic)) NA_real_ else res$aic
+      if (is.null(res$aic) || is.na(res$aic) || !is.finite(res$aic)) Inf else res$aic
     })
-    if (any(is.na(aics))) {
-      criteria <- unlist(lapply(results, function(res) as.numeric(res$dev)))
+
+    if (any(is.infinite(aics))) {
+      criteria <- sapply(results, function(res) {
+        if (is.null(res$dev) || is.na(res$dev) || !is.finite(res$dev)) Inf else as.numeric(res$dev)
+      })
     } else {
       criteria <- aics
     }
-    if (all(is.na(criteria) | !is.finite(criteria))) {
+
+    if (all(is.infinite(criteria))) {
       combined_errors <- unlist(lapply(results, function(res) res$errors))
-      stop("No valid set of coefficients found for any fitting function. Errors encountered:\n",
-           paste(combined_errors, collapse = "\n"))
+      if (length(combined_errors) == 0) combined_errors <- "Unknown mathematical divergence."
+      stop("No valid set of coefficients found for any fitting function.\n",
+           "Suggestion: Try setting 'use_robust_start = TRUE' to safely initialize the model.\n",
+           "Errors encountered:\n",
+           paste(unique(combined_errors), collapse = "\n"))
     }
+
     best_result <- results[[which.min(criteria)]]
 
     best_fit <- list(coefficients = best_result$coef,
@@ -558,5 +709,4 @@ savvy_glm.fit2 <- function (x, y, weights = rep(1, nobs),
        time = elapsed_time,
        chosen_fit = chosen_fit)
 }
-
 

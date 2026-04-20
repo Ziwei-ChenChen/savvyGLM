@@ -94,7 +94,7 @@ test_that("Different control parameters", {
   y <- rbinom(n, 1, prob = 0.5)
   data <- data.frame(y, x)
   fit <- suppressWarnings(savvy_glm2(y ~ ., family = binomial(link = "logit"), data = data,
-                                      model_class = c("SR", "St"), control = glm.control(epsilon = 1e-8, maxit = 100)))
+                                     model_class = c("SR", "St"), control = glm.control(epsilon = 1e-8, maxit = 100)))
 
   expect_true(is.numeric(fit$coefficients), info = "Coefficients should be numeric")
   expect_true(is.character(fit$chosen_fit), info = "Chosen fitting method should be character")
@@ -134,23 +134,32 @@ test_that("Different link functions for Gaussian family", {
   n <- 100
   p <- 5
   x <- matrix(rnorm(n * p), n, p)
-  y <- rnorm(n)
+  y <- rnorm(n) # Contains negative values
 
+  # 1. Identity Link (Works with negative y)
   fit_identity <- suppressWarnings(savvy_glm2(y ~ ., family = gaussian(link = "identity"), data = data.frame(y, x)))
   expect_true(is.numeric(fit_identity$coefficients), info = "Coefficients should be numeric for identity link")
   expect_true(fit_identity$converged, info = "Model should converge for identity link")
 
-  fit_log <- suppressWarnings(try(savvy_glm2(y ~ ., family = gaussian(link = "log"),
-                                              data = data.frame(y, x)), silent = TRUE))
+  # 2. Log Link (Requires positive y for stability)
+  # FIX: Generate strictly positive data for this specific test case
+  y_pos <- exp(rnorm(n))
+
+  fit_log <- suppressWarnings(try(savvy_glm2(y_pos ~ ., family = gaussian(link = "log"),
+                                             data = data.frame(y_pos, x)), silent = TRUE))
+
   if (inherits(fit_log, "try-error")) {
-    expect_error(savvy_glm2(y ~ ., family = gaussian(link = "log"), data = data.frame(y, x), model_class = c("SR","GSR", "St")),
+    # If it fails, check if it's the expected error (though now it should succeed with robust start)
+    expect_error(savvy_glm2(y_pos ~ ., family = gaussian(link = "log"), data = data.frame(y_pos, x), model_class = c("SR","GSR", "St")),
                  "cannot find valid starting values: please specify some",
                  info = "Error expected for log link due to invalid starting values")
   } else {
+    # If it succeeds, check convergence
     expect_true(is.numeric(fit_log$coefficients), info = "Coefficients should be numeric for log link")
     expect_true(fit_log$converged, info = "Model should converge for log link")
   }
 
+  # 3. Inverse Link
   fit_inverse <- suppressWarnings(savvy_glm2(y ~ ., family = gaussian(link = "inverse"), data = data.frame(y, x)))
   expect_true(is.numeric(fit_inverse$coefficients), info = "Coefficients should be numeric for inverse link")
   expect_true(fit_inverse$converged, info = "Model should converge for inverse link")
@@ -484,7 +493,7 @@ test_that("savvy_glm2 processes valid method argument and control options", {
   data <- data.frame(y, x)
 
   fit <- suppressWarnings(savvy_glm2(y ~ x1 + x2, family = poisson(),
-                                         data = data, model_class = "DSh", method = "savvy_glm.fit2"))
+                                     data = data, model_class = "DSh", method = "savvy_glm.fit2"))
 
   expect_s3_class(fit, "glm")
   expect_equal(fit$method, "savvy_glm.fit2")

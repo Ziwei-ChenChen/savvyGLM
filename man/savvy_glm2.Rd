@@ -5,11 +5,11 @@
 \title{Generalized Linear Models with Slab and Shrinkage Estimators}
 \usage{
 savvy_glm2(formula, family = gaussian, data, weights,
-               model_class = c("St", "DSh", "SR", "GSR", "Sh"), subset,
-               na.action, start = NULL, etastart, mustart, offset,
-               control = list(...), model = TRUE,
-               method = "savvy_glm.fit2", x = FALSE, y = TRUE,
-               contrasts = NULL, use_parallel = TRUE, ...)
+                model_class = c("St", "DSh", "SR", "GSR", "Sh"), subset,
+                na.action, start = NULL, etastart, mustart, offset,
+                control = list(...), model = TRUE,
+                method = "savvy_glm.fit2", x = FALSE, y = TRUE,
+                contrasts = NULL, use_parallel = TRUE, ...)
 }
 \arguments{
 \item{formula}{An object of class "formula": a symbolic description of the model to be fitted. As for \code{\link{glm2}}.}
@@ -29,7 +29,7 @@ By default, the value is \code{c("St", "DSh", "SR", "GSR")}; note that the \code
 
 \item{na.action}{A function which indicates what should happen when the data contain NAs. As for \code{\link{glm2}}.}
 
-\item{start}{Starting values for the parameters in the linear predictor. As for \code{\link{glm2}}.}
+\item{start}{Starting values for the parameters in the linear predictor. As for \code{\link{glm2}}. If \code{NULL}, robust optimization-based starting values may be calculated automatically for fragile link functions (see Details).}
 
 \item{etastart}{Starting values for the linear predictor. As for \code{\link{glm2}}.}
 
@@ -74,7 +74,43 @@ within the IRLS algorithm. The function begins with initial parameter estimates 
 specified shrinkage methods. When multiple methods are specified in \code{model_class}, they may be evaluated in parallel (if
 \code{use_parallel = TRUE}), and the final model is selected based on the lowest AIC. In cases where any candidate model returns an \code{NA}
 or non-finite AIC (such as when using quasi-likelihood families), the deviance is used uniformly as the selection criterion.
-This approach ensures that the chosen model represents the best trade-off between fit and complexity given the data and the specified family.
+
+\strong{Robust Starting Values:}
+In situations where the user does not provide \code{start}, \code{etastart}, or \code{mustart}, and the chosen \code{family} utilizes specific link functions
+(such as \code{"log"}, \code{"sqrt"}, \code{"inverse"}, or \code{"logit"}), standard GLM initialization can sometimes lead to infinite deviance or divergence.
+To prevent this, the underlying \code{savvy_glm.fit2} automatically employs a data-driven optimization approach using the \pkg{CVXR} package to calculate stable starting coefficients.
+}
+\examples{
+# Example 1: Standard Logistic Regression
+set.seed(123)
+n <- 200
+p <- 5
+X <- matrix(rnorm(n * p), n, p)
+colnames(X) <- paste0("X", 1:p)
+
+linear_predictor <- X \%*\% c(0.5, -0.5, 0.2, 0, 0)
+prob <- 1 / (1 + exp(-linear_predictor))
+y <- rbinom(n, 1, prob)
+
+df <- data.frame(y = y, X)
+fit1 <- savvy_glm2(y ~ ., data = df,
+                   family = binomial(link = "logit"),
+                   model_class = c("St", "DSh"))
+print(fit1$chosen_fit)
+print(coef(fit1))
+
+# Example 2: Demonstrating Robust Starting Values for a Quadratic Link
+eta <- abs(X \%*\% c(0.5, -0.2, 0.1, 0, 0)) + 1
+mu_quad <- eta^2
+y_quad <- rpois(n, lambda = mu_quad)
+df_quad <- data.frame(y = y_quad, X)
+
+fit2 <- savvy_glm2(y ~ ., data = df_quad,
+                   family = poisson(link = "sqrt"),
+                   model_class = c("SR", "St"))
+print(fit2$chosen_fit)
+print(coef(fit2))
+
 }
 \references{
 Marschner, I. C. (2011). \emph{glm2: Fitting Generalized Linear Models with Convergence Problems}.

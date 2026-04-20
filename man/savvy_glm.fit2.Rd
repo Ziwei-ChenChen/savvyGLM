@@ -5,11 +5,11 @@
 \title{Generalized Linear Models Fitting with Slab and Shrinkage Estimators}
 \usage{
 savvy_glm.fit2(x, y, weights = rep(1, nobs),
-                        model_class = c("St", "DSh", "SR", "GSR", "Sh"),
+                        model_class = c("St", "DSh", "SR", "GSR", "LW", "QIS", "Sh"),
                         start = NULL, etastart = NULL, mustart = NULL,
                         offset = rep(0, nobs), family = gaussian(),
                         control = list(), intercept = TRUE,
-                        use_parallel = TRUE)
+                        use_parallel = TRUE, use_robust_start = FALSE)
 }
 \arguments{
 \item{x}{A numeric matrix of predictors. As for \code{\link{glm.fit}}.}
@@ -19,12 +19,12 @@ savvy_glm.fit2(x, y, weights = rep(1, nobs),
 \item{weights}{An optional vector of weights to be used in the fitting process. As for \code{\link{glm.fit}}.}
 
 \item{model_class}{A character vector specifying the shrinkage model(s) to be used.
-Allowed values are \code{"St"}, \code{"DSh"}, \code{"SR"}, \code{"GSR"}, and \code{"Sh"}.
+Allowed values are \code{"St"}, \code{"DSh"}, \code{"SR"}, \code{"GSR"}, \code{"LW"}, \code{"QIS"}, and \code{"Sh"}.
 If a single value is provided, only that method is run. If multiple values are provided,
 the function runs the specified methods in parallel (if \code{use_parallel = TRUE}) and returns the best one based on Akaike Information Criterion (AIC).
-When the user does not explicitly supply a value for \code{model_class}, the default is \code{c("St", "DSh", "SR", "GSR")} (i.e. \code{"Sh"} is not considered).}
+When the user does not explicitly supply a value for \code{model_class}, the default is \code{c("St", "DSh", "SR", "GSR", "LW", "QIS")} (i.e. \code{"Sh"} is not considered).}
 
-\item{start}{Starting values for the parameters. As for \code{\link{glm.fit}}.}
+\item{start}{Starting values for the parameters. As for \code{\link{glm.fit}}. If \code{NULL} and \code{use_robust_start = TRUE}, robust starting values may be calculated automatically (see Details).}
 
 \item{etastart}{Starting values for the linear predictor. As for \code{\link{glm.fit}}.}
 
@@ -36,10 +36,12 @@ When the user does not explicitly supply a value for \code{model_class}, the def
 
 \item{control}{A list of parameters for controlling the fitting process. As for \code{\link{glm.fit}}.}
 
-\item{intercept}{A logical value indicating whether an intercept should be included in the model, defalut is \code{TRUE}. As for \code{\link{glm.fit}}.}
+\item{intercept}{A logical value indicating whether an intercept should be included in the model, default is \code{TRUE}. As for \code{\link{glm.fit}}.}
 
 \item{use_parallel}{Logical. If \code{TRUE}, enables parallel execution of the fitting process.
 Defaults to \code{TRUE}. Set to \code{FALSE} for serial execution.}
+
+\item{use_robust_start}{Logical. If \code{TRUE}, uses an optimization-based approach (via the \pkg{CVXR} package) to calculate robust starting values for fragile link functions (e.g., "log", "sqrt"). Defaults to \code{FALSE} to save computational time, as standard initialization works well for most typical datasets.}
 }
 \value{
 The value returned by \code{savvy_glm.fit2} has the same structure as the value returned by \code{glm.fit}. It includes the following components:
@@ -67,22 +69,29 @@ The value returned by \code{savvy_glm.fit2} has the same structure as the value 
 }
 \description{
 \code{savvy_glm.fit2} is a modified version of \code{glm.fit} that enhances the standard iteratively reweighted least squares (IRLS) algorithm by incorporating a set of shrinkage estimator functions.
-These functions (namely \code{St_ost}, \code{DSh_ost}, \code{SR_ost}, \code{GSR_ost}, and optionally \code{Sh_ost}) provide alternative coefficient updates based on shrinkage principles.
-The function allows the user to select one or more of these methods via the \code{model_class} argument.
+These functions (namely \code{St_ost}, \code{DSh_ost}, \code{SR_ost}, \code{GSR_ost}, \code{LW_est}, \code{QIS_est}, and optionally \code{Sh_ost}) provide alternative coefficient updates based on shrinkage principles.
+The function allows the user to select one or more of these methods via the \code{model_class} argument. Additionally, it optionally implements a robust optimization-based method to find starting values for fragile link functions.
 }
 \details{
 \code{savvy_glm.fit2} extends the classical Generalized Linear Model (GLM) fitting procedure by evaluating a collection of shrinkage‐based updates during each iteration of the IRLS algorithm.
-When multiple shrinkage methods are specified in \code{model_class} (the default is \code{c("St", "DSh", "SR", "GSR")}, thereby excluding \code{"Sh"} unless explicitly provided),
-if the user explicitly includes \code{"Sh"} (for example, \code{model_class = c("St", "DSh", "SR", "GSR", "Sh")} or \code{model_class = c("St", "Sh")}),
+When multiple shrinkage methods are specified in \code{model_class} (the default is \code{c("St", "DSh", "SR", "GSR", "LW", "QIS")}, thereby excluding \code{"Sh"} unless explicitly provided),
+if the user explicitly includes \code{"Sh"} (for example, \code{model_class = c("St", "DSh", "SR", "GSR", "LW", "QIS", "Sh")} or \code{model_class = c("St", "Sh")}),
 then the method \code{Sh_ost} is also evaluated.
 
 The function can run these candidate methods in parallel (if \code{use_parallel = TRUE}). The final model is selected based on the lowest AIC.
 In cases where any candidate model returns an \code{NA} or non-finite AIC (which may occur when using quasi-likelihood families),
 the deviance is used uniformly as the model-selection criterion instead.
 
-In essence, the function starts with initial estimates (via \code{start}, \code{etastart}, or \code{mustart})
+\strong{Robust Starting Values:}
+In situations where the user does not provide \code{start}, \code{etastart}, or \code{mustart}, and the chosen \code{family} utilizes a fragile link function
+(specifically \code{"log"}, \code{"sqrt"}, \code{"inverse"}, \code{"1/mu^2"}, or bounded links like \code{"logit"}), standard GLM initialization can lead to infinite deviance or immediate divergence.
+If \code{use_robust_start = TRUE}, \code{savvy_glm.fit2} employs a novel, data-driven optimization approach using the \pkg{CVXR} package to calculate stable starting coefficients (\code{start}).
+This process minimizes the squared difference between the linear predictor and a safely transformed target mean, enforcing positivity constraints strictly when required by the link function.
+
+In essence, the function starts with initial estimates (either robustly generated or user-supplied)
 and iteratively updates the coefficients using the chosen shrinkage method(s).
 The incorporation of these shrinkage estimators aims to improve convergence properties and to yield more stable or parsimonious models under various data scenarios.
+
 \strong{Shrinkage Estimators Used in the IRLS Algorithm:}
 \describe{
   \item{\strong{Stein Estimator (St)}}{
@@ -117,6 +126,22 @@ The incorporation of these shrinkage estimators aims to improve convergence prop
     }
   }
 
+  \item{\strong{Ledoit-Wolf Linear Shrinkage (LW)}}{
+    \itemize{
+      \item Implements linear shrinkage towards a one-parameter matrix where all variances are equal and all covariances are zero.
+      \item Provides a well-conditioned estimator for large-dimensional covariance matrices.
+      \item Based on the methodology of Ledoit and Wolf (2004b).
+    }
+  }
+
+  \item{\strong{Quadratic-Inverse Shrinkage (QIS)}}{
+    \itemize{
+      \item A nonlinear shrinkage estimator derived under Frobenius loss, Inverse Stein's loss, and Minimum Variance loss.
+      \item Highly effective for large covariance matrices.
+      \item Based on the quadratic shrinkage approach of Ledoit and Wolf (2022).
+    }
+  }
+
   \item{\strong{Shrinkage Estimator (Sh)}}{
     \itemize{
       \item Computes a non-diagonal shrinkage matrix by solving a \emph{Sylvester equation}.
@@ -126,6 +151,39 @@ The incorporation of these shrinkage estimators aims to improve convergence prop
   }
 }
 }
+\examples{
+# Example 1: Standard Poisson regression with log link
+set.seed(123)
+n <- 100
+p <- 5
+X <- cbind(1, matrix(rnorm(n * p), n, p))
+true_beta <- c(0.5, -0.2, 0.1, 0, 0, 0)
+
+mu <- exp(X \%*\% true_beta)
+y <- rpois(n, lambda = mu)
+
+# Fit using savvy_glm.fit2 with the Stein (St) estimator
+fit1 <- savvy_glm.fit2(x = X, y = y,
+                       family = poisson(link = "log"),
+                       model_class = "St")
+
+print(fit1$coefficients)
+
+# Example 2: Demonstrating Robust Starting Values for a Quadratic Link
+eta <- abs(X \%*\% true_beta) + 1
+mu_quad <- eta^2
+
+# Generate Poisson data using the quadratic mean
+y_quad <- rpois(n, lambda = mu_quad)
+fit2 <- savvy_glm.fit2(x = X, y = y_quad,
+                       family = poisson(link = "sqrt"),
+                       model_class = c("SR", "St", "LW"),
+                       use_robust_start = TRUE)
+
+print(fit2$chosen_fit)
+print(fit2$coefficients)
+
+}
 \references{
 Marschner, I. C. (2011). \emph{glm2: Fitting Generalized Linear Models with Convergence Problems}.
 The R Journal, 3(2), 12–15. doi:10.32614/RJ-2011-012. Available at:
@@ -133,6 +191,12 @@ The R Journal, 3(2), 12–15. doi:10.32614/RJ-2011-012. Available at:
 
 Asimit, V., Cidota, M. A., Chen, Z., & Asimit, J. (2025). \emph{Slab and Shrinkage Linear Regression Estimation}.
 Retrieved from \url{https://openaccess.city.ac.uk/id/eprint/35005/}.
+
+Ledoit, O. and Wolf, M. (2004b). \emph{A well-conditioned estimator for large-dimensional covariance matrices}.
+Journal of Multivariate Analysis, 88(2):365–411.
+
+Ledoit, O. and Wolf, M. (2022). \emph{Quadratic shrinkage for large covariance matrices}.
+Bernoulli, 28(3): 1519-1547.
 
 SavvyGLM article. \url{https://ziwei-chenchen.github.io/savvyGLM}.
 }

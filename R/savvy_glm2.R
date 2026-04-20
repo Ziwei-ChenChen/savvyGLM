@@ -7,11 +7,11 @@
 #' the function can evaluate them in parallel (controlled by the \code{use_parallel} argument) and selects the final model based on criterion.
 #'
 #' @usage savvy_glm2(formula, family = gaussian, data, weights,
-#'                model_class = c("St", "DSh", "SR", "GSR", "Sh"), subset,
-#'                na.action, start = NULL, etastart, mustart, offset,
-#'                control = list(...), model = TRUE,
-#'                method = "savvy_glm.fit2", x = FALSE, y = TRUE,
-#'                contrasts = NULL, use_parallel = TRUE, ...)
+#'                 model_class = c("St", "DSh", "SR", "GSR", "Sh"), subset,
+#'                 na.action, start = NULL, etastart, mustart, offset,
+#'                 control = list(...), model = TRUE,
+#'                 method = "savvy_glm.fit2", x = FALSE, y = TRUE,
+#'                 contrasts = NULL, use_parallel = TRUE, ...)
 #'
 #' @param formula An object of class "formula": a symbolic description of the model to be fitted. As for \code{\link{glm2}}.
 #' @param family A description of the error distribution and link function to be used in the model. As for \code{\link{glm2}}.
@@ -23,7 +23,7 @@
 #' By default, the value is \code{c("St", "DSh", "SR", "GSR")}; note that the \code{"Sh"} method is considered only if explicitly included.
 #' @param subset An optional vector specifying a subset of observations to be used in the fitting process. As for \code{\link{glm2}}.
 #' @param na.action A function which indicates what should happen when the data contain NAs. As for \code{\link{glm2}}.
-#' @param start Starting values for the parameters in the linear predictor. As for \code{\link{glm2}}.
+#' @param start Starting values for the parameters in the linear predictor. As for \code{\link{glm2}}. If \code{NULL}, robust optimization-based starting values may be calculated automatically for fragile link functions (see Details).
 #' @param etastart Starting values for the linear predictor. As for \code{\link{glm2}}.
 #' @param mustart Starting values for the vector of means. As for \code{\link{glm2}}.
 #' @param offset An optional vector specifying a priori known component to be included in the linear predictor during fitting. As for \code{\link{glm2}}.
@@ -46,7 +46,11 @@
 #' specified shrinkage methods. When multiple methods are specified in \code{model_class}, they may be evaluated in parallel (if
 #' \code{use_parallel = TRUE}), and the final model is selected based on the lowest AIC. In cases where any candidate model returns an \code{NA}
 #' or non-finite AIC (such as when using quasi-likelihood families), the deviance is used uniformly as the selection criterion.
-#' This approach ensures that the chosen model represents the best trade-off between fit and complexity given the data and the specified family.
+#'
+#' \strong{Robust Starting Values:}
+#' In situations where the user does not provide \code{start}, \code{etastart}, or \code{mustart}, and the chosen \code{family} utilizes specific link functions
+#' (such as \code{"log"}, \code{"sqrt"}, \code{"inverse"}, or \code{"logit"}), standard GLM initialization can sometimes lead to infinite deviance or divergence.
+#' To prevent this, the underlying \code{savvy_glm.fit2} automatically employs a data-driven optimization approach using the \pkg{CVXR} package to calculate stable starting coefficients.
 #'
 #' @return The value returned by \code{savvy_glm2} has exactly the same structure as that returned by \code{glm2}, except for:
 #' \item{method}{the name of the fitter function used, which by default is \code{savvy_glm.fit2}.}
@@ -76,13 +80,44 @@
 #'
 #' @seealso \code{\link{glm}}, \code{\link{glm2}}, \code{\link{savvy_glm.fit2}}
 #'
+#' @examples
+#' # Example 1: Standard Logistic Regression
+#' set.seed(123)
+#' n <- 200
+#' p <- 5
+#' X <- matrix(rnorm(n * p), n, p)
+#' colnames(X) <- paste0("X", 1:p)
+#'
+#' linear_predictor <- X %*% c(0.5, -0.5, 0.2, 0, 0)
+#' prob <- 1 / (1 + exp(-linear_predictor))
+#' y <- rbinom(n, 1, prob)
+#'
+#' df <- data.frame(y = y, X)
+#' fit1 <- savvy_glm2(y ~ ., data = df,
+#'                    family = binomial(link = "logit"),
+#'                    model_class = c("St", "DSh"))
+#' print(fit1$chosen_fit)
+#' print(coef(fit1))
+#'
+#' # Example 2: Demonstrating Robust Starting Values for a Quadratic Link
+#' eta <- abs(X %*% c(0.5, -0.2, 0.1, 0, 0)) + 1
+#' mu_quad <- eta^2
+#' y_quad <- rpois(n, lambda = mu_quad)
+#' df_quad <- data.frame(y = y_quad, X)
+#'
+#' fit2 <- savvy_glm2(y ~ ., data = df_quad,
+#'                    family = poisson(link = "sqrt"),
+#'                    model_class = c("SR", "St"))
+#' print(fit2$chosen_fit)
+#' print(coef(fit2))
+#'
 #' @export
 savvy_glm2 <- function(formula, family = gaussian, data, weights,
-                        model_class = c("St", "DSh", "SR", "GSR", "Sh"), subset,
-                        na.action, start = NULL, etastart, mustart, offset,
-                        control = list(...), model = TRUE,
-                        method = "savvy_glm.fit2", x = FALSE, y = TRUE,
-                        contrasts = NULL, use_parallel = TRUE, ...) {
+                       model_class = c("St", "DSh", "SR", "GSR", "Sh"), subset,
+                       na.action, start = NULL, etastart, mustart, offset,
+                       control = list(...), model = TRUE,
+                       method = "savvy_glm.fit2", x = FALSE, y = TRUE,
+                       contrasts = NULL, use_parallel = TRUE, ...) {
   call <- match.call()
   if (is.character(family))
     family <- get(family, mode = "function", envir = parent.frame())
@@ -166,3 +201,5 @@ savvy_glm2 <- function(formula, family = gaussian, data, weights,
   class(fit) <- c(fit$class, c("glm", "lm"))
   fit
 }
+
+

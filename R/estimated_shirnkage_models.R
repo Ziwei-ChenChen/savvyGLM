@@ -168,4 +168,109 @@ Sh_ost <- function(x, y) {
   as.vector(C_star %*% est)
 }
 
+# LW (2004)
+cov1Para <- function(Y, k = -1) {
+  dim.Y <- dim(Y)
+  N <- dim.Y[1]
+  p <- dim.Y[2]
+  if (k < 0) {    # demean the data and set k = 1
+    Y <- scale(Y, scale = F)
+    k <- 1
+  }
+  n <- N - k    # effective sample size
+  c <- p / n    # concentration ratio
+  sample <- (t(Y) %*% Y) / n
+
+  # compute shrinkage target
+  meanvar <- mean(diag(sample))
+  target <- meanvar * diag(p)
+
+  # estimate the parameter that we call pi in Ledoit and Wolf (2003, JEF)
+  Y2 <- Y^2
+  sample2 <- (t(Y2) %*% Y2) / n
+  piMat <- sample2 - sample^2
+  pihat <- sum(piMat)
+
+  # estimate the parameter that we call gamma in Ledoit and Wolf (2003, JEF)
+  gammahat <- norm(c(sample - target), type = "2")^2
+
+  # diagonal part of the parameter that we call rho
+  rho_diag <- 0
+
+  # off-diagonal part of the parameter that we call rho
+  rho_off <- 0
+
+  # compute shrinkage intensity
+  rhohat <- rho_diag + rho_off
+  kappahat <- (pihat - rhohat) / gammahat
+  shrinkage <- max(0, min(1, kappahat / n))
+
+  # compute shrinkage estimator
+  sigmahat <- shrinkage * target + (1 - shrinkage) * sample
+}
+
+
+LW_est <- function(x, y) {
+  Sigma_LW <- cov1Para(x, k = 0)
+  N <- nrow(x)
+  XY <- crossprod(x, y) / N
+  beta <- tryCatch({
+    solve(Sigma_LW, XY)
+  }, error = function(e) {
+    MASS::ginv(Sigma_LW) %*% XY
+  })
+  return(as.vector(beta))
+}
+
+# QIS: LW (2022)
+rep_row <- function(x, n){
+  matrix(rep(x, each = n), nrow = n)
+}
+
+qis <- function(Y, k = -1) {
+  dim.Y <- dim(Y)
+  N <- dim.Y[1]
+  p <- dim.Y[2]
+  if (k < 0) {    # demean the data and set k = 1
+    Y <- scale(Y, scale = F)
+    k <- 1
+  }
+  n <- N - k    # effective sample size
+  c <- p / n    # concentration ratio
+  sample <- (t(Y) %*% Y) / n    # sample covariance matrix
+  sample <- (t(sample) + sample) / 2   # enforce symmetry (even more)
+  spectral <- eigen(sample, symmetric = T)    # spectral decompositon
+  lambda <- spectral$values[p:1]    # sort eigenvalues in ascending order
+  u <- spectral$vectors[,p:1]    # eigenvectors follow their eigenvalues
+  h <- min(c^2, 1/c^2)^0.35 / p^0.35    # smoothing parameter
+  invlambda <- 1 / lambda[max(1, p-n+1):p]    # inverse of non-null eigenvalues
+  Lj <- rep_row(invlambda, min(p, n))    # like 1 / lambda_j
+  Lj.i <- Lj - t(Lj)    # like (1 / lambda_j) - (1 / lambda_i)
+  theta <- rowMeans(Lj * Lj.i / (Lj.i^2 + h^2 * Lj^2))    # smoothed Stein shrinker
+  Htheta <- rowMeans(Lj * (h * Lj) / (Lj.i^2 + h^2 * Lj^2)) # its conjugate
+  Atheta2 <- theta^2 + Htheta^2    # its squared amplitude
+  if (p <= n)    # case where sample covariance matrix is not singular
+    delta <- 1 / ((1 - c)^2 * invlambda + 2 * c * (1 - c) * invlambda * theta +
+                    c^2 * invlambda * Atheta2)           # optimally shrunk eigenvalues
+  else {    # case where sample covariance matrix is singular
+    delta0 <- 1 / ((c - 1) * mean(invlambda))     # shrinkage of null eigenvalues
+    delta <- c(rep(delta0, p - n), 1 / (invlambda * Atheta2));
+  }
+  deltaQIS <- delta * (sum(lambda) / sum(delta))    # preserve trace
+  sigmahat <- u %*% diag(deltaQIS) %*% t(u)    #reconstruct covariance matrix
+}
+
+
+QIS_est <- function(x, y) {
+  Sigma_QIS <- qis(x, k = 0)
+  N <- nrow(x)
+  XY <- crossprod(x, y) / N
+  beta <- tryCatch({
+    solve(Sigma_QIS, XY)
+  }, error = function(e) {
+    MASS::ginv(Sigma_QIS) %*% XY
+  })
+  return(as.vector(beta))
+}
+
 
