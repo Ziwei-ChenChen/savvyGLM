@@ -12,7 +12,7 @@ utils::globalVariables("n", add = TRUE)
 #'                         start = NULL, etastart = NULL, mustart = NULL,
 #'                         offset = rep(0, nobs), family = gaussian(),
 #'                         control = list(), intercept = TRUE,
-#'                         use_parallel = TRUE, use_robust_start = FALSE)
+#'                         use_parallel = FALSE, use_robust_start = FALSE)
 #'
 #' @param x A numeric matrix of predictors. As for \code{\link{glm.fit}}.
 #' @param y A numeric vector of responses. As for \code{\link{glm.fit}}.
@@ -34,7 +34,7 @@ utils::globalVariables("n", add = TRUE)
 #' @param use_robust_start Logical. If \code{TRUE}, uses an optimization-based approach (via the \pkg{CVXR} package) to calculate robust starting values for fragile link functions (e.g., "log", "sqrt"). Defaults to \code{FALSE} to save computational time, as standard initialization works well for most typical datasets.
 #'
 #' @details
-#' \code{savvy_glm.fit2} extends the classical Generalized Linear Model (GLM) fitting procedure by evaluating a collection of shrinkage‐based updates during each iteration of the IRLS algorithm.
+#' \code{savvy_glm.fit2} extends the classical Generalized Linear Model (GLM) fitting procedure by evaluating a collection of shrinkage-based updates during each iteration of the IRLS algorithm.
 #' When multiple shrinkage methods are specified in \code{model_class} (the default is \code{c("St", "DSh", "SR", "GSR", "LW", "QIS")}, thereby excluding \code{"Sh"} unless explicitly provided),
 #' if the user explicitly includes \code{"Sh"} (for example, \code{model_class = c("St", "DSh", "SR", "GSR", "LW", "QIS", "Sh")} or \code{model_class = c("St", "Sh")}),
 #' then the method \code{Sh_ost} is also evaluated.
@@ -55,61 +55,33 @@ utils::globalVariables("n", add = TRUE)
 #'
 #' \strong{Shrinkage Estimators Used in the IRLS Algorithm:}
 #' \describe{
-#'   \item{\strong{Stein Estimator (St)}}{
-#'     \itemize{
-#'       \item Computes a single multiplicative shrinkage factor applied uniformly to all coefficients.
-#'       \item The factor is chosen to minimize the overall mean squared error (MSE) of the OLS estimator.
-#'       \item Best suited when the predictors are similarly scaled so that uniform shrinkage is appropriate.
-#'     }
-#'   }
+#'   \item{\strong{Stein Estimator (St)}}{Computes a single multiplicative shrinkage factor applied uniformly to all coefficients. 
+#'   The factor is chosen to minimize the overall mean squared error (MSE) of the OLS estimator. It is best suited when the 
+#'   predictors are similarly scaled so that uniform shrinkage is appropriate.}
 #'
-#'   \item{\strong{Diagonal Shrinkage (DSh)}}{
-#'     \itemize{
-#'       \item Extends the Stein estimator by calculating an individual shrinkage factor for each coefficient.
-#'       \item Each factor is derived from the magnitude and variance of the corresponding coefficient.
-#'       \item Provides enhanced flexibility when predictor scales or contributions differ.
-#'     }
-#'   }
+#'   \item{\strong{Diagonal Shrinkage (DSh)}}{Extends the Stein estimator by calculating an individual shrinkage factor for each coefficient. 
+#'   Each factor is derived from the magnitude and variance of the corresponding coefficient, providing enhanced flexibility when 
+#'   predictor scales or contributions differ.}
 #'
-#'   \item{\strong{Simple Slab Regression (SR)}}{
-#'     \itemize{
-#'       \item Penalizes the projection of the OLS estimator along a fixed, predefined direction.
-#'       \item Uses a closed-form solution under a slab (fixed-penalty) constraint.
-#'       \item Suitable when prior information suggests shrinking the coefficients along a known direction.
-#'     }
-#'   }
+#'   \item{\strong{Simple Slab Regression (SR)}}{Penalizes the projection of the OLS estimator along a fixed, predefined direction. 
+#'   It uses a closed-form solution under a slab (fixed-penalty) constraint, making it suitable when prior information suggests 
+#'   shrinking the coefficients along a known direction.}
 #'
-#'   \item{\strong{Generalized Slab Regression (GSR)}}{
-#'     \itemize{
-#'       \item Generalizes SR by incorporating multiple, data-adaptive shrinkage directions.
-#'       \item Typically employs the leading eigenvectors of the design matrix as the directions.
-#'       \item Provides adaptive regularization that effectively handles multicollinearity.
-#'     }
-#'   }
+#'   \item{\strong{Generalized Slab Regression (GSR)}}{Generalizes SR by incorporating multiple, data-adaptive shrinkage directions. 
+#'   It typically employs the leading eigenvectors of the design matrix as the directions, providing adaptive regularization that 
+#'   effectively handles multicollinearity.}
 #'
-#'   \item{\strong{Ledoit-Wolf Linear Shrinkage (LW)}}{
-#'     \itemize{
-#'       \item Implements linear shrinkage towards a one-parameter matrix where all variances are equal and all covariances are zero.
-#'       \item Provides a well-conditioned estimator for large-dimensional covariance matrices.
-#'       \item Based on the methodology of Ledoit and Wolf (2004b).
-#'     }
-#'   }
+#'   \item{\strong{Ledoit-Wolf Linear Shrinkage (LW)}}{Implements linear shrinkage towards a one-parameter matrix where all variances 
+#'   are equal and all covariances are zero. This provides a well-conditioned estimator for large-dimensional covariance matrices, 
+#'   based on the methodology of Ledoit and Wolf (2004b).}
 #'
-#'   \item{\strong{Quadratic-Inverse Shrinkage (QIS)}}{
-#'     \itemize{
-#'       \item A nonlinear shrinkage estimator derived under Frobenius loss, Inverse Stein's loss, and Minimum Variance loss.
-#'       \item Highly effective for large covariance matrices.
-#'       \item Based on the quadratic shrinkage approach of Ledoit and Wolf (2022).
-#'     }
-#'   }
+#'   \item{\strong{Quadratic-Inverse Shrinkage (QIS)}}{A nonlinear shrinkage estimator derived under Frobenius loss, Inverse Stein's loss, 
+#'   and Minimum Variance loss. It is highly effective for large covariance matrices and is based on the quadratic shrinkage approach 
+#'   of Ledoit and Wolf (2022).}
 #'
-#'   \item{\strong{Shrinkage Estimator (Sh)}}{
-#'     \itemize{
-#'       \item Computes a non-diagonal shrinkage matrix by solving a \emph{Sylvester equation}.
-#'       \item Transforms the OLS estimator to achieve a lower mean squared error.
-#'       \item This estimator is evaluated only when \code{"Sh"} is explicitly included in the \code{model_class} argument.
-#'     }
-#'   }
+#'   \item{\strong{Shrinkage Estimator (Sh)}}{Computes a non-diagonal shrinkage matrix by solving a \emph{Sylvester equation}. 
+#'   It transforms the OLS estimator to achieve a lower mean squared error. This estimator is evaluated only when \code{"Sh"} is 
+#'   explicitly included in the \code{model_class} argument.}
 #' }
 #'
 #' @return
@@ -136,13 +108,15 @@ utils::globalVariables("n", add = TRUE)
 #' \item{time}{the time taken for the fitting process.}
 #' \item{chosen_fit}{the name of the chosen fitting method based on AIC.}
 #'
-#' @author Ziwei Chen and Vali Asimit\cr
-#' Maintainer: Ziwei Chen <ziwei.chen.3@citystgeorges.ac.uk>
+#' @author Ziwei Chen, Vali Asimit and Claudio Senatore\cr
+#' Maintainer: Ziwei Chen <Ziwei.Chen.3@citystgeorges.ac.uk>
 #'
 #' @references
 #' Marschner, I. C. (2011). \emph{glm2: Fitting Generalized Linear Models with Convergence Problems}.
 #' The R Journal, 3(2), 12–15. doi:10.32614/RJ-2011-012. Available at:
 #' \url{https://doi.org/10.32614/RJ-2011-012}.
+#'
+#' Asimit, V., Avramescu, O., Chen, Z., Rivas, D., & Senatore, C. (2026). \emph{GLM Solutions via Shrinkage}.
 #'
 #' Asimit, V., Cidota, M. A., Chen, Z., & Asimit, J. (2025). \emph{Slab and Shrinkage Linear Regression Estimation}.
 #' Retrieved from \url{https://openaccess.city.ac.uk/id/eprint/35005/}.
@@ -153,8 +127,6 @@ utils::globalVariables("n", add = TRUE)
 #' Ledoit, O. and Wolf, M. (2022). \emph{Quadratic shrinkage for large covariance matrices}.
 #' Bernoulli, 28(3): 1519-1547.
 #'
-#' SavvyGLM article. \url{https://ziwei-chenchen.github.io/savvyGLM}.
-#'
 #' @importFrom stats model.matrix model.response gaussian binomial poisson
 #' @importFrom MASS ginv
 #' @importFrom expm "%^%"
@@ -163,10 +135,10 @@ utils::globalVariables("n", add = TRUE)
 #' @importFrom parallel mclapply makeCluster parLapply stopCluster detectCores
 #' @importFrom Matrix rankMatrix Schur
 #' @importFrom stats lm coef predict
-#' @importFrom CVXR Variable Minimize Problem solve sum_squares
+#' @importFrom CVXR Variable Minimize Problem psolve sum_squares value
 #'
-#' @seealso
-#' \code{\link{glm.fit}}, \code{\link{glm}}, \code{\link{glm.fit2}}
+#' @seealso 
+#' \code{\link[stats]{glm.fit}}, \code{\link[stats]{glm}}, \code{\link[glm2]{glm.fit2}}
 #'
 #' @keywords models regression
 #'
@@ -197,6 +169,7 @@ utils::globalVariables("n", add = TRUE)
 #' fit2 <- savvy_glm.fit2(x = X, y = y_quad,
 #'                        family = poisson(link = "sqrt"),
 #'                        model_class = c("SR", "St", "LW"),
+#'                        use_parallel = TRUE,
 #'                        use_robust_start = TRUE)
 #'
 #' print(fit2$chosen_fit)
@@ -207,7 +180,7 @@ savvy_glm.fit2 <- function (x, y, weights = rep(1, nobs),
                             model_class = c("St", "DSh", "SR", "GSR", "LW", "QIS", "Sh"),
                             start = NULL, etastart = NULL, mustart = NULL,
                             offset = rep(0, nobs), family = gaussian(), control = list(),
-                            intercept = TRUE, use_parallel = TRUE, use_robust_start = FALSE) {
+                            intercept = TRUE, use_parallel = FALSE, use_robust_start = FALSE) {
 
   start_time <- Sys.time()
   control <- do.call("glm.control", control)
@@ -256,10 +229,14 @@ savvy_glm.fit2 <- function (x, y, weights = rep(1, nobs),
           constraints <- list(eta_var >= epsilon)
         }
         problem <- CVXR::Problem(objective, constraints)
-        result <- CVXR::solve(problem, solver = "SCS",
-                              reltol = 1e-7, abstol = 1e-7, feastol = 1e-7,
-                              silent = TRUE)
-        val <- result$getValue(beta_var)
+        tryCatch({
+          CVXR::psolve(problem, solver = "SCS",
+                       reltol = 1e-7, abstol = 1e-7, feastol = 1e-7,
+                       silent = TRUE)
+        }, error = function(e) NULL)
+        val <- tryCatch({
+          CVXR::value(beta_var)
+        }, error = function(e) NULL)
         if (is.null(val) || any(is.na(val))) {
           fallback <- rep(0, ncol(x))
           fallback[1] <- mean(target, na.rm = TRUE)
@@ -542,7 +519,8 @@ savvy_glm.fit2 <- function (x, y, weights = rep(1, nobs),
     if (identical(Sys.getenv("_R_CHECK_PACKAGE_NAME_"), "savvyGLM")) {
       use_parallel <- FALSE
     }
-    if (use_parallel && length(fit_functions) > 1) {
+    is_large_enough <- (nobs > 500) || (nvars > 50)
+    if (use_parallel && length(fit_functions) > 1 && is_large_enough) {
       if (.Platform$OS.type == "windows") {
         cl <- parallel::makeCluster(num_cores)
         parallel::clusterExport(cl,

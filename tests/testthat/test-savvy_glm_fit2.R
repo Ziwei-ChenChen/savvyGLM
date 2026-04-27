@@ -461,7 +461,7 @@ test_that("Custom Power link function handling via Quasi family", {
   x <- matrix(abs(rnorm(n * p)), n, p)
   y <- rpois(n, lambda = 5) + 1
 
-  custom_family <- quasi(link = power(-2), variance = "mu")
+  custom_family <- quasi(link = stats::power(-2), variance = "mu")
   fit <- suppressWarnings(savvy_glm.fit2(cbind(1, x), y, model_class = "DSh", family = custom_family, use_robust_start = TRUE))
   expect_true(is.numeric(fit$coefficients), info = "Coefficients should be numeric for custom power(-2) link")
 })
