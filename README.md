@@ -1,14 +1,16 @@
 # savvyGLM: Shrinkage Methods for Generalized Linear Models
 
-The `savvyGLM` package offers a complete framework for fitting shrinkage estimators in *generalized linear models (GLMs)*. It integrates several shrinkage methods into the *Iteratively Reweighted Least Squares (IRLS)* algorithm to improve both convergence and estimation accuracy, particularly when standard maximum likelihood estimation is challenged by issues like multicollinearity or a high number of predictors. Shrinkage estimators introduce a small bias that produces a large reduction in variance, making the IRLS estimates more reliable than those based solely on the traditional OLS update. For further details on the shrinkage estimators employed in this package, please refer to [*Slab and Shrinkage Linear Regression Estimation*](https://openaccess.city.ac.uk/id/eprint/35005/).
+The `savvyGLM` package offers a complete framework for fitting shrinkage estimators in *generalized linear models (GLMs)*. It integrates several shrinkage methods into the *Iteratively Reweighted Least Squares (IRLS)* algorithm to improve both convergence and estimation accuracy, particularly when standard maximum likelihood estimation is challenged by issues like multicollinearity or a high number of predictors. Shrinkage estimators introduce a small bias that produces a large reduction in variance, making the IRLS estimates more reliable than those based solely on the traditional OLS update.
+
+For further details on the core shrinkage estimators employed in this package, please refer to [*Slab and Shrinkage Linear Regression Estimation*](https://openaccess.city.ac.uk/id/eprint/35005/).
 
 This package builds on theoretical work discussed in:
 
-Asimit, V., Chen, Z., Dimitrova, D., Xie, Y., & Zhang, Y. (2025). [Shrinkage GLM Modeling](https://openaccess.city.ac.uk/id/eprint/35099/).
+Asimit, V., Avramescu, O., Chen, Z., Rivas, D., & Senatore, C. (2026). *GLM Solutions via Shrinkage*.
 
-The official documentation site is available at: <https://Ziwei-ChenChen.github.io/savvyGLM>
+The official documentation site is available at: <https://Ziwei-ChenChen.github.io/savvyGLM/>
 
-If you are interested in applying shrinkage methods within linear regression, please refer to the companion package [`savvySh`](https://github.com/Ziwei-ChenChen/savvySh).
+If you are interested in applying shrinkage methods within standard linear regression, please refer to the companion package [`savvySh`](https://CRAN.R-project.org/package=savvySh).
 
 ## Installation Guide
 
@@ -28,15 +30,19 @@ library(savvyGLM)
 
 The package supports several shrinkage approaches within IRLS algorithm, including:
 
--   **Stein Estimator (St):** Applies a single shrinkage factor to all coefficients.
+- **Stein Estimator (St):** Applies a single shrinkage factor to all coefficients.
 
--   **Diagonal Shrinkage (DSh):** Applies separate shrinkage factors to each coefficient.
+- **Diagonal Shrinkage (DSh):** Applies separate shrinkage factors to each coefficient.
 
--   **Slab Regression (SR):** Adds a penalty that shrinks the solution along a fixed direction.
+- **Slab Regression (SR):** Adds a penalty that shrinks the solution along a fixed direction.
 
--   **Generalized Slab Regression (GSR):** Extends SR by allowing shrinkage along multiple directions.
+- **Generalized Slab Regression (GSR):** Extends SR by allowing shrinkage along multiple directions.
 
--   **Shrinkage Estimator (Sh):** Uses a full shrinkage matrix estimated by solving a *Sylvester equation*. This method is optional due to its higher computational cost.
+- **Ledoit-Wolf Linear Shrinkage (LW):** Implements linear shrinkage towards a well-conditioned, one-parameter target matrix.
+
+- **Quadratic-Inverse Shrinkage (QIS):** A high-performance nonlinear shrinkage estimator for large covariance matrices.
+
+- **Shrinkage Estimator (Sh):** Uses a full shrinkage matrix estimated by solving a *Sylvester equation*. This method is optional due to its higher computational cost.
 
 These methods build on the robust features of the `glm2` package—such as step-halving—to further enhance the performance of GLMs.
 
@@ -80,7 +86,7 @@ fit <- savvy_glm.fit2(
   x = cbind(1, x),
   y = y,
   family = inverse.gaussian(link = "log"),
-  model_class = c("SR", "DSh"),
+  model_class = c("SR", "DSh", "LW"),
   control = glm.control(trace = TRUE)
 )
 coef(fit)
@@ -101,10 +107,10 @@ print(fit$chosen_fit)
 
 ## Authors
 
--   Ziwei Chen – [ziwei.chen.3\@citystgeorges.ac.uk](ziwei.chen.3@citystgeorges.ac.uk)
-
--   Vali Asimit – [asimit\@citystgeorges.ac.uk](asimit@citystgeorges.ac.uk)
+- Ziwei Chen – [ziwei.chen.3\@citystgeorges.ac.uk](mailto:Ziwei.Chen.3@citystgeorges.ac.uk)
+- Vali Asimit – [asimit\@citystgeorges.ac.uk](mailto:asimit@citystgeorges.ac.uk)
+- Claudio Senatore – [Claudio.Senatore\@sas.com](mailto:Claudio.Senatore@sas.com)
 
 ## License
 
-This package is licensed under the MIT License.
+This package is licensed under the GPL (\>= 3) License.
