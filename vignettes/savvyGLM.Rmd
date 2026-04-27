@@ -31,10 +31,6 @@ In summary, our package modifies `glm.fit2` from `glm2` to:
 
 -   Employ parallelization when multiple candidate methods are specified.
 
-For more details, please see:
-
-Asimit, V., Chen, Z., Dimitrova, D., Xie, Y., & Zhang, Y. (2025). [Shrinkage GLM Modeling](http//...).
-
 ## Main Features
 
 `savvyGLM` provides five classes of shrinkage methods for GLMs, although by default four are evaluated unless the user explicitly includes `Sh`(since Sh is time-consuming):
@@ -48,9 +44,9 @@ Asimit, V., Chen, Z., Dimitrova, D., Xie, Y., & Zhang, Y. (2025). [Shrinkage GLM
 ## Key Argument and Output Summary
 
 | **Argument** | **Description** | **Default** |
-|------------------------|------------------------|------------------------|
-| `x` | A numeric matrix of predictors. As for [`glm.fit`](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/glm.fit.html). | **No default; user must supply.** |
-| `y` | A numeric vector of responses. As for [`glm.fit`](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/glm.fit.html). | **No default; user must supply.** |
+|---------------|-------------------------------------------|---------------|
+| `x` | A numeric matrix of predictors. As for [`glm.fit`](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/glm.html). | **No default; user must supply.** |
+| `y` | A numeric vector of responses. As for [`glm.fit`](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/glm.html). | **No default; user must supply.** |
 | `weights` | An optional vector of weights to be used in the fitting process. | `rep(1, nobs)` |
 | `model_class` | A character vector specifying the shrinkage model(s) to be used. Allowed values are `"St"`, `"DSh"`, `"SR"`, `"GSR"`, and `"Sh"`. If multiple values are given, they are run in parallel and the best is chosen by AIC. If `"Sh"` is not included, it is omitted from the evaluation. | `c("St", "DSh", "SR", "GSR")` |
 | `start`, `etastart`, `mustart` | Optional starting values for the parameters, the linear predictor, and the mean, respectively. | `NULL` |
@@ -58,10 +54,10 @@ Asimit, V., Chen, Z., Dimitrova, D., Xie, Y., & Zhang, Y. (2025). [Shrinkage GLM
 | `family` | A function specifying the conditional distribution of $Y \mid X$, e.g., $Y \mid X \sim \text{family}(g^{-1}(X\beta))$. (e.g., `gaussian()`, `binomial()`, `poisson()`). | `gaussian()` |
 | `control` | A list of parameters for controlling the fitting process (e.g., `maxit`, `epsilon`). Similar to [`glm.control`](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/glm.control.html). | `list()` |
 | `intercept` | A logical value indicating whether an intercept should be included in the model. | `TRUE` |
-| `use_parallel` | Logical. If `TRUE`, multiple methods in `model_class` are evaluated in parallel. If only one method is specified, it is run directly. The best model is chosen by the lowest AIC among the methods tested. | `TRUE` |
+| `use_parallel` | Logical. If `TRUE`, multiple methods in `model_class` are evaluated in parallel. If only one method is specified, it is run directly. The best model is chosen by the lowest AIC among the methods tested. | `FALSE` |
 | **Key Output** | **Description** | **Notes** |
 | `chosen_fit` | The name of the shrinkage method selected based on the lowest AIC. If only one method is specified in `model_class`, then `chosen_fit` will simply return that method's name. | Returned in the final model object. |
-| `coefficients`, `residuals`, etc. | The usual GLM components, similar to those returned by [`glm.fit`](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/glm.fit.html). | See documentation for full details. |
+| `coefficients`, `residuals`, etc. | The usual GLM components, similar to those returned by [`glm.fit`](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/glm.html). | See documentation for full details. |
 
 This vignette provides an overview of the methods implemented in `savvyGLM` and demonstrates how to use them on [simulated data](#simulation-examples) and [real data](#real-data-analysis). We begin with a theoretical overview of each shrinkage class and GLM with IRLS, then walk through simulation examples that illustrate how to apply `savvyGLM` for each method.
 
@@ -76,12 +72,14 @@ The underlying optimization methods in `savvyGLM` are designed to reduce the the
 Here, we just provide a table summary since for a detailed theoretical overview of the shrinkage estimators applied to GLMs, please refer to the [savvySh package](https://ziwei-chenchen.github.io/savvySh/), which covers many of the same shrinkage estimators used here, but in the context of linear regression. The methods in `savvyGLM` extend these ideas to generalized linear models, ensuring that the IRLS updates incorporate shrinkage at each iteration.
 
 | **Method** | **Shrinkage Approach** | **Simple Description** | **Extra Overhead?** | **Included by Default?** |
-|---------------|---------------|---------------|---------------|---------------|
+|--------------|--------------|-------------------|--------------|--------------|
 | **OLS** | No shrinkage | Baseline estimator without any regularization. | No | No (baseline method) |
 | **St** | Scalar shrinkage | Scales all OLS coefficients by a common factor to reduce MSE. | No | **Yes** |
 | **DSh** | Diagonal matrix | Shrinks each OLS coefficient separately using individual factors. | No | **Yes** |
 | **SR** | Slab penalty (1 direction) | Adds a penalty that shrinks the estimate along a fixed direction (e.g., all-ones vector). | No | **Yes** |
 | **GSR** | Slab penalty (multiple directions) | Generalizes SR by penalizing multiple directions, often from eigenvectors. | No | **Yes** |
+| **LW** | Linear shrinkage | Shrinks towards a structured target matrix (equal variances, zero covariances) to handle large-dimensional data. | No | **Yes** |
+| **QIS** | Nonlinear shrinkage | A quadratic shrinkage estimator optimized under various loss functions, highly effective for large covariance matrices. | No | **Yes** |
 | **Sh** | Full matrix (*Sylvester equation*) | Applies a matrix transformation to OLS using a solution to the *Sylvester equation*. | **Yes** (computational) | No (only if specified in `model_class`) |
 
 ## Generalized Linear Model and its IRLS Implementation
@@ -195,18 +193,7 @@ theta_func <- function(p_val) {
   sgn * mag
 }
 
-findStartingValues <- function(x, y) {
-  beta <- Variable(ncol(x))
-  eta <- x %*% beta
-  g_y <- (y + 0.5) / 2
-  logit_g_y <- log(g_y / (1 - g_y))
-  objective <- Minimize(sum_squares(logit_g_y - eta))
-  problem <- Problem(objective)
-  result <- solve(problem)
-  as.numeric(result$getValue(beta))
-}
-
-model_names <- c("OLS", "SR", "GSR", "St", "DSh", "Sh")
+model_names <- c("OLS", "SR", "GSR", "St", "DSh", "LW", "QIS", "Sh")
 l2_matrix <- matrix(NA, nrow = length(model_names), ncol = length(rho_vals),
                     dimnames = list(model_names, paste0("rho=", rho_vals)))
 for (j in seq_along(rho_vals)) {
@@ -225,15 +212,12 @@ for (j in seq_along(rho_vals)) {
   final_indices <- c(y_zero_indices, y_one_indices)
   X_final <- X_large_intercept[final_indices, ]
   y_final <- y_large[final_indices]
-  starting_values <- findStartingValues(X_final, y_final)
   
-  fit_ols <- glm.fit2(X_final, y_final, start = starting_values,
-                      control = control_list, family = family_type)
+  fit_ols <- glm.fit2(X_final, y_final, control = control_list, family = family_type)
   l2_matrix["OLS", j] <- norm(fit_ols$coefficients - beta_true, type = "2")
 
   for (m in model_names[-1]) {
-    fit <- savvy_glm.fit2(X_final, y_final, model_class = m,
-                           start = starting_values, control = control_list, family = family_type)
+    fit <- savvy_glm.fit2(X_final, y_final, model_class = m, control = control_list, family = family_type)
     l2_matrix[m, j] <- norm(fit$coefficients - beta_true, type = "2")
   }
 }
@@ -277,18 +261,7 @@ theta_func <- function(p_val) {
   sgn * mag
 }
 
-findStartingValues <- function(x, y) {
-  beta <- Variable(ncol(x))
-  eta <- x %*% beta
-  g_y <- (y + 0.5) / 2
-  logit_g_y <- log(g_y / (1 - g_y))
-  objective <- Minimize(sum_squares(logit_g_y - eta))
-  problem <- Problem(objective)
-  result <- solve(problem)
-  as.numeric(result$getValue(beta))
-}
-
-model_names <- c("OLS", "SR", "GSR", "St", "DSh", "Sh")
+model_names <- c("OLS", "SR", "GSR", "St", "DSh", "LW", "QIS", "Sh")
 l2_matrix <- matrix(NA, nrow = length(model_names), ncol = length(rho_vals),
                     dimnames = list(model_names, paste0("rho=", rho_vals)))
 for (j in seq_along(rho_vals)) {
@@ -307,15 +280,12 @@ for (j in seq_along(rho_vals)) {
   final_indices <- c(y_zero_indices, y_one_indices)
   X_final <- X_large_intercept[final_indices, ]
   y_final <- y_large[final_indices]
-  starting_values <- findStartingValues(X_final, y_final)
   
-  fit_ols <- glm.fit2(X_final, y_final, start = starting_values,
-                      control = control_list, family = family_type)
+  fit_ols <- glm.fit2(X_final, y_final, control = control_list, family = family_type)
   l2_matrix["OLS", j] <- norm(fit_ols$coefficients - beta_true, type = "2")
 
   for (m in model_names[-1]) {
-    fit <- savvy_glm.fit2(X_final, y_final, model_class = m,
-                           start = starting_values, control = control_list, family = family_type)
+    fit <- savvy_glm.fit2(X_final, y_final, model_class = m, control = control_list, family = family_type)
     l2_matrix[m, j] <- norm(fit$coefficients - beta_true, type = "2")
   }
 }
@@ -364,17 +334,7 @@ theta_func <- function(p_val) {
   return(betas)
 }
 
-findStartingValues <- function(x, y) {
-  beta <- Variable(ncol(x))
-  eta <- x %*% beta
-  objective <- Minimize(sum_squares(log(y + 0.1) - eta))
-  problem <- Problem(objective)
-  result <- solve(problem)
-  starting_values <- as.numeric(result$getValue(beta))
-  return(starting_values)
-}
-
-model_names <- c("OLS", "SR", "GSR", "St", "DSh", "Sh")
+model_names <- c("OLS", "SR", "GSR", "St", "DSh", "LW", "QIS", "Sh")
 l2_matrix <- matrix(NA, nrow = length(model_names), ncol = length(rho_vals),
                     dimnames = list(model_names, paste0("rho=", rho_vals)))
 for (j in seq_along(rho_vals)) {
@@ -386,15 +346,12 @@ for (j in seq_along(rho_vals)) {
   beta_true <- theta_func(p_val + 1)
   mu_y <- as.vector(exp(X_intercept %*% beta_true))
   y <- rpois(n_val, lambda = mu_y)
-  starting_values <- findStartingValues(X_intercept, y)
   
-  fit_ols <- glm.fit2(X_intercept, y, start = starting_values,
-                      control = control_list, family = family_type)
+  fit_ols <- glm.fit2(X_intercept, y, control = control_list, family = family_type)
   l2_matrix["OLS", j] <- norm(fit_ols$coefficients - beta_true, type = "2")
 
   for (m in model_names[-1]) {
-    fit <- savvy_glm.fit2(X_intercept, y, model_class = m,
-                           start = starting_values, control = control_list, family = family_type)
+    fit <- savvy_glm.fit2(X_intercept, y, model_class = m, control = control_list, family = family_type)
     l2_matrix[m, j] <- norm(fit$coefficients - beta_true, type = "2")
   }
 }
@@ -437,18 +394,7 @@ theta_func <- function(p_val) {
   sgn * mag
 }
 
-findStartingValues <- function(x, y, epsilon = 1e-6) {
-  beta <- Variable(ncol(x))
-  eta <- x %*% beta
-  objective <- Minimize(sum_squares(sqrt(y + 0.1) - eta))
-  constraints <- list(eta >= epsilon)
-  problem <- Problem(objective, constraints)
-  result <- solve(problem)
-  starting_values <- as.numeric(result$getValue(beta))
-  return(starting_values)
-}
-
-model_names <- c("OLS", "SR", "GSR", "St", "DSh", "Sh")
+model_names <- c("OLS", "SR", "GSR", "St", "DSh", "LW", "QIS", "Sh")
 l2_matrix <- matrix(NA, nrow = length(model_names), ncol = length(rho_vals),
                     dimnames = list(model_names, paste0("rho=", rho_vals)))
 for (j in seq_along(rho_vals)) {
@@ -460,15 +406,12 @@ for (j in seq_along(rho_vals)) {
   beta_true <- theta_func(p_val + 1)
   mu_y <- as.vector((X_intercept %*% beta_true)^2)
   y <- rpois(n_val, lambda = mu_y)
-  starting_values <- findStartingValues(X_intercept, y)
   
-  fit_ols <- glm.fit2(X_intercept, y, start = starting_values,
-                      control = control_list, family = family_type)
+  fit_ols <- glm.fit2(X_intercept, y, control = control_list, family = family_type)
   l2_matrix["OLS", j] <- norm(fit_ols$coefficients - beta_true, type = "2")
 
   for (m in model_names[-1]) {
-    fit <- savvy_glm.fit2(X_intercept, y, model_class = m,
-                           start = starting_values, control = control_list, family = family_type)
+    fit <- savvy_glm.fit2(X_intercept, y, model_class = m, control = control_list, family = family_type)
     l2_matrix[m, j] <- norm(fit$coefficients - beta_true, type = "2")
   }
 }
@@ -517,17 +460,7 @@ theta_func <- function(p_val) {
   return(betas)
 }
 
-findStartingValues <- function(x, y) {
-  beta <- Variable(ncol(x))
-  eta <- x %*% beta
-  objective <- Minimize(sum_squares(log(y + 0.1) - eta))
-  problem <- Problem(objective)
-  result <- solve(problem)
-  starting_values <- as.numeric(result$getValue(beta))
-  return(starting_values)
-}
-
-model_names <- c("OLS", "SR", "GSR", "St", "DSh", "Sh")
+model_names <- c("OLS", "SR", "GSR", "St", "DSh", "LW", "QIS", "Sh")
 l2_matrix <- matrix(NA, nrow = length(model_names), ncol = length(rho_vals),
                     dimnames = list(model_names, paste0("rho=", rho_vals)))
 for (j in seq_along(rho_vals)) {
@@ -545,15 +478,12 @@ for (j in seq_along(rho_vals)) {
     y[bad_idx] <- rgamma(length(bad_idx), shape = mu_y[bad_idx], scale = 1)
     retry_count <- retry_count + 1
   }
-  starting_values <- findStartingValues(X_intercept, y)
   
-  fit_ols <- glm.fit2(X_intercept, y, start = starting_values,
-                      control = control_list, family = family_type)
+  fit_ols <- glm.fit2(X_intercept, y, control = control_list, family = family_type)
   l2_matrix["OLS", j] <- norm(fit_ols$coefficients - beta_true, type = "2")
 
   for (m in model_names[-1]) {
-    fit <- savvy_glm.fit2(X_intercept, y, model_class = m,
-                           start = starting_values, control = control_list, family = family_type)
+    fit <- savvy_glm.fit2(X_intercept, y, model_class = m, control = control_list, family = family_type)
     l2_matrix[m, j] <- norm(fit$coefficients - beta_true, type = "2")
   }
 }
@@ -571,11 +501,9 @@ kable(l2_table, digits = 4, caption = "L2 Distance Between Estimated and True Co
 For Gamma GLMs with the sqrt link, the mean response is modeled as $\mu = \eta^2$ with $\eta = X_{\text{intercept}} \, \beta_{\text{true}}$. Covariates are generated as before, and responses are drawn from a Gamma distribution with *shape* $\mu =\eta^2$, including a retry mechanism to ensure all response values are positive. Fitting the models using both the standard GLM (via `glm.fit2`) and the shrinkage-based GLM (via `savvy_glm.fit2`in `savvyGLM` package).
 
 ```{r,warning=FALSE}
-# Load packages
 library(savvyGLM)
 library(MASS)
 library(glm2)
-library(CVXR)
 library(knitr)
 
 set.seed(123)
@@ -602,14 +530,15 @@ findStartingValues <- function(x, y, epsilon = 1e-6) {
   objective <- Minimize(sum_squares(sqrt(y + 0.1) - eta))
   constraints <- list(eta >= epsilon)
   problem <- Problem(objective, constraints)
-  result <- solve(problem)
-  starting_values <- as.numeric(result$getValue(beta))
+  psolve(problem, silent = TRUE)
+  starting_values <- as.numeric(value(beta))
   return(starting_values)
 }
 
-model_names <- c("OLS", "SR", "GSR", "St", "DSh", "Sh")
+model_names <- c("OLS", "SR", "GSR", "St", "DSh", "LW", "QIS", "Sh")
 l2_matrix <- matrix(NA, nrow = length(model_names), ncol = length(rho_vals),
                     dimnames = list(model_names, paste0("rho=", rho_vals)))
+
 for (j in seq_along(rho_vals)) {
   rho_val <- rho_vals[j]
   Sigma <- sigma.rho(rho_val, p_val)
@@ -619,12 +548,14 @@ for (j in seq_along(rho_vals)) {
   beta_true <- theta_func(p_val + 1)
   mu_y <- as.vector((X_intercept %*% beta_true)^2)
   y <- rgamma(n_val, shape = mu_y, scale = 1)
+  
   retry_count <- 0
   while(any(y <= 0) && retry_count < 100) {
     bad_idx <- which(y <= 0)
     y[bad_idx] <- rgamma(length(bad_idx), shape = mu_y[bad_idx], scale = 1)
     retry_count <- retry_count + 1
   }
+  
   starting_values <- findStartingValues(X_intercept, y)
   
   fit_ols <- glm.fit2(X_intercept, y, start = starting_values,
@@ -632,8 +563,10 @@ for (j in seq_along(rho_vals)) {
   l2_matrix["OLS", j] <- norm(fit_ols$coefficients - beta_true, type = "2")
 
   for (m in model_names[-1]) {
-    fit <- savvy_glm.fit2(X_intercept, y, model_class = m,
-                           start = starting_values, control = control_list, family = family_type)
+    # Added use_parallel = FALSE to dramatically speed up vignette building
+    fit <- savvy_glm.fit2(X_intercept, y, model_class = m, control = control_list, 
+                          family = family_type, use_robust_start = TRUE, 
+                          use_parallel = FALSE)
     l2_matrix[m, j] <- norm(fit$coefficients - beta_true, type = "2")
   }
 }
@@ -650,7 +583,7 @@ kable(l2_table, digits = 4, caption = "L2 Distance Between Estimated and True Co
 
 # Real Data Analysis {#real-data-analysis}
 
-In this section, we evaluate the performance of Gamma GLM estimation methods using real flood insurance data from three states: Florida (FL), Texas (TX), and Louisiana (LA). The dataset covers the period 2014 to 2023 and includes claims from the [National Flood Insurance Programme (NFIP)](https://www.fema.gov/openfema-data-page/fima-nfip-redacted-claims-v2). For each state (e.g., Florida (FL) and Louisiana (LA)), the data are no provided here, but you can download from [NFIP](https://www.fema.gov/openfema-data-page/fima-nfip-redacted-claims-v2) and follow the preprocess steps provided in the paper.
+In this section, we evaluate the performance of Gamma GLM estimation methods using real flood insurance data from three states: Florida (FL), Texas (TX), and Louisiana (LA). The dataset covers the period 2014 to 2023 and includes claims from the National Flood Insurance Programme (NFIP). For each state (e.g., Florida (FL) and Louisiana (LA)), the data are no provided here, but you can download from NFIP and follow the preprocess steps provided in the paper.
 
 For each year, the dataset is split into a 70% training set and a 30% test set. Models are fitted using the standard GLM (via `glm.fit2`) and several shrinkage-based GLM (via `savvy_glm.fit2` with model classes such as SR, GSR, St, DSh, and optionally Sh) using two different link functions:
 
@@ -666,7 +599,7 @@ $$
 
 A ratio greater than one indicates that the shrinkage-based GLM achieved a lower MSE (i.e., superior performance) compared to the standard update. This process is repeated multiple times (e.g., $N=100$ replications per year), and the average ratio is computed for each model and each year.
 
-Here, we just provide two cases and for a detailed account of the full data processing and evaluation procedures, please refer to the [main paper](http//...).
+Here, we just provide two cases and for a detailed account of the full data processing and evaluation procedures, please refer to the main paper: GLM Solutions via Shrinkage.
 
 ------------------------------------------------------------------------
 
@@ -691,16 +624,6 @@ family_type <- Gamma(link = "log")
 Evaluation_results <- matrix(NA, nrow = length(model_names), ncol = length(years),
                              dimnames = list(model_names, years))
 
-findStartingValues <- function(x, y) {
-  beta <- Variable(ncol(x))
-  eta <- x %*% beta
-  objective <- Minimize(sum_squares(log(y + 0.1) - eta))
-  problem <- Problem(objective)
-  result <- solve(problem)
-  starting_values <- as.numeric(result$getValue(beta))
-  return(starting_values)
-}
-
 calculate_mse <- function(true_values, predicted_values) {
   mean((true_values - predicted_values)^2)
 }
@@ -724,15 +647,14 @@ for (yr in years) {
     y_test <- test_data[, 1]
     X_train_int <- cbind(1, X_train)
     X_test_int <- cbind(1, X_test)
-    starting_values <- findStartingValues(X_train_int, y_train)
   
     model_glm2 <- glm.fit2(X_train_int, y_train, start = starting_values,
                            control = control_list, family = family_type)
     y_pred_glm2 <- exp(X_test_int %*% model_glm2$coefficients)
     mse_ols <- calculate_mse(y_test, y_pred_glm2)
     for (m in model_names[-1]) {
-      model_savvy <- savvy_glm.fit2(X_train_int, y_train, model_class = m,
-                                      start = starting_values, control = control_list, family = family_type)
+      model_savvy <- savvy_glm.fit2(X_train_int, y_train, model_class = m, control = control_list,
+                                    family = family_type, use_robust_start = TRUE)
       y_pred <- exp(X_test_int %*% model_savvy$coefficients)
       mse_savvy <- calculate_mse(y_test, y_pred)
       ratio_mat[i, m] <- mse_ols / mse_savvy
@@ -770,17 +692,6 @@ family_type <- Gamma(link = "sqrt")
 Evaluation_results <- matrix(NA, nrow = length(model_names), ncol = length(years),
                              dimnames = list(model_names, years))
 
-findStartingValues <- function(x, y, epsilon = 1e-6) {
-  beta <- Variable(ncol(x))
-  eta <- x %*% beta
-  objective <- Minimize(sum_squares(sqrt(y + 0.1) - eta))
-  constraints <- list(eta >= epsilon)
-  problem <- Problem(objective, constraints)
-  result <- solve(problem)
-  starting_values <- as.numeric(result$getValue(beta))
-  return(starting_values)
-}
-
 calculate_mse <- function(true_values, predicted_values) {
   mean((true_values - predicted_values)^2)
 }
@@ -804,15 +715,14 @@ for (yr in years) {
     y_test <- test_data[, 1]
     X_train_int <- cbind(1, X_train)
     X_test_int <- cbind(1, X_test)
-    starting_values <- findStartingValues(X_train_int, y_train)
   
     model_glm2 <- glm.fit2(X_train_int, y_train, start = starting_values,
                            control = control_list, family = family_type)
     y_pred_glm2 <- (X_test_int %*% model_glm2$coefficients)^2
     mse_ols <- calculate_mse(y_test, y_pred_glm2)
     for (m in model_names[-1]) {
-      model_savvy <- savvy_glm.fit2(X_train_int, y_train, model_class = m,
-                                      start = starting_values, control = control_list, family = family_type)
+      model_savvy <- savvy_glm.fit2(X_train_int, y_train, model_class = m, control = control_list,
+                                    family = family_type, use_robust_start = TRUE)
       y_pred <- exp(X_test_int %*% model_savvy$coefficients)
       mse_savvy <- calculate_mse(y_test, y_pred)
       ratio_mat[i, m] <- mse_ols / mse_savvy
