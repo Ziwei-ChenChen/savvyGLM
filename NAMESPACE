@@ -2,6 +2,12 @@
 
 export(savvy_glm.fit2)
 export(savvy_glm2)
+importFrom(CVXR,Minimize)
+importFrom(CVXR,Problem)
+importFrom(CVXR,Variable)
+importFrom(CVXR,psolve)
+importFrom(CVXR,sum_squares)
+importFrom(CVXR,value)
 importFrom(MASS,ginv)
 importFrom(Matrix,Schur)
 importFrom(Matrix,rankMatrix)
