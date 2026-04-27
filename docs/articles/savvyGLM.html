@@ -7,9 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>savvyGLM: Shrinkage Methods for Generalized Linear Models • savvyGLM</title>
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="../deps/bootstrap-5.1.3/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.1.3/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.2.1/css/all.min.css" rel="stylesheet">
-<link href="../deps/font-awesome-6.2.1/css/v4-shims.min.css" rel="stylesheet">
+<link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="savvyGLM: Shrinkage Methods for Generalized Linear Models">
 </head>
 <body>
@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">savvyGLM</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -36,6 +36,7 @@
 <li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json">
 </form></li>
+<li class="nav-item"><a class="external-link nav-link" href="https://github.com/ziwei-chenchen/savvyGLM/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
       </ul>
 </div>
 
@@ -52,7 +53,7 @@
       <h1>savvyGLM: Shrinkage Methods for Generalized Linear Models</h1>
             
       
-
+      <small class="dont-index">Source: <a href="https://github.com/ziwei-chenchen/savvyGLM/blob/HEAD/vignettes/savvyGLM.Rmd" class="external-link"><code>vignettes/savvyGLM.Rmd</code></a></small>
       <div class="d-none name"><code>savvyGLM.Rmd</code></div>
     </div>
 
@@ -101,9 +102,6 @@ in <code>glm2</code>.</p></li>
 <li><p>Employ parallelization when multiple candidate methods are
 specified.</p></li>
 </ul>
-<p>For more details, please see:</p>
-<p>Asimit, V., Chen, Z., Dimitrova, D., Xie, Y., &amp; Zhang, Y. (2025).
-<a href="http//...">Shrinkage GLM Modeling</a>.</p>
 <div class="section level3">
 <h3 id="main-features">Main Features<a class="anchor" aria-label="anchor" href="#main-features"></a>
 </h3>
@@ -136,9 +134,9 @@ Akaike Information Criterion (AIC).</li>
 </h3>
 <table class="table">
 <colgroup>
-<col width="33%">
-<col width="33%">
-<col width="33%">
+<col width="20%">
+<col width="58%">
+<col width="20%">
 </colgroup>
 <thead><tr class="header">
 <th><strong>Argument</strong></th>
@@ -148,12 +146,12 @@ Akaike Information Criterion (AIC).</li>
 <tbody>
 <tr class="odd">
 <td><code>x</code></td>
-<td>A numeric matrix of predictors. As for <a href="https://stat.ethz.ch/R-manual/R-devel/library/stats/html/glm.fit.html" class="external-link"><code>glm.fit</code></a>.</td>
+<td>A numeric matrix of predictors. As for <a href="https://stat.ethz.ch/R-manual/R-devel/library/stats/html/glm.html" class="external-link"><code>glm.fit</code></a>.</td>
 <td><strong>No default; user must supply.</strong></td>
 </tr>
 <tr class="even">
 <td><code>y</code></td>
-<td>A numeric vector of responses. As for <a href="https://stat.ethz.ch/R-manual/R-devel/library/stats/html/glm.fit.html" class="external-link"><code>glm.fit</code></a>.</td>
+<td>A numeric vector of responses. As for <a href="https://stat.ethz.ch/R-manual/R-devel/library/stats/html/glm.html" class="external-link"><code>glm.fit</code></a>.</td>
 <td><strong>No default; user must supply.</strong></td>
 </tr>
 <tr class="odd">
@@ -190,7 +188,7 @@ and the mean, respectively.</td>
 <td>A function specifying the conditional distribution of
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>Y</mi><mo>∣</mo><mi>X</mi></mrow><annotation encoding="application/x-tex">Y \mid X</annotation></semantics></math>,
 e.g.,
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>Y</mi><mo>∣</mo><mi>X</mi><mo>∼</mo><mtext mathvariant="normal">family</mtext><mrow><mo stretchy="true" form="prefix">(</mo><msup><mi>g</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup><mrow><mo stretchy="true" form="prefix">(</mo><mi>X</mi><mi>β</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">Y \mid X \sim \text{family}(g^{-1}(X\beta))</annotation></semantics></math>.
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>Y</mi><mo>∣</mo><mi>X</mi><mo>∼</mo><mtext mathvariant="normal">family</mtext><mo stretchy="false" form="prefix">(</mo><msup><mi>g</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup><mo stretchy="false" form="prefix">(</mo><mi>X</mi><mi>β</mi><mo stretchy="false" form="postfix">)</mo><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">Y \mid X \sim \text{family}(g^{-1}(X\beta))</annotation></semantics></math>.
 (e.g., <code><a href="https://rdrr.io/r/stats/family.html" class="external-link">gaussian()</a></code>, <code><a href="https://rdrr.io/r/stats/family.html" class="external-link">binomial()</a></code>,
 <code><a href="https://rdrr.io/r/stats/family.html" class="external-link">poisson()</a></code>).</td>
 <td><code><a href="https://rdrr.io/r/stats/family.html" class="external-link">gaussian()</a></code></td>
@@ -213,7 +211,7 @@ in the model.</td>
 <code>model_class</code> are evaluated in parallel. If only one method
 is specified, it is run directly. The best model is chosen by the lowest
 AIC among the methods tested.</td>
-<td><code>TRUE</code></td>
+<td><code>FALSE</code></td>
 </tr>
 <tr class="odd">
 <td><strong>Key Output</strong></td>
@@ -230,7 +228,7 @@ If only one method is specified in <code>model_class</code>, then
 <tr class="odd">
 <td>
 <code>coefficients</code>, <code>residuals</code>, etc.</td>
-<td>The usual GLM components, similar to those returned by <a href="https://stat.ethz.ch/R-manual/R-devel/library/stats/html/glm.fit.html" class="external-link"><code>glm.fit</code></a>.</td>
+<td>The usual GLM components, similar to those returned by <a href="https://stat.ethz.ch/R-manual/R-devel/library/stats/html/glm.html" class="external-link"><code>glm.fit</code></a>.</td>
 <td>See documentation for full details.</td>
 </tr>
 </tbody>
@@ -264,11 +262,11 @@ ensuring that the IRLS updates incorporate shrinkage at each
 iteration.</p>
 <table class="table">
 <colgroup>
-<col width="20%">
-<col width="20%">
-<col width="20%">
-<col width="20%">
-<col width="20%">
+<col width="18%">
+<col width="18%">
+<col width="25%">
+<col width="18%">
+<col width="18%">
 </colgroup>
 <thead><tr class="header">
 <th><strong>Method</strong></th>
@@ -317,6 +315,22 @@ eigenvectors.</td>
 <td><strong>Yes</strong></td>
 </tr>
 <tr class="even">
+<td><strong>LW</strong></td>
+<td>Linear shrinkage</td>
+<td>Shrinks towards a structured target matrix (equal variances, zero
+covariances) to handle large-dimensional data.</td>
+<td>No</td>
+<td><strong>Yes</strong></td>
+</tr>
+<tr class="odd">
+<td><strong>QIS</strong></td>
+<td>Nonlinear shrinkage</td>
+<td>A quadratic shrinkage estimator optimized under various loss
+functions, highly effective for large covariance matrices.</td>
+<td>No</td>
+<td><strong>Yes</strong></td>
+</tr>
+<tr class="even">
 <td><strong>Sh</strong></td>
 <td>Full matrix (<em>Sylvester equation</em>)</td>
 <td>Applies a matrix transformation to OLS using a solution to the
@@ -343,7 +357,7 @@ The conditional distribution of
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Y</mi><annotation encoding="application/x-tex">Y</annotation></semantics></math>
 belongs to the exponential dispersion family, with probability density
 or mass function</p>
-<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>f</mi><mi>Y</mi></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>y</mi><mo>;</mo><mi>θ</mi><mo>,</mo><mi>ϕ</mi><mo stretchy="true" form="postfix">)</mo></mrow><mspace width="0.278em"></mspace><mo>=</mo><mspace width="0.278em"></mspace><mo>exp</mo><mrow><mo stretchy="true" form="prefix">{</mo><mfrac><mrow><mi>θ</mi><mspace width="0.167em"></mspace><mi>y</mi><mo>−</mo><mi>b</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>θ</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><mrow><mi>a</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>ϕ</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow></mfrac><mspace width="0.278em"></mspace><mo>+</mo><mspace width="0.278em"></mspace><mi>c</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>y</mi><mo>,</mo><mi>ϕ</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true" form="postfix">}</mo></mrow><mo>,</mo></mrow><annotation encoding="application/x-tex">
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>f</mi><mi>Y</mi></msub><mo stretchy="false" form="prefix">(</mo><mi>y</mi><mo>;</mo><mi>θ</mi><mo>,</mo><mi>ϕ</mi><mo stretchy="false" form="postfix">)</mo><mspace width="0.278em"></mspace><mo>=</mo><mspace width="0.278em"></mspace><mrow><mi mathvariant="normal">exp</mi><mo>⁡</mo></mrow><mrow><mo stretchy="true" form="prefix">{</mo><mfrac><mrow><mi>θ</mi><mspace width="0.167em"></mspace><mi>y</mi><mo>−</mo><mi>b</mi><mo stretchy="false" form="prefix">(</mo><mi>θ</mi><mo stretchy="false" form="postfix">)</mo></mrow><mrow><mi>a</mi><mo stretchy="false" form="prefix">(</mo><mi>ϕ</mi><mo stretchy="false" form="postfix">)</mo></mrow></mfrac><mspace width="0.278em"></mspace><mo>+</mo><mspace width="0.278em"></mspace><mi>c</mi><mo stretchy="false" form="prefix">(</mo><mi>y</mi><mo>,</mo><mi>ϕ</mi><mo stretchy="false" form="postfix">)</mo><mo stretchy="true" form="postfix">}</mo></mrow><mo>,</mo></mrow><annotation encoding="application/x-tex">
 f_Y(y; \theta, \phi) \;=\; \exp\left\{\frac{\theta\,y - b(\theta)}{a(\phi)} \;+\; c(y, \phi)\right\},
 </annotation></semantics></math></p>
 <p>where
@@ -361,38 +375,38 @@ is linked to a linear predictor
 through a link function
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>g</mi><annotation encoding="application/x-tex">g</annotation></semantics></math>,
 so that</p>
-<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>𝔼</mi><mrow><mo stretchy="true" form="prefix">[</mo><msub><mi>Y</mi><mi>i</mi></msub><mo>∣</mo><msub><mi>𝐗</mi><mi>i</mi></msub><mo>=</mo><msub><mi>𝐱</mi><mi>i</mi></msub><mo stretchy="true" form="postfix">]</mo></mrow><mspace width="0.278em"></mspace><mo>=</mo><mspace width="0.278em"></mspace><mi>h</mi><mrow><mo stretchy="true" form="prefix">(</mo><msubsup><mi>𝐱</mi><mi>i</mi><mi>⊤</mi></msubsup><mi>𝛃</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>,</mo></mrow><annotation encoding="application/x-tex">
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>𝔼</mi><mo stretchy="false" form="prefix">[</mo><msub><mi>Y</mi><mi>i</mi></msub><mo>∣</mo><msub><mi>𝐗</mi><mi>i</mi></msub><mo>=</mo><msub><mi>𝐱</mi><mi>i</mi></msub><mo stretchy="false" form="postfix">]</mo><mspace width="0.278em"></mspace><mo>=</mo><mspace width="0.278em"></mspace><mi>h</mi><mrow><mo stretchy="true" form="prefix">(</mo><msubsup><mi>𝐱</mi><mi>i</mi><mi>⊤</mi></msubsup><mi>𝛃</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>,</mo></mrow><annotation encoding="application/x-tex">
 \mathbb{E}[Y_i \mid \mathbf{X}_i = \mathbf{x}_i] \;=\; h\left(\mathbf{x}_i^\top \boldsymbol{\beta}\right),
 </annotation></semantics></math></p>
 <p>where
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>h</mi><mo>=</mo><msup><mi>g</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup></mrow><annotation encoding="application/x-tex">h = g^{-1}</annotation></semantics></math>
 is the inverse of the link. Under a canonical link,
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>h</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>⋅</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><msup><mi>b</mi><mi>′</mi></msup><mrow><mo stretchy="true" form="prefix">(</mo><mi>⋅</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">h(\cdot) = b^\prime(\cdot)</annotation></semantics></math>.</p>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>h</mi><mo stretchy="false" form="prefix">(</mo><mi>⋅</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><msup><mi>b</mi><mi>′</mi></msup><mo stretchy="false" form="prefix">(</mo><mi>⋅</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">h(\cdot) = b^\prime(\cdot)</annotation></semantics></math>.</p>
 <p>For an independent sample
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msubsup><mrow><mo stretchy="true" form="prefix">{</mo><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>y</mi><mi>i</mi></msub><mo>,</mo><msub><mi>𝐱</mi><mi>i</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true" form="postfix">}</mo></mrow><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></msubsup><annotation encoding="application/x-tex">\left\{(y_i, \mathbf{x}_i)\right\}_{i=1}^n</annotation></semantics></math>,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msubsup><mrow><mo stretchy="true" form="prefix">{</mo><mo stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mi>i</mi></msub><mo>,</mo><msub><mi>𝐱</mi><mi>i</mi></msub><mo stretchy="false" form="postfix">)</mo><mo stretchy="true" form="postfix">}</mo></mrow><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></msubsup><annotation encoding="application/x-tex">\left\{(y_i, \mathbf{x}_i)\right\}_{i=1}^n</annotation></semantics></math>,
 the log-likelihood for
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>𝛃</mi><annotation encoding="application/x-tex">\boldsymbol{\beta}</annotation></semantics></math>
 can be written as</p>
-<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>ℓ</mo><mrow><mo stretchy="true" form="prefix">(</mo><mi>𝛃</mi><mo stretchy="true" form="postfix">)</mo></mrow><mspace width="0.278em"></mspace><mo>=</mo><mspace width="0.278em"></mspace><munderover><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></munderover><mfrac><mrow><msub><mi>θ</mi><mi>i</mi></msub><mspace width="0.167em"></mspace><msub><mi>y</mi><mi>i</mi></msub><mspace width="0.278em"></mspace><mo>−</mo><mspace width="0.278em"></mspace><mi>b</mi><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>θ</mi><mi>i</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow></mrow><mrow><mi>a</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>ϕ</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow></mfrac><mspace width="0.278em"></mspace><mo>+</mo><mspace width="0.278em"></mspace><mi>c</mi><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>y</mi><mi>i</mi></msub><mo>,</mo><mi>ϕ</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>,</mo></mrow><annotation encoding="application/x-tex">
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ℓ</mi><mo stretchy="false" form="prefix">(</mo><mi>𝛃</mi><mo stretchy="false" form="postfix">)</mo><mspace width="0.278em"></mspace><mo>=</mo><mspace width="0.278em"></mspace><munderover><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></munderover><mfrac><mrow><msub><mi>θ</mi><mi>i</mi></msub><mspace width="0.167em"></mspace><msub><mi>y</mi><mi>i</mi></msub><mspace width="0.278em"></mspace><mo>−</mo><mspace width="0.278em"></mspace><mi>b</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>θ</mi><mi>i</mi></msub><mo stretchy="false" form="postfix">)</mo></mrow><mrow><mi>a</mi><mo stretchy="false" form="prefix">(</mo><mi>ϕ</mi><mo stretchy="false" form="postfix">)</mo></mrow></mfrac><mspace width="0.278em"></mspace><mo>+</mo><mspace width="0.278em"></mspace><mi>c</mi><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>y</mi><mi>i</mi></msub><mo>,</mo><mi>ϕ</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>,</mo></mrow><annotation encoding="application/x-tex">
 \ell(\boldsymbol{\beta}) 
 \;=\; \sum_{i=1}^n \frac{\theta_i\,y_i \;-\; b(\theta_i)}{a(\phi)} \;+\; c\left(y_i, \phi\right),
 </annotation></semantics></math></p>
 <p>where
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>θ</mi><mi>i</mi></msub><mo>=</mo><msup><mrow><mo stretchy="true" form="prefix">(</mo><msup><mi>b</mi><mi>′</mi></msup><mo stretchy="true" form="postfix">)</mo></mrow><mrow><mi>−</mi><mn>1</mn></mrow></msup><mo>∘</mo><mspace width="0.167em"></mspace><mi>h</mi><mrow><mo stretchy="true" form="prefix">(</mo><msubsup><mi>𝐱</mi><mi>i</mi><mi>⊤</mi></msubsup><mi>𝛃</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\theta_i = (b^\prime)^{-1}\circ\, h\left(\mathbf{x}_i^\top \boldsymbol{\beta}\right)</annotation></semantics></math>.
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>θ</mi><mi>i</mi></msub><mo>=</mo><mo stretchy="false" form="prefix">(</mo><msup><mi>b</mi><mi>′</mi></msup><msup><mo stretchy="false" form="postfix">)</mo><mrow><mi>−</mi><mn>1</mn></mrow></msup><mo>∘</mo><mspace width="0.167em"></mspace><mi>h</mi><mrow><mo stretchy="true" form="prefix">(</mo><msubsup><mi>𝐱</mi><mi>i</mi><mi>⊤</mi></msubsup><mi>𝛃</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\theta_i = (b^\prime)^{-1}\circ\, h\left(\mathbf{x}_i^\top \boldsymbol{\beta}\right)</annotation></semantics></math>.
 Maximizing this log-likelihood is equivalent to minimizing the following
 objective function,</p>
-<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>𝒞</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>𝛃</mi><mo stretchy="true" form="postfix">)</mo></mrow><mspace width="0.278em"></mspace><mo>=</mo><mspace width="0.278em"></mspace><mo>−</mo><munderover><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></munderover><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>θ</mi><mi>i</mi></msub><mspace width="0.167em"></mspace><msub><mi>y</mi><mi>i</mi></msub><mspace width="0.278em"></mspace><mo>−</mo><mspace width="0.278em"></mspace><mi>b</mi><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>θ</mi><mi>i</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true" form="postfix">)</mo></mrow><mi>.</mi></mrow><annotation encoding="application/x-tex">
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>𝒞</mi><mo stretchy="false" form="prefix">(</mo><mi>𝛃</mi><mo stretchy="false" form="postfix">)</mo><mspace width="0.278em"></mspace><mo>=</mo><mspace width="0.278em"></mspace><mo>−</mo><munderover><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></munderover><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>θ</mi><mi>i</mi></msub><mspace width="0.167em"></mspace><msub><mi>y</mi><mi>i</mi></msub><mspace width="0.278em"></mspace><mo>−</mo><mspace width="0.278em"></mspace><mi>b</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>θ</mi><mi>i</mi></msub><mo stretchy="false" form="postfix">)</mo><mo stretchy="true" form="postfix">)</mo></mrow><mi>.</mi></mrow><annotation encoding="application/x-tex">
 \mathcal{C}(\boldsymbol{\beta}) 
 \;=\; -\sum_{i=1}^n \left(\theta_i\,y_i \;-\; b(\theta_i)\right).
 </annotation></semantics></math></p>
 <p>Taking the derivative of
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>𝒞</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>𝛃</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\mathcal{C}(\boldsymbol{\beta})</annotation></semantics></math>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>𝒞</mi><mo stretchy="false" form="prefix">(</mo><mi>𝛃</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\mathcal{C}(\boldsymbol{\beta})</annotation></semantics></math>
 with respect to
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>𝛃</mi><annotation encoding="application/x-tex">\boldsymbol{\beta}</annotation></semantics></math>
 leads to the so-called normal equations, which can be solved
 iteratively. In particular, the IRLS algorithm reformulates each
 iteration as a WLS problem:</p>
-<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mover><mi>𝛃</mi><mo accent="true">̂</mo></mover><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo>+</mo><mn>1</mn><mo stretchy="true" form="postfix">)</mo></mrow></msup><mspace width="0.278em"></mspace><mo>=</mo><mspace width="0.278em"></mspace><munder><mrow><mi mathvariant="normal">a</mi><mi mathvariant="normal">r</mi><mi mathvariant="normal">g</mi><mspace width="0.167em"></mspace><mi mathvariant="normal">m</mi><mi mathvariant="normal">i</mi><mi mathvariant="normal">n</mi></mrow><mi>𝛃</mi></munder><mspace width="0.278em"></mspace><msup><mrow><mo stretchy="true" form="prefix">(</mo><msup><mi>𝐳</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow></msup><mo>−</mo><mi>𝐗</mi><mspace width="0.167em"></mspace><mi>𝛃</mi><mo stretchy="true" form="postfix">)</mo></mrow><mi>⊤</mi></msup><msup><mi>𝐖</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow></msup><mrow><mo stretchy="true" form="prefix">(</mo><msup><mi>𝐳</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow></msup><mo>−</mo><mi>𝐗</mi><mspace width="0.167em"></mspace><mi>𝛃</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>,</mo></mrow><annotation encoding="application/x-tex">
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mover><mi>𝛃</mi><mo accent="true">̂</mo></mover><mrow><mo stretchy="false" form="prefix">(</mo><mi>t</mi><mo>+</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo></mrow></msup><mspace width="0.278em"></mspace><mo>=</mo><mspace width="0.278em"></mspace><munder><mrow><mi mathvariant="normal">a</mi><mi mathvariant="normal">r</mi><mi mathvariant="normal">g</mi><mspace width="0.167em"></mspace><mi mathvariant="normal">m</mi><mi mathvariant="normal">i</mi><mi mathvariant="normal">n</mi></mrow><mi>𝛃</mi></munder><mspace width="0.278em"></mspace><msup><mrow><mo stretchy="true" form="prefix">(</mo><msup><mi>𝐳</mi><mrow><mo stretchy="false" form="prefix">(</mo><mi>t</mi><mo stretchy="false" form="postfix">)</mo></mrow></msup><mo>−</mo><mi>𝐗</mi><mspace width="0.167em"></mspace><mi>𝛃</mi><mo stretchy="true" form="postfix">)</mo></mrow><mi>⊤</mi></msup><msup><mi>𝐖</mi><mrow><mo stretchy="false" form="prefix">(</mo><mi>t</mi><mo stretchy="false" form="postfix">)</mo></mrow></msup><mrow><mo stretchy="true" form="prefix">(</mo><msup><mi>𝐳</mi><mrow><mo stretchy="false" form="prefix">(</mo><mi>t</mi><mo stretchy="false" form="postfix">)</mo></mrow></msup><mo>−</mo><mi>𝐗</mi><mspace width="0.167em"></mspace><mi>𝛃</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>,</mo></mrow><annotation encoding="application/x-tex">
 \widehat{\boldsymbol{\beta}}^{(t+1)} 
 \;=\; \underset{\boldsymbol{\beta}}{\mathrm{arg\,min}}
 \;\left(\mathbf{z}^{(t)} - \mathbf{X}\,\boldsymbol{\beta}\right)^\top
@@ -400,13 +414,13 @@ iteration as a WLS problem:</p>
 \left(\mathbf{z}^{(t)} - \mathbf{X}\,\boldsymbol{\beta}\right),
 </annotation></semantics></math></p>
 <p>where
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>𝐖</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow></msup><annotation encoding="application/x-tex">\mathbf{W}^{(t)}</annotation></semantics></math>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>𝐖</mi><mrow><mo stretchy="false" form="prefix">(</mo><mi>t</mi><mo stretchy="false" form="postfix">)</mo></mrow></msup><annotation encoding="application/x-tex">\mathbf{W}^{(t)}</annotation></semantics></math>
 is the diagonal matrix of weights and
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>𝐳</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow></msup><annotation encoding="application/x-tex">\mathbf{z}^{(t)}</annotation></semantics></math>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>𝐳</mi><mrow><mo stretchy="false" form="prefix">(</mo><mi>t</mi><mo stretchy="false" form="postfix">)</mo></mrow></msup><annotation encoding="application/x-tex">\mathbf{z}^{(t)}</annotation></semantics></math>
 is the pseudo-response at iteration
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>t</mi><annotation encoding="application/x-tex">t</annotation></semantics></math>.
 Specifically,</p>
-<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>𝐖</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow></msup><mspace width="0.278em"></mspace><mo>=</mo><mspace width="0.278em"></mspace><mrow><mi mathvariant="normal">d</mi><mi mathvariant="normal">i</mi><mi mathvariant="normal">a</mi><mi mathvariant="normal">g</mi></mrow><mrow><mo stretchy="true" form="prefix">(</mo><msup><mrow><mo stretchy="true" form="prefix">(</mo><msup><mi>h</mi><mi>′</mi></msup><mrow><mo stretchy="true" form="prefix">(</mo><msubsup><mi>η</mi><mi>i</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow></msubsup><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true" form="postfix">)</mo></mrow><mn>2</mn></msup><mi>/</mi><mi>V</mi><mrow><mo stretchy="true" form="prefix">(</mo><msubsup><mi>μ</mi><mi>i</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow></msubsup><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true" form="postfix">)</mo></mrow><mo>,</mo><mspace width="1.0em"></mspace><msubsup><mi>𝐳</mi><mi>i</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow></msubsup><mspace width="0.278em"></mspace><mo>=</mo><mspace width="0.278em"></mspace><msubsup><mi>η</mi><mi>i</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow></msubsup><mspace width="0.278em"></mspace><mo>+</mo><mspace width="0.278em"></mspace><mfrac><mrow><msub><mi>y</mi><mi>i</mi></msub><mo>−</mo><msubsup><mi>μ</mi><mi>i</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow></msubsup></mrow><mrow><msup><mi>h</mi><mi>′</mi></msup><mrow><mo stretchy="true" form="prefix">(</mo><msubsup><mi>η</mi><mi>i</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow></msubsup><mo stretchy="true" form="postfix">)</mo></mrow></mrow></mfrac><mo>,</mo></mrow><annotation encoding="application/x-tex">
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>𝐖</mi><mrow><mo stretchy="false" form="prefix">(</mo><mi>t</mi><mo stretchy="false" form="postfix">)</mo></mrow></msup><mspace width="0.278em"></mspace><mo>=</mo><mspace width="0.278em"></mspace><mrow><mi mathvariant="normal">d</mi><mi mathvariant="normal">i</mi><mi mathvariant="normal">a</mi><mi mathvariant="normal">g</mi></mrow><mrow><mo stretchy="true" form="prefix">(</mo><msup><mrow><mo stretchy="true" form="prefix">(</mo><msup><mi>h</mi><mi>′</mi></msup><mo stretchy="false" form="prefix">(</mo><msubsup><mi>η</mi><mi>i</mi><mrow><mo stretchy="false" form="prefix">(</mo><mi>t</mi><mo stretchy="false" form="postfix">)</mo></mrow></msubsup><mo stretchy="false" form="postfix">)</mo><mo stretchy="true" form="postfix">)</mo></mrow><mn>2</mn></msup><mi>/</mi><mi>V</mi><mrow><mo stretchy="true" form="prefix">(</mo><msubsup><mi>μ</mi><mi>i</mi><mrow><mo stretchy="false" form="prefix">(</mo><mi>t</mi><mo stretchy="false" form="postfix">)</mo></mrow></msubsup><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true" form="postfix">)</mo></mrow><mo>,</mo><mspace width="1.0em"></mspace><msubsup><mi>𝐳</mi><mi>i</mi><mrow><mo stretchy="false" form="prefix">(</mo><mi>t</mi><mo stretchy="false" form="postfix">)</mo></mrow></msubsup><mspace width="0.278em"></mspace><mo>=</mo><mspace width="0.278em"></mspace><msubsup><mi>η</mi><mi>i</mi><mrow><mo stretchy="false" form="prefix">(</mo><mi>t</mi><mo stretchy="false" form="postfix">)</mo></mrow></msubsup><mspace width="0.278em"></mspace><mo>+</mo><mspace width="0.278em"></mspace><mfrac><mrow><msub><mi>y</mi><mi>i</mi></msub><mo>−</mo><msubsup><mi>μ</mi><mi>i</mi><mrow><mo stretchy="false" form="prefix">(</mo><mi>t</mi><mo stretchy="false" form="postfix">)</mo></mrow></msubsup></mrow><mrow><msup><mi>h</mi><mi>′</mi></msup><mo stretchy="false" form="prefix">(</mo><msubsup><mi>η</mi><mi>i</mi><mrow><mo stretchy="false" form="prefix">(</mo><mi>t</mi><mo stretchy="false" form="postfix">)</mo></mrow></msubsup><mo stretchy="false" form="postfix">)</mo></mrow></mfrac><mo>,</mo></mrow><annotation encoding="application/x-tex">
 \mathbf{W}^{(t)} 
 \;=\; \mathrm{diag}\left(\left(h^\prime(\eta_i^{(t)})\right)^2 / V\left(\mu_i^{(t)}\right)\right),
 \quad
@@ -414,11 +428,11 @@ Specifically,</p>
 \;=\; \eta_i^{(t)} \;+\; \frac{y_i - \mu_i^{(t)}}{h^\prime(\eta_i^{(t)})},
 </annotation></semantics></math></p>
 <p>with
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mi>μ</mi><mi>i</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow></msubsup><mo>=</mo><mi>h</mi><mrow><mo stretchy="true" form="prefix">(</mo><msubsup><mi>η</mi><mi>i</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow></msubsup><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\mu_i^{(t)} = h(\eta_i^{(t)})</annotation></semantics></math>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mi>μ</mi><mi>i</mi><mrow><mo stretchy="false" form="prefix">(</mo><mi>t</mi><mo stretchy="false" form="postfix">)</mo></mrow></msubsup><mo>=</mo><mi>h</mi><mo stretchy="false" form="prefix">(</mo><msubsup><mi>η</mi><mi>i</mi><mrow><mo stretchy="false" form="prefix">(</mo><mi>t</mi><mo stretchy="false" form="postfix">)</mo></mrow></msubsup><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\mu_i^{(t)} = h(\eta_i^{(t)})</annotation></semantics></math>
 and
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mi>η</mi><mi>i</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow></msubsup><mo>=</mo><msubsup><mi>𝐱</mi><mi>i</mi><mi>⊤</mi></msubsup><msup><mover><mi>𝛃</mi><mo accent="true">̂</mo></mover><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow></msup></mrow><annotation encoding="application/x-tex">\eta_i^{(t)} = \mathbf{x}_i^\top \widehat{\boldsymbol{\beta}}^{(t)}</annotation></semantics></math>.
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mi>η</mi><mi>i</mi><mrow><mo stretchy="false" form="prefix">(</mo><mi>t</mi><mo stretchy="false" form="postfix">)</mo></mrow></msubsup><mo>=</mo><msubsup><mi>𝐱</mi><mi>i</mi><mi>⊤</mi></msubsup><msup><mover><mi>𝛃</mi><mo accent="true">̂</mo></mover><mrow><mo stretchy="false" form="prefix">(</mo><mi>t</mi><mo stretchy="false" form="postfix">)</mo></mrow></msup></mrow><annotation encoding="application/x-tex">\eta_i^{(t)} = \mathbf{x}_i^\top \widehat{\boldsymbol{\beta}}^{(t)}</annotation></semantics></math>.
 Here,
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>V</mi><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>μ</mi><mi>i</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">V(\mu_i)</annotation></semantics></math>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>V</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>μ</mi><mi>i</mi></msub><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">V(\mu_i)</annotation></semantics></math>
 is the variance function determined by the exponential family, and
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>h</mi><mi>′</mi></msup><annotation encoding="application/x-tex">h^\prime</annotation></semantics></math>
 is the derivative of the inverse link.</p>
@@ -452,11 +466,11 @@ GLMs with <em>log</em> link and <em>sqrt</em> link:</p>
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>𝐗</mi><mo>∈</mo><msup><mi>ℜ</mi><mrow><mi>n</mi><mo>×</mo><mi>p</mi></mrow></msup></mrow><annotation encoding="application/x-tex">\mathbf{X} \in \Re^{n \times p}</annotation></semantics></math>
 is drawn from a multivariate normal distribution with mean zero, unit
 variances, and a Toeplitz covariance matrix
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Σ</mi><annotation encoding="application/x-tex">\Sigma</annotation></semantics></math>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi mathvariant="normal">Σ</mi><annotation encoding="application/x-tex">\Sigma</annotation></semantics></math>
 where
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mtext mathvariant="normal">Cov</mtext><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>X</mi><mrow><mi>i</mi><mo>,</mo><mi>j</mi></mrow></msub><mo>,</mo><msub><mi>X</mi><mrow><mi>k</mi><mo>,</mo><mi>j</mi></mrow></msub><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><msup><mi>ρ</mi><mrow><mo stretchy="true" form="prefix">|</mo><mi>i</mi><mo>−</mo><mi>k</mi><mo stretchy="true" form="postfix">|</mo></mrow></msup></mrow><annotation encoding="application/x-tex">\text{Cov}(X_{i,j}, X_{k,j}) = \rho^{|i-k|}</annotation></semantics></math>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mtext mathvariant="normal">Cov</mtext><mo stretchy="false" form="prefix">(</mo><msub><mi>X</mi><mrow><mi>i</mi><mo>,</mo><mi>j</mi></mrow></msub><mo>,</mo><msub><mi>X</mi><mrow><mi>k</mi><mo>,</mo><mi>j</mi></mrow></msub><mo stretchy="false" form="postfix">)</mo><mo>=</mo><msup><mi>ρ</mi><mrow><mo stretchy="false" form="prefix">|</mo><mi>i</mi><mo>−</mo><mi>k</mi><mo stretchy="false" form="prefix">|</mo></mrow></msup></mrow><annotation encoding="application/x-tex">\text{Cov}(X_{i,j}, X_{k,j}) = \rho^{|i-k|}</annotation></semantics></math>
 with
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ρ</mi><mo>∈</mo><mrow><mo stretchy="true" form="prefix">(</mo><mi>−</mi><mn>1</mn><mo>,</mo><mn>1</mn><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\rho \in (-1,1)</annotation></semantics></math>.</p></li>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ρ</mi><mo>∈</mo><mo stretchy="false" form="prefix">(</mo><mi>−</mi><mn>1</mn><mo>,</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\rho \in (-1,1)</annotation></semantics></math>.</p></li>
 <li><p><strong>True Coefficients</strong>: The true regression
 coefficients
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>β</mi><mi>j</mi></msub><annotation encoding="application/x-tex">\beta_j</annotation></semantics></math>
@@ -477,7 +491,7 @@ considered:For the <em>log</em> link:
 for the <em>sqrt</em> link:
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>μ</mi><mi>i</mi></msub><mo>=</mo><msubsup><mi>η</mi><mi>i</mi><mn>2</mn></msubsup></mrow><annotation encoding="application/x-tex">\mu_i = \eta_i^2</annotation></semantics></math>.
 Then, generate
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>Y</mi><mi>i</mi></msub><mo>∼</mo><mtext mathvariant="normal">Poisson</mtext><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>μ</mi><mi>i</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">Y_i \sim \text{Poisson}(\mu_i)</annotation></semantics></math>.</p></li>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>Y</mi><mi>i</mi></msub><mo>∼</mo><mtext mathvariant="normal">Poisson</mtext><mo stretchy="false" form="prefix">(</mo><msub><mi>μ</mi><mi>i</mi></msub><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">Y_i \sim \text{Poisson}(\mu_i)</annotation></semantics></math>.</p></li>
 <li><p><strong>Gamma GLM</strong>: Similarly, use
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>μ</mi><mi>i</mi></msub><mo>=</mo><msup><mi>e</mi><msub><mi>η</mi><mi>i</mi></msub></msup></mrow><annotation encoding="application/x-tex">\mu_i = e^{\eta_i}</annotation></semantics></math>
 (<em>log</em> link) or
@@ -521,7 +535,7 @@ GLM (via <code>glm.fit2</code>) and the shrinkage-based GLM (via
 <code>savvy_glm.fit2</code>in <code>savvyGLM</code> package).</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Load packages</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://Ziwei-ChenChen.github.io/savvyGLM">savvyGLM</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://Ziwei-ChenChen.github.io/savvyGLM/">savvyGLM</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="http://www.stats.ox.ac.uk/pub/MASS4/" class="external-link">MASS</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">glm2</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -535,9 +549,12 @@ GLM (via <code>glm.fit2</code>) and the shrinkage-based GLM (via
 <span><span class="co">#&gt; The following object is masked from 'package:MASS':</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;     huber</span></span>
-<span><span class="co">#&gt; The following object is masked from 'package:stats':</span></span>
+<span><span class="co">#&gt; The following objects are masked from 'package:stats':</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;     power</span></span>
+<span><span class="co">#&gt;     power, sd, var</span></span>
+<span><span class="co">#&gt; The following objects are masked from 'package:base':</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;     diag, norm, outer</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://yihui.org/knitr/" class="external-link">knitr</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">123</span><span class="op">)</span></span>
@@ -550,7 +567,7 @@ GLM (via <code>glm.fit2</code>) and the shrinkage-based GLM (via
 <span><span class="va">family_type</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/family.html" class="external-link">binomial</a></span><span class="op">(</span>link <span class="op">=</span> <span class="st">"logit"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">sigma.rho</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">rho_val</span>, <span class="va">p_val</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="va">rho_val</span> <span class="op">^</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">abs</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/outer.html" class="external-link">outer</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="va">p_val</span>, <span class="fl">1</span><span class="op">:</span><span class="va">p_val</span>, <span class="st">"-"</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="va">rho_val</span> <span class="op">^</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">abs</a></span><span class="op">(</span><span class="fu"><a href="https://www.cvxgrp.org/CVXR/reference/math_atoms.html" class="external-link">outer</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="va">p_val</span>, <span class="fl">1</span><span class="op">:</span><span class="va">p_val</span>, <span class="st">"-"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">}</span></span>
 <span></span>
 <span><span class="va">theta_func</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">p_val</span><span class="op">)</span> <span class="op">{</span></span>
@@ -559,18 +576,7 @@ GLM (via <code>glm.fit2</code>) and the shrinkage-based GLM (via
 <span>  <span class="va">sgn</span> <span class="op">*</span> <span class="va">mag</span></span>
 <span><span class="op">}</span></span>
 <span></span>
-<span><span class="va">findStartingValues</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="va">beta</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://www.cvxgrp.org/CVXR/reference/Variable-class.html" class="external-link">Variable</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span></span>
-<span>  <span class="va">eta</span> <span class="op">&lt;-</span> <span class="va">x</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html" class="external-link">%*%</a></span> <span class="va">beta</span></span>
-<span>  <span class="va">g_y</span> <span class="op">&lt;-</span> <span class="op">(</span><span class="va">y</span> <span class="op">+</span> <span class="fl">0.5</span><span class="op">)</span> <span class="op">/</span> <span class="fl">2</span></span>
-<span>  <span class="va">logit_g_y</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="va">g_y</span> <span class="op">/</span> <span class="op">(</span><span class="fl">1</span> <span class="op">-</span> <span class="va">g_y</span><span class="op">)</span><span class="op">)</span></span>
-<span>  <span class="va">objective</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://www.cvxgrp.org/CVXR/reference/Minimize-class.html" class="external-link">Minimize</a></span><span class="op">(</span><span class="fu"><a href="https://www.cvxgrp.org/CVXR/reference/sum_squares.html" class="external-link">sum_squares</a></span><span class="op">(</span><span class="va">logit_g_y</span> <span class="op">-</span> <span class="va">eta</span><span class="op">)</span><span class="op">)</span></span>
-<span>  <span class="va">problem</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://www.cvxgrp.org/CVXR/reference/Problem-class.html" class="external-link">Problem</a></span><span class="op">(</span><span class="va">objective</span><span class="op">)</span></span>
-<span>  <span class="va">result</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/solve.html" class="external-link">solve</a></span><span class="op">(</span><span class="va">problem</span><span class="op">)</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="va">result</span><span class="op">$</span><span class="fu">getValue</span><span class="op">(</span><span class="va">beta</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="op">}</span></span>
-<span></span>
-<span><span class="va">model_names</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"OLS"</span>, <span class="st">"SR"</span>, <span class="st">"GSR"</span>, <span class="st">"St"</span>, <span class="st">"DSh"</span>, <span class="st">"Sh"</span><span class="op">)</span></span>
+<span><span class="va">model_names</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"OLS"</span>, <span class="st">"SR"</span>, <span class="st">"GSR"</span>, <span class="st">"St"</span>, <span class="st">"DSh"</span>, <span class="st">"LW"</span>, <span class="st">"QIS"</span>, <span class="st">"Sh"</span><span class="op">)</span></span>
 <span><span class="va">l2_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="cn">NA</span>, nrow <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">model_names</span><span class="op">)</span>, ncol <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">rho_vals</span><span class="op">)</span>,</span>
 <span>                    dimnames <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">model_names</span>, <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"rho="</span>, <span class="va">rho_vals</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="kw">for</span> <span class="op">(</span><span class="va">j</span> <span class="kw">in</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_along</a></span><span class="op">(</span><span class="va">rho_vals</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
@@ -589,16 +595,13 @@ GLM (via <code>glm.fit2</code>) and the shrinkage-based GLM (via
 <span>  <span class="va">final_indices</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">y_zero_indices</span>, <span class="va">y_one_indices</span><span class="op">)</span></span>
 <span>  <span class="va">X_final</span> <span class="op">&lt;-</span> <span class="va">X_large_intercept</span><span class="op">[</span><span class="va">final_indices</span>, <span class="op">]</span></span>
 <span>  <span class="va">y_final</span> <span class="op">&lt;-</span> <span class="va">y_large</span><span class="op">[</span><span class="va">final_indices</span><span class="op">]</span></span>
-<span>  <span class="va">starting_values</span> <span class="op">&lt;-</span> <span class="fu">findStartingValues</span><span class="op">(</span><span class="va">X_final</span>, <span class="va">y_final</span><span class="op">)</span></span>
 <span>  </span>
-<span>  <span class="va">fit_ols</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/glm2/man/glm.fit2.html" class="external-link">glm.fit2</a></span><span class="op">(</span><span class="va">X_final</span>, <span class="va">y_final</span>, start <span class="op">=</span> <span class="va">starting_values</span>,</span>
-<span>                      control <span class="op">=</span> <span class="va">control_list</span>, family <span class="op">=</span> <span class="va">family_type</span><span class="op">)</span></span>
-<span>  <span class="va">l2_matrix</span><span class="op">[</span><span class="st">"OLS"</span>, <span class="va">j</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu">norm</span><span class="op">(</span><span class="va">fit_ols</span><span class="op">$</span><span class="va">coefficients</span> <span class="op">-</span> <span class="va">beta_true</span>, type <span class="op">=</span> <span class="st">"2"</span><span class="op">)</span></span>
+<span>  <span class="va">fit_ols</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/glm2/man/glm.fit2.html" class="external-link">glm.fit2</a></span><span class="op">(</span><span class="va">X_final</span>, <span class="va">y_final</span>, control <span class="op">=</span> <span class="va">control_list</span>, family <span class="op">=</span> <span class="va">family_type</span><span class="op">)</span></span>
+<span>  <span class="va">l2_matrix</span><span class="op">[</span><span class="st">"OLS"</span>, <span class="va">j</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://www.cvxgrp.org/CVXR/reference/math_atoms.html" class="external-link">norm</a></span><span class="op">(</span><span class="va">fit_ols</span><span class="op">$</span><span class="va">coefficients</span> <span class="op">-</span> <span class="va">beta_true</span>, type <span class="op">=</span> <span class="st">"2"</span><span class="op">)</span></span>
 <span></span>
 <span>  <span class="kw">for</span> <span class="op">(</span><span class="va">m</span> <span class="kw">in</span> <span class="va">model_names</span><span class="op">[</span><span class="op">-</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span> <span class="op">{</span></span>
-<span>    <span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/savvy_glm.fit2.html">savvy_glm.fit2</a></span><span class="op">(</span><span class="va">X_final</span>, <span class="va">y_final</span>, model_class <span class="op">=</span> <span class="va">m</span>,</span>
-<span>                           start <span class="op">=</span> <span class="va">starting_values</span>, control <span class="op">=</span> <span class="va">control_list</span>, family <span class="op">=</span> <span class="va">family_type</span><span class="op">)</span></span>
-<span>    <span class="va">l2_matrix</span><span class="op">[</span><span class="va">m</span>, <span class="va">j</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu">norm</span><span class="op">(</span><span class="va">fit</span><span class="op">$</span><span class="va">coefficients</span> <span class="op">-</span> <span class="va">beta_true</span>, type <span class="op">=</span> <span class="st">"2"</span><span class="op">)</span></span>
+<span>    <span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/savvy_glm.fit2.html">savvy_glm.fit2</a></span><span class="op">(</span><span class="va">X_final</span>, <span class="va">y_final</span>, model_class <span class="op">=</span> <span class="va">m</span>, control <span class="op">=</span> <span class="va">control_list</span>, family <span class="op">=</span> <span class="va">family_type</span><span class="op">)</span></span>
+<span>    <span class="va">l2_matrix</span><span class="op">[</span><span class="va">m</span>, <span class="va">j</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://www.cvxgrp.org/CVXR/reference/math_atoms.html" class="external-link">norm</a></span><span class="op">(</span><span class="va">fit</span><span class="op">$</span><span class="va">coefficients</span> <span class="op">-</span> <span class="va">beta_true</span>, type <span class="op">=</span> <span class="st">"2"</span><span class="op">)</span></span>
 <span>  <span class="op">}</span></span>
 <span><span class="op">}</span></span></code></pre></div>
 <p>A summary table here is produced to compare these distances across
@@ -622,51 +625,67 @@ LR)</caption>
 <tbody>
 <tr class="odd">
 <td align="left">OLS</td>
-<td align="right">113.9223</td>
-<td align="right">370.0605</td>
-<td align="right">389.5301</td>
-<td align="right">85.0934</td>
-<td align="right">1411.1209</td>
+<td align="right">118.4198</td>
+<td align="right">138.5361</td>
+<td align="right">414.2164</td>
+<td align="right">5084.7451</td>
+<td align="right">26.1614</td>
 </tr>
 <tr class="even">
 <td align="left">SR</td>
-<td align="right">113.9563</td>
-<td align="right">370.6068</td>
-<td align="right">389.4979</td>
-<td align="right">85.0923</td>
-<td align="right">1411.7484</td>
+<td align="right">117.8333</td>
+<td align="right">138.5864</td>
+<td align="right">413.9950</td>
+<td align="right">5082.0885</td>
+<td align="right">26.1597</td>
 </tr>
 <tr class="odd">
 <td align="left">GSR</td>
-<td align="right">119.8898</td>
-<td align="right">369.5698</td>
-<td align="right">391.3903</td>
-<td align="right">81.4199</td>
-<td align="right">1413.7821</td>
+<td align="right">117.7572</td>
+<td align="right">138.3772</td>
+<td align="right">413.5489</td>
+<td align="right">5235.2437</td>
+<td align="right">23.1458</td>
 </tr>
 <tr class="even">
 <td align="left">St</td>
-<td align="right">116.8701</td>
-<td align="right">366.5771</td>
-<td align="right">388.6831</td>
-<td align="right">82.2640</td>
-<td align="right">1409.4099</td>
+<td align="right">119.5847</td>
+<td align="right">136.3671</td>
+<td align="right">412.7503</td>
+<td align="right">5068.1288</td>
+<td align="right">24.5283</td>
 </tr>
 <tr class="odd">
 <td align="left">DSh</td>
-<td align="right">117.7217</td>
-<td align="right">365.9178</td>
-<td align="right">388.7349</td>
-<td align="right">81.8181</td>
-<td align="right">1414.8157</td>
+<td align="right">121.0566</td>
+<td align="right">136.6320</td>
+<td align="right">412.7369</td>
+<td align="right">5069.2734</td>
+<td align="right">23.6872</td>
+</tr>
+<tr class="even">
+<td align="left">LW</td>
+<td align="right">35.5669</td>
+<td align="right">36.9323</td>
+<td align="right">38.5387</td>
+<td align="right">36.5738</td>
+<td align="right">34.2470</td>
+</tr>
+<tr class="odd">
+<td align="left">QIS</td>
+<td align="right">25.2448</td>
+<td align="right">33.1878</td>
+<td align="right">146.1587</td>
+<td align="right">2284.2926</td>
+<td align="right">18.4463</td>
 </tr>
 <tr class="even">
 <td align="left">Sh</td>
-<td align="right">12.3169</td>
-<td align="right">53.2125</td>
-<td align="right">62.8100</td>
-<td align="right">71.2555</td>
-<td align="right">307.2719</td>
+<td align="right">12.1582</td>
+<td align="right">10.0166</td>
+<td align="right">73.5201</td>
+<td align="right">1190.1148</td>
+<td align="right">22.7176</td>
 </tr>
 </tbody>
 </table>
@@ -682,7 +701,7 @@ estimators under class imbalance. As before, models are fit using both
 the standard GLM and the various shrinkage-based GLM.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Load packages</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://Ziwei-ChenChen.github.io/savvyGLM">savvyGLM</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://Ziwei-ChenChen.github.io/savvyGLM/">savvyGLM</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="http://www.stats.ox.ac.uk/pub/MASS4/" class="external-link">MASS</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">glm2</span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://cvxr.rbind.io" class="external-link">CVXR</a></span><span class="op">)</span></span>
@@ -698,7 +717,7 @@ the standard GLM and the various shrinkage-based GLM.</p>
 <span><span class="va">family_type</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/family.html" class="external-link">binomial</a></span><span class="op">(</span>link <span class="op">=</span> <span class="st">"logit"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">sigma.rho</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">rho_val</span>, <span class="va">p_val</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="va">rho_val</span> <span class="op">^</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">abs</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/outer.html" class="external-link">outer</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="va">p_val</span>, <span class="fl">1</span><span class="op">:</span><span class="va">p_val</span>, <span class="st">"-"</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="va">rho_val</span> <span class="op">^</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">abs</a></span><span class="op">(</span><span class="fu"><a href="https://www.cvxgrp.org/CVXR/reference/math_atoms.html" class="external-link">outer</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="va">p_val</span>, <span class="fl">1</span><span class="op">:</span><span class="va">p_val</span>, <span class="st">"-"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">}</span></span>
 <span></span>
 <span><span class="va">theta_func</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">p_val</span><span class="op">)</span> <span class="op">{</span></span>
@@ -707,18 +726,7 @@ the standard GLM and the various shrinkage-based GLM.</p>
 <span>  <span class="va">sgn</span> <span class="op">*</span> <span class="va">mag</span></span>
 <span><span class="op">}</span></span>
 <span></span>
-<span><span class="va">findStartingValues</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="va">beta</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://www.cvxgrp.org/CVXR/reference/Variable-class.html" class="external-link">Variable</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span></span>
-<span>  <span class="va">eta</span> <span class="op">&lt;-</span> <span class="va">x</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html" class="external-link">%*%</a></span> <span class="va">beta</span></span>
-<span>  <span class="va">g_y</span> <span class="op">&lt;-</span> <span class="op">(</span><span class="va">y</span> <span class="op">+</span> <span class="fl">0.5</span><span class="op">)</span> <span class="op">/</span> <span class="fl">2</span></span>
-<span>  <span class="va">logit_g_y</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="va">g_y</span> <span class="op">/</span> <span class="op">(</span><span class="fl">1</span> <span class="op">-</span> <span class="va">g_y</span><span class="op">)</span><span class="op">)</span></span>
-<span>  <span class="va">objective</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://www.cvxgrp.org/CVXR/reference/Minimize-class.html" class="external-link">Minimize</a></span><span class="op">(</span><span class="fu"><a href="https://www.cvxgrp.org/CVXR/reference/sum_squares.html" class="external-link">sum_squares</a></span><span class="op">(</span><span class="va">logit_g_y</span> <span class="op">-</span> <span class="va">eta</span><span class="op">)</span><span class="op">)</span></span>
-<span>  <span class="va">problem</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://www.cvxgrp.org/CVXR/reference/Problem-class.html" class="external-link">Problem</a></span><span class="op">(</span><span class="va">objective</span><span class="op">)</span></span>
-<span>  <span class="va">result</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/solve.html" class="external-link">solve</a></span><span class="op">(</span><span class="va">problem</span><span class="op">)</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="va">result</span><span class="op">$</span><span class="fu">getValue</span><span class="op">(</span><span class="va">beta</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="op">}</span></span>
-<span></span>
-<span><span class="va">model_names</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"OLS"</span>, <span class="st">"SR"</span>, <span class="st">"GSR"</span>, <span class="st">"St"</span>, <span class="st">"DSh"</span>, <span class="st">"Sh"</span><span class="op">)</span></span>
+<span><span class="va">model_names</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"OLS"</span>, <span class="st">"SR"</span>, <span class="st">"GSR"</span>, <span class="st">"St"</span>, <span class="st">"DSh"</span>, <span class="st">"LW"</span>, <span class="st">"QIS"</span>, <span class="st">"Sh"</span><span class="op">)</span></span>
 <span><span class="va">l2_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="cn">NA</span>, nrow <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">model_names</span><span class="op">)</span>, ncol <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">rho_vals</span><span class="op">)</span>,</span>
 <span>                    dimnames <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">model_names</span>, <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"rho="</span>, <span class="va">rho_vals</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="kw">for</span> <span class="op">(</span><span class="va">j</span> <span class="kw">in</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_along</a></span><span class="op">(</span><span class="va">rho_vals</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
@@ -737,16 +745,13 @@ the standard GLM and the various shrinkage-based GLM.</p>
 <span>  <span class="va">final_indices</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">y_zero_indices</span>, <span class="va">y_one_indices</span><span class="op">)</span></span>
 <span>  <span class="va">X_final</span> <span class="op">&lt;-</span> <span class="va">X_large_intercept</span><span class="op">[</span><span class="va">final_indices</span>, <span class="op">]</span></span>
 <span>  <span class="va">y_final</span> <span class="op">&lt;-</span> <span class="va">y_large</span><span class="op">[</span><span class="va">final_indices</span><span class="op">]</span></span>
-<span>  <span class="va">starting_values</span> <span class="op">&lt;-</span> <span class="fu">findStartingValues</span><span class="op">(</span><span class="va">X_final</span>, <span class="va">y_final</span><span class="op">)</span></span>
 <span>  </span>
-<span>  <span class="va">fit_ols</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/glm2/man/glm.fit2.html" class="external-link">glm.fit2</a></span><span class="op">(</span><span class="va">X_final</span>, <span class="va">y_final</span>, start <span class="op">=</span> <span class="va">starting_values</span>,</span>
-<span>                      control <span class="op">=</span> <span class="va">control_list</span>, family <span class="op">=</span> <span class="va">family_type</span><span class="op">)</span></span>
-<span>  <span class="va">l2_matrix</span><span class="op">[</span><span class="st">"OLS"</span>, <span class="va">j</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu">norm</span><span class="op">(</span><span class="va">fit_ols</span><span class="op">$</span><span class="va">coefficients</span> <span class="op">-</span> <span class="va">beta_true</span>, type <span class="op">=</span> <span class="st">"2"</span><span class="op">)</span></span>
+<span>  <span class="va">fit_ols</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/glm2/man/glm.fit2.html" class="external-link">glm.fit2</a></span><span class="op">(</span><span class="va">X_final</span>, <span class="va">y_final</span>, control <span class="op">=</span> <span class="va">control_list</span>, family <span class="op">=</span> <span class="va">family_type</span><span class="op">)</span></span>
+<span>  <span class="va">l2_matrix</span><span class="op">[</span><span class="st">"OLS"</span>, <span class="va">j</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://www.cvxgrp.org/CVXR/reference/math_atoms.html" class="external-link">norm</a></span><span class="op">(</span><span class="va">fit_ols</span><span class="op">$</span><span class="va">coefficients</span> <span class="op">-</span> <span class="va">beta_true</span>, type <span class="op">=</span> <span class="st">"2"</span><span class="op">)</span></span>
 <span></span>
 <span>  <span class="kw">for</span> <span class="op">(</span><span class="va">m</span> <span class="kw">in</span> <span class="va">model_names</span><span class="op">[</span><span class="op">-</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span> <span class="op">{</span></span>
-<span>    <span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/savvy_glm.fit2.html">savvy_glm.fit2</a></span><span class="op">(</span><span class="va">X_final</span>, <span class="va">y_final</span>, model_class <span class="op">=</span> <span class="va">m</span>,</span>
-<span>                           start <span class="op">=</span> <span class="va">starting_values</span>, control <span class="op">=</span> <span class="va">control_list</span>, family <span class="op">=</span> <span class="va">family_type</span><span class="op">)</span></span>
-<span>    <span class="va">l2_matrix</span><span class="op">[</span><span class="va">m</span>, <span class="va">j</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu">norm</span><span class="op">(</span><span class="va">fit</span><span class="op">$</span><span class="va">coefficients</span> <span class="op">-</span> <span class="va">beta_true</span>, type <span class="op">=</span> <span class="st">"2"</span><span class="op">)</span></span>
+<span>    <span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/savvy_glm.fit2.html">savvy_glm.fit2</a></span><span class="op">(</span><span class="va">X_final</span>, <span class="va">y_final</span>, model_class <span class="op">=</span> <span class="va">m</span>, control <span class="op">=</span> <span class="va">control_list</span>, family <span class="op">=</span> <span class="va">family_type</span><span class="op">)</span></span>
+<span>    <span class="va">l2_matrix</span><span class="op">[</span><span class="va">m</span>, <span class="va">j</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://www.cvxgrp.org/CVXR/reference/math_atoms.html" class="external-link">norm</a></span><span class="op">(</span><span class="va">fit</span><span class="op">$</span><span class="va">coefficients</span> <span class="op">-</span> <span class="va">beta_true</span>, type <span class="op">=</span> <span class="st">"2"</span><span class="op">)</span></span>
 <span>  <span class="op">}</span></span>
 <span><span class="op">}</span></span></code></pre></div>
 <p>A summary table here is produced to compare these distances across
@@ -770,51 +775,67 @@ LR)</caption>
 <tbody>
 <tr class="odd">
 <td align="left">OLS</td>
-<td align="right">43.8576</td>
-<td align="right">76.1059</td>
-<td align="right">149.6920</td>
-<td align="right">148.9224</td>
-<td align="right">416.6273</td>
+<td align="right">46.5948</td>
+<td align="right">87.9700</td>
+<td align="right">99.5634</td>
+<td align="right">571.7420</td>
+<td align="right">340.9713</td>
 </tr>
 <tr class="even">
 <td align="left">SR</td>
-<td align="right">43.4368</td>
-<td align="right">75.9847</td>
-<td align="right">149.3453</td>
-<td align="right">148.8895</td>
-<td align="right">416.8925</td>
+<td align="right">46.0122</td>
+<td align="right">87.8380</td>
+<td align="right">100.1734</td>
+<td align="right">569.5226</td>
+<td align="right">341.3195</td>
 </tr>
 <tr class="odd">
 <td align="left">GSR</td>
-<td align="right">45.6810</td>
-<td align="right">75.6519</td>
-<td align="right">149.7902</td>
-<td align="right">149.3444</td>
-<td align="right">418.4628</td>
+<td align="right">44.9937</td>
+<td align="right">87.4731</td>
+<td align="right">99.1064</td>
+<td align="right">571.4744</td>
+<td align="right">342.1765</td>
 </tr>
 <tr class="even">
 <td align="left">St</td>
-<td align="right">45.5025</td>
-<td align="right">75.1966</td>
-<td align="right">149.0896</td>
-<td align="right">148.5704</td>
-<td align="right">415.2965</td>
+<td align="right">44.8112</td>
+<td align="right">86.6661</td>
+<td align="right">99.1358</td>
+<td align="right">569.1595</td>
+<td align="right">339.4084</td>
 </tr>
 <tr class="odd">
 <td align="left">DSh</td>
-<td align="right">44.0459</td>
-<td align="right">74.7376</td>
-<td align="right">148.6800</td>
-<td align="right">148.5846</td>
-<td align="right">417.6846</td>
+<td align="right">44.1640</td>
+<td align="right">86.4792</td>
+<td align="right">97.9790</td>
+<td align="right">568.3849</td>
+<td align="right">341.3638</td>
+</tr>
+<tr class="even">
+<td align="left">LW</td>
+<td align="right">36.2126</td>
+<td align="right">37.3790</td>
+<td align="right">38.4147</td>
+<td align="right">37.3230</td>
+<td align="right">35.5573</td>
+</tr>
+<tr class="odd">
+<td align="left">QIS</td>
+<td align="right">22.4423</td>
+<td align="right">18.9188</td>
+<td align="right">20.2855</td>
+<td align="right">233.9737</td>
+<td align="right">108.4859</td>
 </tr>
 <tr class="even">
 <td align="left">Sh</td>
-<td align="right">26.6729</td>
-<td align="right">19.8582</td>
-<td align="right">9.2992</td>
-<td align="right">12.6352</td>
-<td align="right">65.0610</td>
+<td align="right">26.5751</td>
+<td align="right">17.7852</td>
+<td align="right">16.7885</td>
+<td align="right">94.8718</td>
+<td align="right">50.0001</td>
 </tr>
 </tbody>
 </table>
@@ -827,19 +848,19 @@ LR)</caption>
 <h4 id="log-link-function">Log Link Function<a class="anchor" aria-label="anchor" href="#log-link-function"></a>
 </h4>
 <p>For Poisson GLMs with the log link, the mean response is modeled as
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>μ</mi><mo>=</mo><mo>exp</mo><mrow><mo stretchy="true" form="prefix">(</mo><mi>η</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\mu = \exp(\eta)</annotation></semantics></math>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>μ</mi><mo>=</mo><mrow><mi mathvariant="normal">exp</mi><mo>⁡</mo></mrow><mo stretchy="false" form="prefix">(</mo><mi>η</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\mu = \exp(\eta)</annotation></semantics></math>
 with
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>η</mi><mo>=</mo><msub><mi>X</mi><mtext mathvariant="normal">intercept</mtext></msub><mspace width="0.167em"></mspace><msub><mi>β</mi><mtext mathvariant="normal">true</mtext></msub></mrow><annotation encoding="application/x-tex">\eta = X_{\text{intercept}} \, \beta_{\text{true}}</annotation></semantics></math>.
 In this simulation, covariates are generated from a multivariate normal
 distribution with a Toeplitz covariance matrix. The responses are
 simulated from a Poisson distribution with rate
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>μ</mi><mo>=</mo><mo>exp</mo><mrow><mo stretchy="true" form="prefix">(</mo><mi>η</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\mu = \exp(\eta)</annotation></semantics></math>.
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>μ</mi><mo>=</mo><mrow><mi mathvariant="normal">exp</mi><mo>⁡</mo></mrow><mo stretchy="false" form="prefix">(</mo><mi>η</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\mu = \exp(\eta)</annotation></semantics></math>.
 We fit the models using the standard GLM (via <code>glm.fit2</code>) and
 the shrinkage-based GLM (via <code>savvy_glm.fit2</code>in
 <code>savvyGLM</code> package).</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Load packages</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://Ziwei-ChenChen.github.io/savvyGLM">savvyGLM</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://Ziwei-ChenChen.github.io/savvyGLM/">savvyGLM</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="http://www.stats.ox.ac.uk/pub/MASS4/" class="external-link">MASS</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">glm2</span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://cvxr.rbind.io" class="external-link">CVXR</a></span><span class="op">)</span></span>
@@ -854,7 +875,7 @@ the shrinkage-based GLM (via <code>savvy_glm.fit2</code>in
 <span><span class="va">family_type</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/family.html" class="external-link">poisson</a></span><span class="op">(</span>link <span class="op">=</span> <span class="st">"log"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">sigma.rho</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">rho_val</span>, <span class="va">p_val</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="va">rho_val</span> <span class="op">^</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">abs</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/outer.html" class="external-link">outer</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="va">p_val</span>, <span class="fl">1</span><span class="op">:</span><span class="va">p_val</span>, <span class="st">"-"</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="va">rho_val</span> <span class="op">^</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">abs</a></span><span class="op">(</span><span class="fu"><a href="https://www.cvxgrp.org/CVXR/reference/math_atoms.html" class="external-link">outer</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="va">p_val</span>, <span class="fl">1</span><span class="op">:</span><span class="va">p_val</span>, <span class="st">"-"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">}</span></span>
 <span></span>
 <span><span class="va">theta_func</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">p_val</span><span class="op">)</span> <span class="op">{</span></span>
@@ -867,17 +888,7 @@ the shrinkage-based GLM (via <code>savvy_glm.fit2</code>in
 <span>  <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="va">betas</span><span class="op">)</span></span>
 <span><span class="op">}</span></span>
 <span></span>
-<span><span class="va">findStartingValues</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="va">beta</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://www.cvxgrp.org/CVXR/reference/Variable-class.html" class="external-link">Variable</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span></span>
-<span>  <span class="va">eta</span> <span class="op">&lt;-</span> <span class="va">x</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html" class="external-link">%*%</a></span> <span class="va">beta</span></span>
-<span>  <span class="va">objective</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://www.cvxgrp.org/CVXR/reference/Minimize-class.html" class="external-link">Minimize</a></span><span class="op">(</span><span class="fu"><a href="https://www.cvxgrp.org/CVXR/reference/sum_squares.html" class="external-link">sum_squares</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="va">y</span> <span class="op">+</span> <span class="fl">0.1</span><span class="op">)</span> <span class="op">-</span> <span class="va">eta</span><span class="op">)</span><span class="op">)</span></span>
-<span>  <span class="va">problem</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://www.cvxgrp.org/CVXR/reference/Problem-class.html" class="external-link">Problem</a></span><span class="op">(</span><span class="va">objective</span><span class="op">)</span></span>
-<span>  <span class="va">result</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/solve.html" class="external-link">solve</a></span><span class="op">(</span><span class="va">problem</span><span class="op">)</span></span>
-<span>  <span class="va">starting_values</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="va">result</span><span class="op">$</span><span class="fu">getValue</span><span class="op">(</span><span class="va">beta</span><span class="op">)</span><span class="op">)</span></span>
-<span>  <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="va">starting_values</span><span class="op">)</span></span>
-<span><span class="op">}</span></span>
-<span></span>
-<span><span class="va">model_names</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"OLS"</span>, <span class="st">"SR"</span>, <span class="st">"GSR"</span>, <span class="st">"St"</span>, <span class="st">"DSh"</span>, <span class="st">"Sh"</span><span class="op">)</span></span>
+<span><span class="va">model_names</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"OLS"</span>, <span class="st">"SR"</span>, <span class="st">"GSR"</span>, <span class="st">"St"</span>, <span class="st">"DSh"</span>, <span class="st">"LW"</span>, <span class="st">"QIS"</span>, <span class="st">"Sh"</span><span class="op">)</span></span>
 <span><span class="va">l2_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="cn">NA</span>, nrow <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">model_names</span><span class="op">)</span>, ncol <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">rho_vals</span><span class="op">)</span>,</span>
 <span>                    dimnames <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">model_names</span>, <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"rho="</span>, <span class="va">rho_vals</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="kw">for</span> <span class="op">(</span><span class="va">j</span> <span class="kw">in</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_along</a></span><span class="op">(</span><span class="va">rho_vals</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
@@ -889,16 +900,13 @@ the shrinkage-based GLM (via <code>savvy_glm.fit2</code>in
 <span>  <span class="va">beta_true</span> <span class="op">&lt;-</span> <span class="fu">theta_func</span><span class="op">(</span><span class="va">p_val</span> <span class="op">+</span> <span class="fl">1</span><span class="op">)</span></span>
 <span>  <span class="va">mu_y</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/vector.html" class="external-link">as.vector</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">exp</a></span><span class="op">(</span><span class="va">X_intercept</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html" class="external-link">%*%</a></span> <span class="va">beta_true</span><span class="op">)</span><span class="op">)</span></span>
 <span>  <span class="va">y</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Poisson.html" class="external-link">rpois</a></span><span class="op">(</span><span class="va">n_val</span>, lambda <span class="op">=</span> <span class="va">mu_y</span><span class="op">)</span></span>
-<span>  <span class="va">starting_values</span> <span class="op">&lt;-</span> <span class="fu">findStartingValues</span><span class="op">(</span><span class="va">X_intercept</span>, <span class="va">y</span><span class="op">)</span></span>
 <span>  </span>
-<span>  <span class="va">fit_ols</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/glm2/man/glm.fit2.html" class="external-link">glm.fit2</a></span><span class="op">(</span><span class="va">X_intercept</span>, <span class="va">y</span>, start <span class="op">=</span> <span class="va">starting_values</span>,</span>
-<span>                      control <span class="op">=</span> <span class="va">control_list</span>, family <span class="op">=</span> <span class="va">family_type</span><span class="op">)</span></span>
-<span>  <span class="va">l2_matrix</span><span class="op">[</span><span class="st">"OLS"</span>, <span class="va">j</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu">norm</span><span class="op">(</span><span class="va">fit_ols</span><span class="op">$</span><span class="va">coefficients</span> <span class="op">-</span> <span class="va">beta_true</span>, type <span class="op">=</span> <span class="st">"2"</span><span class="op">)</span></span>
+<span>  <span class="va">fit_ols</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/glm2/man/glm.fit2.html" class="external-link">glm.fit2</a></span><span class="op">(</span><span class="va">X_intercept</span>, <span class="va">y</span>, control <span class="op">=</span> <span class="va">control_list</span>, family <span class="op">=</span> <span class="va">family_type</span><span class="op">)</span></span>
+<span>  <span class="va">l2_matrix</span><span class="op">[</span><span class="st">"OLS"</span>, <span class="va">j</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://www.cvxgrp.org/CVXR/reference/math_atoms.html" class="external-link">norm</a></span><span class="op">(</span><span class="va">fit_ols</span><span class="op">$</span><span class="va">coefficients</span> <span class="op">-</span> <span class="va">beta_true</span>, type <span class="op">=</span> <span class="st">"2"</span><span class="op">)</span></span>
 <span></span>
 <span>  <span class="kw">for</span> <span class="op">(</span><span class="va">m</span> <span class="kw">in</span> <span class="va">model_names</span><span class="op">[</span><span class="op">-</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span> <span class="op">{</span></span>
-<span>    <span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/savvy_glm.fit2.html">savvy_glm.fit2</a></span><span class="op">(</span><span class="va">X_intercept</span>, <span class="va">y</span>, model_class <span class="op">=</span> <span class="va">m</span>,</span>
-<span>                           start <span class="op">=</span> <span class="va">starting_values</span>, control <span class="op">=</span> <span class="va">control_list</span>, family <span class="op">=</span> <span class="va">family_type</span><span class="op">)</span></span>
-<span>    <span class="va">l2_matrix</span><span class="op">[</span><span class="va">m</span>, <span class="va">j</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu">norm</span><span class="op">(</span><span class="va">fit</span><span class="op">$</span><span class="va">coefficients</span> <span class="op">-</span> <span class="va">beta_true</span>, type <span class="op">=</span> <span class="st">"2"</span><span class="op">)</span></span>
+<span>    <span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/savvy_glm.fit2.html">savvy_glm.fit2</a></span><span class="op">(</span><span class="va">X_intercept</span>, <span class="va">y</span>, model_class <span class="op">=</span> <span class="va">m</span>, control <span class="op">=</span> <span class="va">control_list</span>, family <span class="op">=</span> <span class="va">family_type</span><span class="op">)</span></span>
+<span>    <span class="va">l2_matrix</span><span class="op">[</span><span class="va">m</span>, <span class="va">j</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://www.cvxgrp.org/CVXR/reference/math_atoms.html" class="external-link">norm</a></span><span class="op">(</span><span class="va">fit</span><span class="op">$</span><span class="va">coefficients</span> <span class="op">-</span> <span class="va">beta_true</span>, type <span class="op">=</span> <span class="st">"2"</span><span class="op">)</span></span>
 <span>  <span class="op">}</span></span>
 <span><span class="op">}</span></span></code></pre></div>
 <p>A summary table here is produced to compare these distances across
@@ -922,51 +930,67 @@ for Poisson GLM)</caption>
 <tbody>
 <tr class="odd">
 <td align="left">OLS</td>
-<td align="right">0.2847</td>
-<td align="right">0.2477</td>
-<td align="right">0.2115</td>
-<td align="right">0.3973</td>
-<td align="right">0.3676</td>
+<td align="right">0.2715</td>
+<td align="right">0.2909</td>
+<td align="right">0.2035</td>
+<td align="right">0.2385</td>
+<td align="right">0.2992</td>
 </tr>
 <tr class="even">
 <td align="left">SR</td>
-<td align="right">0.2728</td>
-<td align="right">0.2142</td>
-<td align="right">0.1987</td>
-<td align="right">0.3986</td>
-<td align="right">0.3677</td>
+<td align="right">0.2519</td>
+<td align="right">0.2721</td>
+<td align="right">0.1864</td>
+<td align="right">0.2382</td>
+<td align="right">0.2993</td>
 </tr>
 <tr class="odd">
 <td align="left">GSR</td>
-<td align="right">0.1981</td>
-<td align="right">0.1741</td>
-<td align="right">0.1870</td>
-<td align="right">0.3206</td>
-<td align="right">0.3010</td>
+<td align="right">0.1821</td>
+<td align="right">0.2078</td>
+<td align="right">0.1868</td>
+<td align="right">0.1926</td>
+<td align="right">0.2771</td>
 </tr>
 <tr class="even">
 <td align="left">St</td>
-<td align="right">0.2473</td>
-<td align="right">0.2005</td>
-<td align="right">0.1855</td>
-<td align="right">0.3273</td>
-<td align="right">0.2855</td>
+<td align="right">0.2274</td>
+<td align="right">0.2464</td>
+<td align="right">0.1659</td>
+<td align="right">0.1809</td>
+<td align="right">0.2544</td>
 </tr>
 <tr class="odd">
 <td align="left">DSh</td>
-<td align="right">0.2718</td>
-<td align="right">0.2473</td>
-<td align="right">0.2206</td>
-<td align="right">0.3546</td>
-<td align="right">0.3501</td>
+<td align="right">0.2780</td>
+<td align="right">0.2757</td>
+<td align="right">0.2089</td>
+<td align="right">0.2369</td>
+<td align="right">0.2962</td>
+</tr>
+<tr class="even">
+<td align="left">LW</td>
+<td align="right">0.2004</td>
+<td align="right">0.2499</td>
+<td align="right">0.5471</td>
+<td align="right">0.2115</td>
+<td align="right">0.2859</td>
+</tr>
+<tr class="odd">
+<td align="left">QIS</td>
+<td align="right">0.2527</td>
+<td align="right">0.2666</td>
+<td align="right">0.2090</td>
+<td align="right">0.2165</td>
+<td align="right">0.2963</td>
 </tr>
 <tr class="even">
 <td align="left">Sh</td>
-<td align="right">0.2750</td>
-<td align="right">0.2437</td>
-<td align="right">0.2095</td>
-<td align="right">0.3914</td>
-<td align="right">0.3579</td>
+<td align="right">0.2625</td>
+<td align="right">0.2869</td>
+<td align="right">0.2011</td>
+<td align="right">0.2335</td>
+<td align="right">0.2921</td>
 </tr>
 </tbody>
 </table>
@@ -989,7 +1013,7 @@ Models are then fit using both the standard GLM (via
 <code>savvy_glm.fit2</code>in <code>savvyGLM</code> package).</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Load packages</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://Ziwei-ChenChen.github.io/savvyGLM">savvyGLM</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://Ziwei-ChenChen.github.io/savvyGLM/">savvyGLM</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="http://www.stats.ox.ac.uk/pub/MASS4/" class="external-link">MASS</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">glm2</span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://cvxr.rbind.io" class="external-link">CVXR</a></span><span class="op">)</span></span>
@@ -1004,7 +1028,7 @@ Models are then fit using both the standard GLM (via
 <span><span class="va">family_type</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/family.html" class="external-link">poisson</a></span><span class="op">(</span>link <span class="op">=</span> <span class="st">"sqrt"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">sigma.rho</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">rho_val</span>, <span class="va">p_val</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="va">rho_val</span> <span class="op">^</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">abs</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/outer.html" class="external-link">outer</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="va">p_val</span>, <span class="fl">1</span><span class="op">:</span><span class="va">p_val</span>, <span class="st">"-"</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="va">rho_val</span> <span class="op">^</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">abs</a></span><span class="op">(</span><span class="fu"><a href="https://www.cvxgrp.org/CVXR/reference/math_atoms.html" class="external-link">outer</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="va">p_val</span>, <span class="fl">1</span><span class="op">:</span><span class="va">p_val</span>, <span class="st">"-"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">}</span></span>
 <span></span>
 <span><span class="va">theta_func</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">p_val</span><span class="op">)</span> <span class="op">{</span></span>
@@ -1013,18 +1037,7 @@ Models are then fit using both the standard GLM (via
 <span>  <span class="va">sgn</span> <span class="op">*</span> <span class="va">mag</span></span>
 <span><span class="op">}</span></span>
 <span></span>
-<span><span class="va">findStartingValues</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, <span class="va">epsilon</span> <span class="op">=</span> <span class="fl">1e-6</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="va">beta</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://www.cvxgrp.org/CVXR/reference/Variable-class.html" class="external-link">Variable</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span></span>
-<span>  <span class="va">eta</span> <span class="op">&lt;-</span> <span class="va">x</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html" class="external-link">%*%</a></span> <span class="va">beta</span></span>
-<span>  <span class="va">objective</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://www.cvxgrp.org/CVXR/reference/Minimize-class.html" class="external-link">Minimize</a></span><span class="op">(</span><span class="fu"><a href="https://www.cvxgrp.org/CVXR/reference/sum_squares.html" class="external-link">sum_squares</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="va">y</span> <span class="op">+</span> <span class="fl">0.1</span><span class="op">)</span> <span class="op">-</span> <span class="va">eta</span><span class="op">)</span><span class="op">)</span></span>
-<span>  <span class="va">constraints</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">eta</span> <span class="op">&gt;=</span> <span class="va">epsilon</span><span class="op">)</span></span>
-<span>  <span class="va">problem</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://www.cvxgrp.org/CVXR/reference/Problem-class.html" class="external-link">Problem</a></span><span class="op">(</span><span class="va">objective</span>, <span class="va">constraints</span><span class="op">)</span></span>
-<span>  <span class="va">result</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/solve.html" class="external-link">solve</a></span><span class="op">(</span><span class="va">problem</span><span class="op">)</span></span>
-<span>  <span class="va">starting_values</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="va">result</span><span class="op">$</span><span class="fu">getValue</span><span class="op">(</span><span class="va">beta</span><span class="op">)</span><span class="op">)</span></span>
-<span>  <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="va">starting_values</span><span class="op">)</span></span>
-<span><span class="op">}</span></span>
-<span></span>
-<span><span class="va">model_names</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"OLS"</span>, <span class="st">"SR"</span>, <span class="st">"GSR"</span>, <span class="st">"St"</span>, <span class="st">"DSh"</span>, <span class="st">"Sh"</span><span class="op">)</span></span>
+<span><span class="va">model_names</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"OLS"</span>, <span class="st">"SR"</span>, <span class="st">"GSR"</span>, <span class="st">"St"</span>, <span class="st">"DSh"</span>, <span class="st">"LW"</span>, <span class="st">"QIS"</span>, <span class="st">"Sh"</span><span class="op">)</span></span>
 <span><span class="va">l2_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="cn">NA</span>, nrow <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">model_names</span><span class="op">)</span>, ncol <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">rho_vals</span><span class="op">)</span>,</span>
 <span>                    dimnames <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">model_names</span>, <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"rho="</span>, <span class="va">rho_vals</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="kw">for</span> <span class="op">(</span><span class="va">j</span> <span class="kw">in</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_along</a></span><span class="op">(</span><span class="va">rho_vals</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
@@ -1036,16 +1049,13 @@ Models are then fit using both the standard GLM (via
 <span>  <span class="va">beta_true</span> <span class="op">&lt;-</span> <span class="fu">theta_func</span><span class="op">(</span><span class="va">p_val</span> <span class="op">+</span> <span class="fl">1</span><span class="op">)</span></span>
 <span>  <span class="va">mu_y</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/vector.html" class="external-link">as.vector</a></span><span class="op">(</span><span class="op">(</span><span class="va">X_intercept</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html" class="external-link">%*%</a></span> <span class="va">beta_true</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span></span>
 <span>  <span class="va">y</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Poisson.html" class="external-link">rpois</a></span><span class="op">(</span><span class="va">n_val</span>, lambda <span class="op">=</span> <span class="va">mu_y</span><span class="op">)</span></span>
-<span>  <span class="va">starting_values</span> <span class="op">&lt;-</span> <span class="fu">findStartingValues</span><span class="op">(</span><span class="va">X_intercept</span>, <span class="va">y</span><span class="op">)</span></span>
 <span>  </span>
-<span>  <span class="va">fit_ols</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/glm2/man/glm.fit2.html" class="external-link">glm.fit2</a></span><span class="op">(</span><span class="va">X_intercept</span>, <span class="va">y</span>, start <span class="op">=</span> <span class="va">starting_values</span>,</span>
-<span>                      control <span class="op">=</span> <span class="va">control_list</span>, family <span class="op">=</span> <span class="va">family_type</span><span class="op">)</span></span>
-<span>  <span class="va">l2_matrix</span><span class="op">[</span><span class="st">"OLS"</span>, <span class="va">j</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu">norm</span><span class="op">(</span><span class="va">fit_ols</span><span class="op">$</span><span class="va">coefficients</span> <span class="op">-</span> <span class="va">beta_true</span>, type <span class="op">=</span> <span class="st">"2"</span><span class="op">)</span></span>
+<span>  <span class="va">fit_ols</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/glm2/man/glm.fit2.html" class="external-link">glm.fit2</a></span><span class="op">(</span><span class="va">X_intercept</span>, <span class="va">y</span>, control <span class="op">=</span> <span class="va">control_list</span>, family <span class="op">=</span> <span class="va">family_type</span><span class="op">)</span></span>
+<span>  <span class="va">l2_matrix</span><span class="op">[</span><span class="st">"OLS"</span>, <span class="va">j</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://www.cvxgrp.org/CVXR/reference/math_atoms.html" class="external-link">norm</a></span><span class="op">(</span><span class="va">fit_ols</span><span class="op">$</span><span class="va">coefficients</span> <span class="op">-</span> <span class="va">beta_true</span>, type <span class="op">=</span> <span class="st">"2"</span><span class="op">)</span></span>
 <span></span>
 <span>  <span class="kw">for</span> <span class="op">(</span><span class="va">m</span> <span class="kw">in</span> <span class="va">model_names</span><span class="op">[</span><span class="op">-</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span> <span class="op">{</span></span>
-<span>    <span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/savvy_glm.fit2.html">savvy_glm.fit2</a></span><span class="op">(</span><span class="va">X_intercept</span>, <span class="va">y</span>, model_class <span class="op">=</span> <span class="va">m</span>,</span>
-<span>                           start <span class="op">=</span> <span class="va">starting_values</span>, control <span class="op">=</span> <span class="va">control_list</span>, family <span class="op">=</span> <span class="va">family_type</span><span class="op">)</span></span>
-<span>    <span class="va">l2_matrix</span><span class="op">[</span><span class="va">m</span>, <span class="va">j</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu">norm</span><span class="op">(</span><span class="va">fit</span><span class="op">$</span><span class="va">coefficients</span> <span class="op">-</span> <span class="va">beta_true</span>, type <span class="op">=</span> <span class="st">"2"</span><span class="op">)</span></span>
+<span>    <span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/savvy_glm.fit2.html">savvy_glm.fit2</a></span><span class="op">(</span><span class="va">X_intercept</span>, <span class="va">y</span>, model_class <span class="op">=</span> <span class="va">m</span>, control <span class="op">=</span> <span class="va">control_list</span>, family <span class="op">=</span> <span class="va">family_type</span><span class="op">)</span></span>
+<span>    <span class="va">l2_matrix</span><span class="op">[</span><span class="va">m</span>, <span class="va">j</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://www.cvxgrp.org/CVXR/reference/math_atoms.html" class="external-link">norm</a></span><span class="op">(</span><span class="va">fit</span><span class="op">$</span><span class="va">coefficients</span> <span class="op">-</span> <span class="va">beta_true</span>, type <span class="op">=</span> <span class="st">"2"</span><span class="op">)</span></span>
 <span>  <span class="op">}</span></span>
 <span><span class="op">}</span></span></code></pre></div>
 <p>A summary table here is produced to compare these distances across
@@ -1069,51 +1079,67 @@ for Poisson GLM)</caption>
 <tbody>
 <tr class="odd">
 <td align="left">OLS</td>
-<td align="right">105.6656</td>
-<td align="right">82.8127</td>
-<td align="right">57.8924</td>
-<td align="right">45.0648</td>
-<td align="right">40.1208</td>
+<td align="right">105.8302</td>
+<td align="right">78.9315</td>
+<td align="right">55.8439</td>
+<td align="right">48.2180</td>
+<td align="right">38.8785</td>
 </tr>
 <tr class="even">
 <td align="left">SR</td>
-<td align="right">107.3804</td>
-<td align="right">84.1176</td>
-<td align="right">58.0029</td>
-<td align="right">45.0435</td>
-<td align="right">40.0857</td>
+<td align="right">106.9639</td>
+<td align="right">79.4258</td>
+<td align="right">55.4904</td>
+<td align="right">47.7886</td>
+<td align="right">38.7200</td>
 </tr>
 <tr class="odd">
 <td align="left">GSR</td>
-<td align="right">103.4257</td>
-<td align="right">81.8108</td>
-<td align="right">57.1888</td>
-<td align="right">44.9339</td>
-<td align="right">40.3197</td>
+<td align="right">103.4377</td>
+<td align="right">77.6867</td>
+<td align="right">55.0924</td>
+<td align="right">47.6944</td>
+<td align="right">39.2449</td>
 </tr>
 <tr class="even">
 <td align="left">St</td>
-<td align="right">99.2810</td>
-<td align="right">80.5491</td>
-<td align="right">57.3508</td>
-<td align="right">44.6846</td>
-<td align="right">39.9475</td>
+<td align="right">99.4780</td>
+<td align="right">77.2330</td>
+<td align="right">55.0576</td>
+<td align="right">47.5351</td>
+<td align="right">38.3803</td>
 </tr>
 <tr class="odd">
 <td align="left">DSh</td>
-<td align="right">104.1294</td>
-<td align="right">82.4709</td>
-<td align="right">57.5069</td>
-<td align="right">45.2324</td>
-<td align="right">40.5008</td>
+<td align="right">104.1511</td>
+<td align="right">78.5923</td>
+<td align="right">55.8674</td>
+<td align="right">47.8408</td>
+<td align="right">39.9734</td>
+</tr>
+<tr class="even">
+<td align="left">LW</td>
+<td align="right">104.9087</td>
+<td align="right">78.2375</td>
+<td align="right">56.3488</td>
+<td align="right">48.0411</td>
+<td align="right">39.2115</td>
+</tr>
+<tr class="odd">
+<td align="left">QIS</td>
+<td align="right">104.6722</td>
+<td align="right">78.3262</td>
+<td align="right">56.3039</td>
+<td align="right">48.1902</td>
+<td align="right">39.1141</td>
 </tr>
 <tr class="even">
 <td align="left">Sh</td>
-<td align="right">105.6656</td>
-<td align="right">82.8127</td>
-<td align="right">57.8924</td>
-<td align="right">45.0648</td>
-<td align="right">40.1208</td>
+<td align="right">105.8302</td>
+<td align="right">78.9315</td>
+<td align="right">55.8439</td>
+<td align="right">48.2180</td>
+<td align="right">38.8785</td>
 </tr>
 </tbody>
 </table>
@@ -1127,12 +1153,12 @@ for Poisson GLM)</caption>
 <em>log</em> Link Function<a class="anchor" aria-label="anchor" href="#log-link-function-1"></a>
 </h4>
 <p>In Gamma GLMs with the log link, the mean response is given by
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>μ</mi><mo>=</mo><mo>exp</mo><mrow><mo stretchy="true" form="prefix">(</mo><mi>η</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\mu = \exp(\eta)</annotation></semantics></math>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>μ</mi><mo>=</mo><mrow><mi mathvariant="normal">exp</mi><mo>⁡</mo></mrow><mo stretchy="false" form="prefix">(</mo><mi>η</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\mu = \exp(\eta)</annotation></semantics></math>
 with
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>η</mi><mo>=</mo><msub><mi>X</mi><mtext mathvariant="normal">intercept</mtext></msub><mspace width="0.167em"></mspace><msub><mi>β</mi><mtext mathvariant="normal">true</mtext></msub></mrow><annotation encoding="application/x-tex">\eta = X_{\text{intercept}} \, \beta_{\text{true}}</annotation></semantics></math>.
 Covariates are generated as before, and responses are drawn from a Gamma
 distribution with <em>shape</em>
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>μ</mi><mo>=</mo><mo>exp</mo><mrow><mo stretchy="true" form="prefix">(</mo><mi>η</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\mu =\exp(\eta)</annotation></semantics></math>.
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>μ</mi><mo>=</mo><mrow><mi mathvariant="normal">exp</mi><mo>⁡</mo></mrow><mo stretchy="false" form="prefix">(</mo><mi>η</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\mu =\exp(\eta)</annotation></semantics></math>.
 A retry mechanism is used to ensure that all simulated responses are
 positive, which is required by the Gamma model. Models are fit using
 both the standard GLM (via <code>glm.fit2</code>) and the
@@ -1140,7 +1166,7 @@ shrinkage-based GLM (via <code>savvy_glm.fit2</code>in
 <code>savvyGLM</code> package).</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Load packages</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://Ziwei-ChenChen.github.io/savvyGLM">savvyGLM</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://Ziwei-ChenChen.github.io/savvyGLM/">savvyGLM</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="http://www.stats.ox.ac.uk/pub/MASS4/" class="external-link">MASS</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">glm2</span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://cvxr.rbind.io" class="external-link">CVXR</a></span><span class="op">)</span></span>
@@ -1155,7 +1181,7 @@ shrinkage-based GLM (via <code>savvy_glm.fit2</code>in
 <span><span class="va">family_type</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/family.html" class="external-link">Gamma</a></span><span class="op">(</span>link <span class="op">=</span> <span class="st">"log"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">sigma.rho</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">rho_val</span>, <span class="va">p_val</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="va">rho_val</span> <span class="op">^</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">abs</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/outer.html" class="external-link">outer</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="va">p_val</span>, <span class="fl">1</span><span class="op">:</span><span class="va">p_val</span>, <span class="st">"-"</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="va">rho_val</span> <span class="op">^</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">abs</a></span><span class="op">(</span><span class="fu"><a href="https://www.cvxgrp.org/CVXR/reference/math_atoms.html" class="external-link">outer</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="va">p_val</span>, <span class="fl">1</span><span class="op">:</span><span class="va">p_val</span>, <span class="st">"-"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">}</span></span>
 <span></span>
 <span><span class="va">theta_func</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">p_val</span><span class="op">)</span> <span class="op">{</span></span>
@@ -1168,17 +1194,7 @@ shrinkage-based GLM (via <code>savvy_glm.fit2</code>in
 <span>  <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="va">betas</span><span class="op">)</span></span>
 <span><span class="op">}</span></span>
 <span></span>
-<span><span class="va">findStartingValues</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="va">beta</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://www.cvxgrp.org/CVXR/reference/Variable-class.html" class="external-link">Variable</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span></span>
-<span>  <span class="va">eta</span> <span class="op">&lt;-</span> <span class="va">x</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html" class="external-link">%*%</a></span> <span class="va">beta</span></span>
-<span>  <span class="va">objective</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://www.cvxgrp.org/CVXR/reference/Minimize-class.html" class="external-link">Minimize</a></span><span class="op">(</span><span class="fu"><a href="https://www.cvxgrp.org/CVXR/reference/sum_squares.html" class="external-link">sum_squares</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="va">y</span> <span class="op">+</span> <span class="fl">0.1</span><span class="op">)</span> <span class="op">-</span> <span class="va">eta</span><span class="op">)</span><span class="op">)</span></span>
-<span>  <span class="va">problem</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://www.cvxgrp.org/CVXR/reference/Problem-class.html" class="external-link">Problem</a></span><span class="op">(</span><span class="va">objective</span><span class="op">)</span></span>
-<span>  <span class="va">result</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/solve.html" class="external-link">solve</a></span><span class="op">(</span><span class="va">problem</span><span class="op">)</span></span>
-<span>  <span class="va">starting_values</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="va">result</span><span class="op">$</span><span class="fu">getValue</span><span class="op">(</span><span class="va">beta</span><span class="op">)</span><span class="op">)</span></span>
-<span>  <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="va">starting_values</span><span class="op">)</span></span>
-<span><span class="op">}</span></span>
-<span></span>
-<span><span class="va">model_names</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"OLS"</span>, <span class="st">"SR"</span>, <span class="st">"GSR"</span>, <span class="st">"St"</span>, <span class="st">"DSh"</span>, <span class="st">"Sh"</span><span class="op">)</span></span>
+<span><span class="va">model_names</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"OLS"</span>, <span class="st">"SR"</span>, <span class="st">"GSR"</span>, <span class="st">"St"</span>, <span class="st">"DSh"</span>, <span class="st">"LW"</span>, <span class="st">"QIS"</span>, <span class="st">"Sh"</span><span class="op">)</span></span>
 <span><span class="va">l2_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="cn">NA</span>, nrow <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">model_names</span><span class="op">)</span>, ncol <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">rho_vals</span><span class="op">)</span>,</span>
 <span>                    dimnames <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">model_names</span>, <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"rho="</span>, <span class="va">rho_vals</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="kw">for</span> <span class="op">(</span><span class="va">j</span> <span class="kw">in</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_along</a></span><span class="op">(</span><span class="va">rho_vals</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
@@ -1196,16 +1212,13 @@ shrinkage-based GLM (via <code>savvy_glm.fit2</code>in
 <span>    <span class="va">y</span><span class="op">[</span><span class="va">bad_idx</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/GammaDist.html" class="external-link">rgamma</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">bad_idx</span><span class="op">)</span>, shape <span class="op">=</span> <span class="va">mu_y</span><span class="op">[</span><span class="va">bad_idx</span><span class="op">]</span>, scale <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
 <span>    <span class="va">retry_count</span> <span class="op">&lt;-</span> <span class="va">retry_count</span> <span class="op">+</span> <span class="fl">1</span></span>
 <span>  <span class="op">}</span></span>
-<span>  <span class="va">starting_values</span> <span class="op">&lt;-</span> <span class="fu">findStartingValues</span><span class="op">(</span><span class="va">X_intercept</span>, <span class="va">y</span><span class="op">)</span></span>
 <span>  </span>
-<span>  <span class="va">fit_ols</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/glm2/man/glm.fit2.html" class="external-link">glm.fit2</a></span><span class="op">(</span><span class="va">X_intercept</span>, <span class="va">y</span>, start <span class="op">=</span> <span class="va">starting_values</span>,</span>
-<span>                      control <span class="op">=</span> <span class="va">control_list</span>, family <span class="op">=</span> <span class="va">family_type</span><span class="op">)</span></span>
-<span>  <span class="va">l2_matrix</span><span class="op">[</span><span class="st">"OLS"</span>, <span class="va">j</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu">norm</span><span class="op">(</span><span class="va">fit_ols</span><span class="op">$</span><span class="va">coefficients</span> <span class="op">-</span> <span class="va">beta_true</span>, type <span class="op">=</span> <span class="st">"2"</span><span class="op">)</span></span>
+<span>  <span class="va">fit_ols</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/glm2/man/glm.fit2.html" class="external-link">glm.fit2</a></span><span class="op">(</span><span class="va">X_intercept</span>, <span class="va">y</span>, control <span class="op">=</span> <span class="va">control_list</span>, family <span class="op">=</span> <span class="va">family_type</span><span class="op">)</span></span>
+<span>  <span class="va">l2_matrix</span><span class="op">[</span><span class="st">"OLS"</span>, <span class="va">j</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://www.cvxgrp.org/CVXR/reference/math_atoms.html" class="external-link">norm</a></span><span class="op">(</span><span class="va">fit_ols</span><span class="op">$</span><span class="va">coefficients</span> <span class="op">-</span> <span class="va">beta_true</span>, type <span class="op">=</span> <span class="st">"2"</span><span class="op">)</span></span>
 <span></span>
 <span>  <span class="kw">for</span> <span class="op">(</span><span class="va">m</span> <span class="kw">in</span> <span class="va">model_names</span><span class="op">[</span><span class="op">-</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span> <span class="op">{</span></span>
-<span>    <span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/savvy_glm.fit2.html">savvy_glm.fit2</a></span><span class="op">(</span><span class="va">X_intercept</span>, <span class="va">y</span>, model_class <span class="op">=</span> <span class="va">m</span>,</span>
-<span>                           start <span class="op">=</span> <span class="va">starting_values</span>, control <span class="op">=</span> <span class="va">control_list</span>, family <span class="op">=</span> <span class="va">family_type</span><span class="op">)</span></span>
-<span>    <span class="va">l2_matrix</span><span class="op">[</span><span class="va">m</span>, <span class="va">j</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu">norm</span><span class="op">(</span><span class="va">fit</span><span class="op">$</span><span class="va">coefficients</span> <span class="op">-</span> <span class="va">beta_true</span>, type <span class="op">=</span> <span class="st">"2"</span><span class="op">)</span></span>
+<span>    <span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/savvy_glm.fit2.html">savvy_glm.fit2</a></span><span class="op">(</span><span class="va">X_intercept</span>, <span class="va">y</span>, model_class <span class="op">=</span> <span class="va">m</span>, control <span class="op">=</span> <span class="va">control_list</span>, family <span class="op">=</span> <span class="va">family_type</span><span class="op">)</span></span>
+<span>    <span class="va">l2_matrix</span><span class="op">[</span><span class="va">m</span>, <span class="va">j</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://www.cvxgrp.org/CVXR/reference/math_atoms.html" class="external-link">norm</a></span><span class="op">(</span><span class="va">fit</span><span class="op">$</span><span class="va">coefficients</span> <span class="op">-</span> <span class="va">beta_true</span>, type <span class="op">=</span> <span class="st">"2"</span><span class="op">)</span></span>
 <span>  <span class="op">}</span></span>
 <span><span class="op">}</span></span></code></pre></div>
 <p>A summary table here is produced to compare these distances across
@@ -1229,51 +1242,67 @@ for Gamma GLM)</caption>
 <tbody>
 <tr class="odd">
 <td align="left">OLS</td>
-<td align="right">0.4254</td>
-<td align="right">0.2821</td>
-<td align="right">0.1926</td>
-<td align="right">0.3676</td>
-<td align="right">0.4349</td>
+<td align="right">0.4067</td>
+<td align="right">0.3339</td>
+<td align="right">0.2600</td>
+<td align="right">0.2623</td>
+<td align="right">0.3082</td>
 </tr>
 <tr class="even">
 <td align="left">SR</td>
-<td align="right">0.3941</td>
-<td align="right">0.2812</td>
-<td align="right">0.1919</td>
-<td align="right">0.3652</td>
-<td align="right">0.4345</td>
+<td align="right">0.3957</td>
+<td align="right">0.3258</td>
+<td align="right">0.2600</td>
+<td align="right">0.2614</td>
+<td align="right">0.3079</td>
 </tr>
 <tr class="odd">
 <td align="left">GSR</td>
-<td align="right">0.3001</td>
-<td align="right">0.2103</td>
-<td align="right">0.1742</td>
-<td align="right">0.3101</td>
-<td align="right">0.3238</td>
+<td align="right">0.2540</td>
+<td align="right">0.2633</td>
+<td align="right">0.2333</td>
+<td align="right">0.1989</td>
+<td align="right">0.2318</td>
 </tr>
 <tr class="even">
 <td align="left">St</td>
-<td align="right">0.2670</td>
-<td align="right">0.2179</td>
-<td align="right">0.1627</td>
-<td align="right">0.2818</td>
-<td align="right">0.3337</td>
+<td align="right">0.2406</td>
+<td align="right">0.2534</td>
+<td align="right">0.2022</td>
+<td align="right">0.1861</td>
+<td align="right">0.2557</td>
 </tr>
 <tr class="odd">
 <td align="left">DSh</td>
-<td align="right">0.3171</td>
-<td align="right">0.2600</td>
-<td align="right">0.2052</td>
-<td align="right">0.3366</td>
-<td align="right">0.3509</td>
+<td align="right">0.2701</td>
+<td align="right">0.2912</td>
+<td align="right">0.2399</td>
+<td align="right">0.2381</td>
+<td align="right">0.3028</td>
+</tr>
+<tr class="even">
+<td align="left">LW</td>
+<td align="right">0.3683</td>
+<td align="right">0.2895</td>
+<td align="right">0.3023</td>
+<td align="right">0.2252</td>
+<td align="right">0.2911</td>
+</tr>
+<tr class="odd">
+<td align="left">QIS</td>
+<td align="right">0.3691</td>
+<td align="right">0.2860</td>
+<td align="right">0.3001</td>
+<td align="right">0.2409</td>
+<td align="right">0.2990</td>
 </tr>
 <tr class="even">
 <td align="left">Sh</td>
-<td align="right">0.4102</td>
-<td align="right">0.2777</td>
-<td align="right">0.1894</td>
-<td align="right">0.3605</td>
-<td align="right">0.4205</td>
+<td align="right">0.3902</td>
+<td align="right">0.3260</td>
+<td align="right">0.2567</td>
+<td align="right">0.2548</td>
+<td align="right">0.2981</td>
 </tr>
 </tbody>
 </table>
@@ -1294,11 +1323,9 @@ Fitting the models using both the standard GLM (via
 <code>glm.fit2</code>) and the shrinkage-based GLM (via
 <code>savvy_glm.fit2</code>in <code>savvyGLM</code> package).</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Load packages</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://Ziwei-ChenChen.github.io/savvyGLM">savvyGLM</a></span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://Ziwei-ChenChen.github.io/savvyGLM/">savvyGLM</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="http://www.stats.ox.ac.uk/pub/MASS4/" class="external-link">MASS</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">glm2</span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://cvxr.rbind.io" class="external-link">CVXR</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://yihui.org/knitr/" class="external-link">knitr</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">123</span><span class="op">)</span></span>
@@ -1310,7 +1337,7 @@ Fitting the models using both the standard GLM (via
 <span><span class="va">family_type</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/family.html" class="external-link">Gamma</a></span><span class="op">(</span>link <span class="op">=</span> <span class="st">"sqrt"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">sigma.rho</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">rho_val</span>, <span class="va">p_val</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="va">rho_val</span> <span class="op">^</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">abs</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/outer.html" class="external-link">outer</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="va">p_val</span>, <span class="fl">1</span><span class="op">:</span><span class="va">p_val</span>, <span class="st">"-"</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="va">rho_val</span> <span class="op">^</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">abs</a></span><span class="op">(</span><span class="fu"><a href="https://www.cvxgrp.org/CVXR/reference/math_atoms.html" class="external-link">outer</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="va">p_val</span>, <span class="fl">1</span><span class="op">:</span><span class="va">p_val</span>, <span class="st">"-"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">}</span></span>
 <span></span>
 <span><span class="va">theta_func</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">p_val</span><span class="op">)</span> <span class="op">{</span></span>
@@ -1320,19 +1347,20 @@ Fitting the models using both the standard GLM (via
 <span><span class="op">}</span></span>
 <span></span>
 <span><span class="va">findStartingValues</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, <span class="va">epsilon</span> <span class="op">=</span> <span class="fl">1e-6</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="va">beta</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://www.cvxgrp.org/CVXR/reference/Variable-class.html" class="external-link">Variable</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="va">beta</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://www.cvxgrp.org/CVXR/reference/Variable.html" class="external-link">Variable</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span></span>
 <span>  <span class="va">eta</span> <span class="op">&lt;-</span> <span class="va">x</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html" class="external-link">%*%</a></span> <span class="va">beta</span></span>
-<span>  <span class="va">objective</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://www.cvxgrp.org/CVXR/reference/Minimize-class.html" class="external-link">Minimize</a></span><span class="op">(</span><span class="fu"><a href="https://www.cvxgrp.org/CVXR/reference/sum_squares.html" class="external-link">sum_squares</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="va">y</span> <span class="op">+</span> <span class="fl">0.1</span><span class="op">)</span> <span class="op">-</span> <span class="va">eta</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="va">objective</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://www.cvxgrp.org/CVXR/reference/Minimize.html" class="external-link">Minimize</a></span><span class="op">(</span><span class="fu"><a href="https://www.cvxgrp.org/CVXR/reference/sum_squares.html" class="external-link">sum_squares</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="va">y</span> <span class="op">+</span> <span class="fl">0.1</span><span class="op">)</span> <span class="op">-</span> <span class="va">eta</span><span class="op">)</span><span class="op">)</span></span>
 <span>  <span class="va">constraints</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">eta</span> <span class="op">&gt;=</span> <span class="va">epsilon</span><span class="op">)</span></span>
-<span>  <span class="va">problem</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://www.cvxgrp.org/CVXR/reference/Problem-class.html" class="external-link">Problem</a></span><span class="op">(</span><span class="va">objective</span>, <span class="va">constraints</span><span class="op">)</span></span>
-<span>  <span class="va">result</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/solve.html" class="external-link">solve</a></span><span class="op">(</span><span class="va">problem</span><span class="op">)</span></span>
-<span>  <span class="va">starting_values</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="va">result</span><span class="op">$</span><span class="fu">getValue</span><span class="op">(</span><span class="va">beta</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="va">problem</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://www.cvxgrp.org/CVXR/reference/Problem.html" class="external-link">Problem</a></span><span class="op">(</span><span class="va">objective</span>, <span class="va">constraints</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://www.cvxgrp.org/CVXR/reference/psolve.html" class="external-link">psolve</a></span><span class="op">(</span><span class="va">problem</span>, silent <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span>  <span class="va">starting_values</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="fu"><a href="https://www.cvxgrp.org/CVXR/reference/value.html" class="external-link">value</a></span><span class="op">(</span><span class="va">beta</span><span class="op">)</span><span class="op">)</span></span>
 <span>  <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="va">starting_values</span><span class="op">)</span></span>
 <span><span class="op">}</span></span>
 <span></span>
-<span><span class="va">model_names</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"OLS"</span>, <span class="st">"SR"</span>, <span class="st">"GSR"</span>, <span class="st">"St"</span>, <span class="st">"DSh"</span>, <span class="st">"Sh"</span><span class="op">)</span></span>
+<span><span class="va">model_names</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"OLS"</span>, <span class="st">"SR"</span>, <span class="st">"GSR"</span>, <span class="st">"St"</span>, <span class="st">"DSh"</span>, <span class="st">"LW"</span>, <span class="st">"QIS"</span>, <span class="st">"Sh"</span><span class="op">)</span></span>
 <span><span class="va">l2_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="cn">NA</span>, nrow <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">model_names</span><span class="op">)</span>, ncol <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">rho_vals</span><span class="op">)</span>,</span>
 <span>                    dimnames <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">model_names</span>, <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"rho="</span>, <span class="va">rho_vals</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
 <span><span class="kw">for</span> <span class="op">(</span><span class="va">j</span> <span class="kw">in</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_along</a></span><span class="op">(</span><span class="va">rho_vals</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="va">rho_val</span> <span class="op">&lt;-</span> <span class="va">rho_vals</span><span class="op">[</span><span class="va">j</span><span class="op">]</span></span>
 <span>  <span class="va">Sigma</span> <span class="op">&lt;-</span> <span class="fu">sigma.rho</span><span class="op">(</span><span class="va">rho_val</span>, <span class="va">p_val</span><span class="op">)</span></span>
@@ -1342,22 +1370,26 @@ Fitting the models using both the standard GLM (via
 <span>  <span class="va">beta_true</span> <span class="op">&lt;-</span> <span class="fu">theta_func</span><span class="op">(</span><span class="va">p_val</span> <span class="op">+</span> <span class="fl">1</span><span class="op">)</span></span>
 <span>  <span class="va">mu_y</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/vector.html" class="external-link">as.vector</a></span><span class="op">(</span><span class="op">(</span><span class="va">X_intercept</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html" class="external-link">%*%</a></span> <span class="va">beta_true</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span></span>
 <span>  <span class="va">y</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/GammaDist.html" class="external-link">rgamma</a></span><span class="op">(</span><span class="va">n_val</span>, shape <span class="op">=</span> <span class="va">mu_y</span>, scale <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
+<span>  </span>
 <span>  <span class="va">retry_count</span> <span class="op">&lt;-</span> <span class="fl">0</span></span>
 <span>  <span class="kw">while</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/any.html" class="external-link">any</a></span><span class="op">(</span><span class="va">y</span> <span class="op">&lt;=</span> <span class="fl">0</span><span class="op">)</span> <span class="op">&amp;&amp;</span> <span class="va">retry_count</span> <span class="op">&lt;</span> <span class="fl">100</span><span class="op">)</span> <span class="op">{</span></span>
 <span>    <span class="va">bad_idx</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="va">y</span> <span class="op">&lt;=</span> <span class="fl">0</span><span class="op">)</span></span>
 <span>    <span class="va">y</span><span class="op">[</span><span class="va">bad_idx</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/GammaDist.html" class="external-link">rgamma</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">bad_idx</span><span class="op">)</span>, shape <span class="op">=</span> <span class="va">mu_y</span><span class="op">[</span><span class="va">bad_idx</span><span class="op">]</span>, scale <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
 <span>    <span class="va">retry_count</span> <span class="op">&lt;-</span> <span class="va">retry_count</span> <span class="op">+</span> <span class="fl">1</span></span>
 <span>  <span class="op">}</span></span>
+<span>  </span>
 <span>  <span class="va">starting_values</span> <span class="op">&lt;-</span> <span class="fu">findStartingValues</span><span class="op">(</span><span class="va">X_intercept</span>, <span class="va">y</span><span class="op">)</span></span>
 <span>  </span>
 <span>  <span class="va">fit_ols</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/glm2/man/glm.fit2.html" class="external-link">glm.fit2</a></span><span class="op">(</span><span class="va">X_intercept</span>, <span class="va">y</span>, start <span class="op">=</span> <span class="va">starting_values</span>,</span>
 <span>                      control <span class="op">=</span> <span class="va">control_list</span>, family <span class="op">=</span> <span class="va">family_type</span><span class="op">)</span></span>
-<span>  <span class="va">l2_matrix</span><span class="op">[</span><span class="st">"OLS"</span>, <span class="va">j</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu">norm</span><span class="op">(</span><span class="va">fit_ols</span><span class="op">$</span><span class="va">coefficients</span> <span class="op">-</span> <span class="va">beta_true</span>, type <span class="op">=</span> <span class="st">"2"</span><span class="op">)</span></span>
+<span>  <span class="va">l2_matrix</span><span class="op">[</span><span class="st">"OLS"</span>, <span class="va">j</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://www.cvxgrp.org/CVXR/reference/math_atoms.html" class="external-link">norm</a></span><span class="op">(</span><span class="va">fit_ols</span><span class="op">$</span><span class="va">coefficients</span> <span class="op">-</span> <span class="va">beta_true</span>, type <span class="op">=</span> <span class="st">"2"</span><span class="op">)</span></span>
 <span></span>
 <span>  <span class="kw">for</span> <span class="op">(</span><span class="va">m</span> <span class="kw">in</span> <span class="va">model_names</span><span class="op">[</span><span class="op">-</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span> <span class="op">{</span></span>
-<span>    <span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/savvy_glm.fit2.html">savvy_glm.fit2</a></span><span class="op">(</span><span class="va">X_intercept</span>, <span class="va">y</span>, model_class <span class="op">=</span> <span class="va">m</span>,</span>
-<span>                           start <span class="op">=</span> <span class="va">starting_values</span>, control <span class="op">=</span> <span class="va">control_list</span>, family <span class="op">=</span> <span class="va">family_type</span><span class="op">)</span></span>
-<span>    <span class="va">l2_matrix</span><span class="op">[</span><span class="va">m</span>, <span class="va">j</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu">norm</span><span class="op">(</span><span class="va">fit</span><span class="op">$</span><span class="va">coefficients</span> <span class="op">-</span> <span class="va">beta_true</span>, type <span class="op">=</span> <span class="st">"2"</span><span class="op">)</span></span>
+<span>    <span class="co"># Added use_parallel = FALSE to dramatically speed up vignette building</span></span>
+<span>    <span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/savvy_glm.fit2.html">savvy_glm.fit2</a></span><span class="op">(</span><span class="va">X_intercept</span>, <span class="va">y</span>, model_class <span class="op">=</span> <span class="va">m</span>, control <span class="op">=</span> <span class="va">control_list</span>, </span>
+<span>                          family <span class="op">=</span> <span class="va">family_type</span>, use_robust_start <span class="op">=</span> <span class="cn">TRUE</span>, </span>
+<span>                          use_parallel <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span>    <span class="va">l2_matrix</span><span class="op">[</span><span class="va">m</span>, <span class="va">j</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://www.cvxgrp.org/CVXR/reference/math_atoms.html" class="external-link">norm</a></span><span class="op">(</span><span class="va">fit</span><span class="op">$</span><span class="va">coefficients</span> <span class="op">-</span> <span class="va">beta_true</span>, type <span class="op">=</span> <span class="st">"2"</span><span class="op">)</span></span>
 <span>  <span class="op">}</span></span>
 <span><span class="op">}</span></span></code></pre></div>
 <p>A summary table here is produced to compare these distances across
@@ -1381,51 +1413,67 @@ for Gamma GLM)</caption>
 <tbody>
 <tr class="odd">
 <td align="left">OLS</td>
-<td align="right">107.8225</td>
-<td align="right">81.8266</td>
-<td align="right">56.4835</td>
-<td align="right">45.4632</td>
-<td align="right">40.4655</td>
+<td align="right">108.1097</td>
+<td align="right">78.2093</td>
+<td align="right">56.4163</td>
+<td align="right">46.8951</td>
+<td align="right">41.9629</td>
 </tr>
 <tr class="even">
 <td align="left">SR</td>
-<td align="right">107.8121</td>
-<td align="right">81.8224</td>
-<td align="right">56.4548</td>
-<td align="right">45.4602</td>
-<td align="right">40.4746</td>
+<td align="right">108.1052</td>
+<td align="right">78.2082</td>
+<td align="right">56.3660</td>
+<td align="right">46.8295</td>
+<td align="right">41.9684</td>
 </tr>
 <tr class="odd">
 <td align="left">GSR</td>
-<td align="right">104.3230</td>
-<td align="right">80.3020</td>
-<td align="right">55.5819</td>
-<td align="right">45.3778</td>
-<td align="right">40.4913</td>
+<td align="right">104.5311</td>
+<td align="right">77.1232</td>
+<td align="right">55.9971</td>
+<td align="right">46.7169</td>
+<td align="right">42.1281</td>
 </tr>
 <tr class="even">
 <td align="left">St</td>
-<td align="right">102.0399</td>
-<td align="right">79.3341</td>
-<td align="right">55.8032</td>
-<td align="right">45.0603</td>
-<td align="right">40.2149</td>
+<td align="right">102.2954</td>
+<td align="right">76.2955</td>
+<td align="right">55.7526</td>
+<td align="right">46.3217</td>
+<td align="right">41.5515</td>
 </tr>
 <tr class="odd">
 <td align="left">DSh</td>
-<td align="right">105.1456</td>
-<td align="right">81.0958</td>
-<td align="right">55.9391</td>
-<td align="right">45.8814</td>
-<td align="right">40.3181</td>
+<td align="right">105.6050</td>
+<td align="right">77.2780</td>
+<td align="right">56.6020</td>
+<td align="right">46.8909</td>
+<td align="right">42.1011</td>
+</tr>
+<tr class="even">
+<td align="left">LW</td>
+<td align="right">105.0065</td>
+<td align="right">76.7574</td>
+<td align="right">56.2635</td>
+<td align="right">46.6498</td>
+<td align="right">41.9816</td>
+</tr>
+<tr class="odd">
+<td align="left">QIS</td>
+<td align="right">104.1095</td>
+<td align="right">77.2196</td>
+<td align="right">55.2965</td>
+<td align="right">47.2840</td>
+<td align="right">42.0942</td>
 </tr>
 <tr class="even">
 <td align="left">Sh</td>
-<td align="right">107.7353</td>
-<td align="right">81.7724</td>
-<td align="right">56.4640</td>
-<td align="right">45.4739</td>
-<td align="right">40.4802</td>
+<td align="right">107.9788</td>
+<td align="right">78.1691</td>
+<td align="right">56.4011</td>
+<td align="right">46.8882</td>
+<td align="right">41.9786</td>
 </tr>
 </tbody>
 </table>
@@ -1439,11 +1487,10 @@ for Gamma GLM)</caption>
 <p>In this section, we evaluate the performance of Gamma GLM estimation
 methods using real flood insurance data from three states: Florida (FL),
 Texas (TX), and Louisiana (LA). The dataset covers the period 2014 to
-2023 and includes claims from the <a href="https://www.fema.gov/openfema-data-page/fima-nfip-redacted-claims-v2" class="external-link">National
-Flood Insurance Programme (NFIP)</a>. For each state (e.g., Florida (FL)
-and Louisiana (LA)), the data are no provided here, but you can download
-from <a href="https://www.fema.gov/openfema-data-page/fima-nfip-redacted-claims-v2" class="external-link">NFIP</a>
-and follow the preprocess steps provided in the paper.</p>
+2023 and includes claims from the National Flood Insurance Programme
+(NFIP). For each state (e.g., Florida (FL) and Louisiana (LA)), the data
+are no provided here, but you can download from NFIP and follow the
+preprocess steps provided in the paper.</p>
 <p>For each year, the dataset is split into a 70% training set and a 30%
 test set. Models are fitted using the standard GLM (via
 <code>glm.fit2</code>) and several shrinkage-based GLM (via
@@ -1452,7 +1499,7 @@ and optionally Sh) using two different link functions:</p>
 <ul>
 <li><p>For Gamma GLMs with the <strong>log link</strong>, the mean
 response is modeled as
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>μ</mi><mo>=</mo><mo>exp</mo><mrow><mo stretchy="true" form="prefix">(</mo><mi>η</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\mu = \exp(\eta)</annotation></semantics></math>.</p></li>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>μ</mi><mo>=</mo><mrow><mi mathvariant="normal">exp</mi><mo>⁡</mo></mrow><mo stretchy="false" form="prefix">(</mo><mi>η</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\mu = \exp(\eta)</annotation></semantics></math>.</p></li>
 <li><p>For Gamma GLMs with the <strong>sqrt link</strong>, the mean
 response is modeled as
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>μ</mi><mo>=</mo><msup><mi>η</mi><mn>2</mn></msup></mrow><annotation encoding="application/x-tex">\mu = \eta^2</annotation></semantics></math>.</p></li>
@@ -1469,14 +1516,15 @@ standard update. This process is repeated multiple times (e.g.,
 replications per year), and the average ratio is computed for each model
 and each year.</p>
 <p>Here, we just provide two cases and for a detailed account of the
-full data processing and evaluation procedures, please refer to the <a href="http//...">main paper</a>.</p>
+full data processing and evaluation procedures, please refer to the main
+paper: GLM Solutions via Shrinkage.</p>
 <hr>
 <div class="section level3">
 <h3 id="fl-dataset-with-log-link-function">FL dataset with <em>log</em> Link Function<a class="anchor" aria-label="anchor" href="#fl-dataset-with-log-link-function"></a>
 </h3>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Load required packages</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://Ziwei-ChenChen.github.io/savvyGLM">savvyGLM</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://Ziwei-ChenChen.github.io/savvyGLM/">savvyGLM</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="http://www.stats.ox.ac.uk/pub/MASS4/" class="external-link">MASS</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">glm2</span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://cvxr.rbind.io" class="external-link">CVXR</a></span><span class="op">)</span></span>
@@ -1492,16 +1540,6 @@ full data processing and evaluation procedures, please refer to the <a href="htt
 <span></span>
 <span><span class="va">Evaluation_results</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="cn">NA</span>, nrow <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">model_names</span><span class="op">)</span>, ncol <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">years</span><span class="op">)</span>,</span>
 <span>                             dimnames <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">model_names</span>, <span class="va">years</span><span class="op">)</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">findStartingValues</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="va">beta</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://www.cvxgrp.org/CVXR/reference/Variable-class.html" class="external-link">Variable</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span></span>
-<span>  <span class="va">eta</span> <span class="op">&lt;-</span> <span class="va">x</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html" class="external-link">%*%</a></span> <span class="va">beta</span></span>
-<span>  <span class="va">objective</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://www.cvxgrp.org/CVXR/reference/Minimize-class.html" class="external-link">Minimize</a></span><span class="op">(</span><span class="fu"><a href="https://www.cvxgrp.org/CVXR/reference/sum_squares.html" class="external-link">sum_squares</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="va">y</span> <span class="op">+</span> <span class="fl">0.1</span><span class="op">)</span> <span class="op">-</span> <span class="va">eta</span><span class="op">)</span><span class="op">)</span></span>
-<span>  <span class="va">problem</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://www.cvxgrp.org/CVXR/reference/Problem-class.html" class="external-link">Problem</a></span><span class="op">(</span><span class="va">objective</span><span class="op">)</span></span>
-<span>  <span class="va">result</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/solve.html" class="external-link">solve</a></span><span class="op">(</span><span class="va">problem</span><span class="op">)</span></span>
-<span>  <span class="va">starting_values</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="va">result</span><span class="op">$</span><span class="fu">getValue</span><span class="op">(</span><span class="va">beta</span><span class="op">)</span><span class="op">)</span></span>
-<span>  <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="va">starting_values</span><span class="op">)</span></span>
-<span><span class="op">}</span></span>
 <span></span>
 <span><span class="va">calculate_mse</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">true_values</span>, <span class="va">predicted_values</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="op">(</span><span class="va">true_values</span> <span class="op">-</span> <span class="va">predicted_values</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span></span>
@@ -1526,15 +1564,14 @@ full data processing and evaluation procedures, please refer to the <a href="htt
 <span>    <span class="va">y_test</span> <span class="op">&lt;-</span> <span class="va">test_data</span><span class="op">[</span>, <span class="fl">1</span><span class="op">]</span></span>
 <span>    <span class="va">X_train_int</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="fl">1</span>, <span class="va">X_train</span><span class="op">)</span></span>
 <span>    <span class="va">X_test_int</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="fl">1</span>, <span class="va">X_test</span><span class="op">)</span></span>
-<span>    <span class="va">starting_values</span> <span class="op">&lt;-</span> <span class="fu">findStartingValues</span><span class="op">(</span><span class="va">X_train_int</span>, <span class="va">y_train</span><span class="op">)</span></span>
 <span>  </span>
 <span>    <span class="va">model_glm2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/glm2/man/glm.fit2.html" class="external-link">glm.fit2</a></span><span class="op">(</span><span class="va">X_train_int</span>, <span class="va">y_train</span>, start <span class="op">=</span> <span class="va">starting_values</span>,</span>
 <span>                           control <span class="op">=</span> <span class="va">control_list</span>, family <span class="op">=</span> <span class="va">family_type</span><span class="op">)</span></span>
 <span>    <span class="va">y_pred_glm2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">exp</a></span><span class="op">(</span><span class="va">X_test_int</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html" class="external-link">%*%</a></span> <span class="va">model_glm2</span><span class="op">$</span><span class="va">coefficients</span><span class="op">)</span></span>
 <span>    <span class="va">mse_ols</span> <span class="op">&lt;-</span> <span class="fu">calculate_mse</span><span class="op">(</span><span class="va">y_test</span>, <span class="va">y_pred_glm2</span><span class="op">)</span></span>
 <span>    <span class="kw">for</span> <span class="op">(</span><span class="va">m</span> <span class="kw">in</span> <span class="va">model_names</span><span class="op">[</span><span class="op">-</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span> <span class="op">{</span></span>
-<span>      <span class="va">model_savvy</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/savvy_glm.fit2.html">savvy_glm.fit2</a></span><span class="op">(</span><span class="va">X_train_int</span>, <span class="va">y_train</span>, model_class <span class="op">=</span> <span class="va">m</span>,</span>
-<span>                                      start <span class="op">=</span> <span class="va">starting_values</span>, control <span class="op">=</span> <span class="va">control_list</span>, family <span class="op">=</span> <span class="va">family_type</span><span class="op">)</span></span>
+<span>      <span class="va">model_savvy</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/savvy_glm.fit2.html">savvy_glm.fit2</a></span><span class="op">(</span><span class="va">X_train_int</span>, <span class="va">y_train</span>, model_class <span class="op">=</span> <span class="va">m</span>, control <span class="op">=</span> <span class="va">control_list</span>,</span>
+<span>                                    family <span class="op">=</span> <span class="va">family_type</span>, use_robust_start <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span>      <span class="va">y_pred</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">exp</a></span><span class="op">(</span><span class="va">X_test_int</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html" class="external-link">%*%</a></span> <span class="va">model_savvy</span><span class="op">$</span><span class="va">coefficients</span><span class="op">)</span></span>
 <span>      <span class="va">mse_savvy</span> <span class="op">&lt;-</span> <span class="fu">calculate_mse</span><span class="op">(</span><span class="va">y_test</span>, <span class="va">y_pred</span><span class="op">)</span></span>
 <span>      <span class="va">ratio_mat</span><span class="op">[</span><span class="va">i</span>, <span class="va">m</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">mse_ols</span> <span class="op">/</span> <span class="va">mse_savvy</span></span>
@@ -1553,7 +1590,7 @@ full data processing and evaluation procedures, please refer to the <a href="htt
 </h3>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Load required packages</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://Ziwei-ChenChen.github.io/savvyGLM">savvyGLM</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://Ziwei-ChenChen.github.io/savvyGLM/">savvyGLM</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="http://www.stats.ox.ac.uk/pub/MASS4/" class="external-link">MASS</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">glm2</span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://cvxr.rbind.io" class="external-link">CVXR</a></span><span class="op">)</span></span>
@@ -1569,17 +1606,6 @@ full data processing and evaluation procedures, please refer to the <a href="htt
 <span></span>
 <span><span class="va">Evaluation_results</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="cn">NA</span>, nrow <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">model_names</span><span class="op">)</span>, ncol <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">years</span><span class="op">)</span>,</span>
 <span>                             dimnames <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">model_names</span>, <span class="va">years</span><span class="op">)</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">findStartingValues</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, <span class="va">epsilon</span> <span class="op">=</span> <span class="fl">1e-6</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="va">beta</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://www.cvxgrp.org/CVXR/reference/Variable-class.html" class="external-link">Variable</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span></span>
-<span>  <span class="va">eta</span> <span class="op">&lt;-</span> <span class="va">x</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html" class="external-link">%*%</a></span> <span class="va">beta</span></span>
-<span>  <span class="va">objective</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://www.cvxgrp.org/CVXR/reference/Minimize-class.html" class="external-link">Minimize</a></span><span class="op">(</span><span class="fu"><a href="https://www.cvxgrp.org/CVXR/reference/sum_squares.html" class="external-link">sum_squares</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="va">y</span> <span class="op">+</span> <span class="fl">0.1</span><span class="op">)</span> <span class="op">-</span> <span class="va">eta</span><span class="op">)</span><span class="op">)</span></span>
-<span>  <span class="va">constraints</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">eta</span> <span class="op">&gt;=</span> <span class="va">epsilon</span><span class="op">)</span></span>
-<span>  <span class="va">problem</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://www.cvxgrp.org/CVXR/reference/Problem-class.html" class="external-link">Problem</a></span><span class="op">(</span><span class="va">objective</span>, <span class="va">constraints</span><span class="op">)</span></span>
-<span>  <span class="va">result</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/solve.html" class="external-link">solve</a></span><span class="op">(</span><span class="va">problem</span><span class="op">)</span></span>
-<span>  <span class="va">starting_values</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="va">result</span><span class="op">$</span><span class="fu">getValue</span><span class="op">(</span><span class="va">beta</span><span class="op">)</span><span class="op">)</span></span>
-<span>  <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="va">starting_values</span><span class="op">)</span></span>
-<span><span class="op">}</span></span>
 <span></span>
 <span><span class="va">calculate_mse</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">true_values</span>, <span class="va">predicted_values</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="op">(</span><span class="va">true_values</span> <span class="op">-</span> <span class="va">predicted_values</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span></span>
@@ -1604,15 +1630,14 @@ full data processing and evaluation procedures, please refer to the <a href="htt
 <span>    <span class="va">y_test</span> <span class="op">&lt;-</span> <span class="va">test_data</span><span class="op">[</span>, <span class="fl">1</span><span class="op">]</span></span>
 <span>    <span class="va">X_train_int</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="fl">1</span>, <span class="va">X_train</span><span class="op">)</span></span>
 <span>    <span class="va">X_test_int</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="fl">1</span>, <span class="va">X_test</span><span class="op">)</span></span>
-<span>    <span class="va">starting_values</span> <span class="op">&lt;-</span> <span class="fu">findStartingValues</span><span class="op">(</span><span class="va">X_train_int</span>, <span class="va">y_train</span><span class="op">)</span></span>
 <span>  </span>
 <span>    <span class="va">model_glm2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/glm2/man/glm.fit2.html" class="external-link">glm.fit2</a></span><span class="op">(</span><span class="va">X_train_int</span>, <span class="va">y_train</span>, start <span class="op">=</span> <span class="va">starting_values</span>,</span>
 <span>                           control <span class="op">=</span> <span class="va">control_list</span>, family <span class="op">=</span> <span class="va">family_type</span><span class="op">)</span></span>
 <span>    <span class="va">y_pred_glm2</span> <span class="op">&lt;-</span> <span class="op">(</span><span class="va">X_test_int</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html" class="external-link">%*%</a></span> <span class="va">model_glm2</span><span class="op">$</span><span class="va">coefficients</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span></span>
 <span>    <span class="va">mse_ols</span> <span class="op">&lt;-</span> <span class="fu">calculate_mse</span><span class="op">(</span><span class="va">y_test</span>, <span class="va">y_pred_glm2</span><span class="op">)</span></span>
 <span>    <span class="kw">for</span> <span class="op">(</span><span class="va">m</span> <span class="kw">in</span> <span class="va">model_names</span><span class="op">[</span><span class="op">-</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span> <span class="op">{</span></span>
-<span>      <span class="va">model_savvy</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/savvy_glm.fit2.html">savvy_glm.fit2</a></span><span class="op">(</span><span class="va">X_train_int</span>, <span class="va">y_train</span>, model_class <span class="op">=</span> <span class="va">m</span>,</span>
-<span>                                      start <span class="op">=</span> <span class="va">starting_values</span>, control <span class="op">=</span> <span class="va">control_list</span>, family <span class="op">=</span> <span class="va">family_type</span><span class="op">)</span></span>
+<span>      <span class="va">model_savvy</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/savvy_glm.fit2.html">savvy_glm.fit2</a></span><span class="op">(</span><span class="va">X_train_int</span>, <span class="va">y_train</span>, model_class <span class="op">=</span> <span class="va">m</span>, control <span class="op">=</span> <span class="va">control_list</span>,</span>
+<span>                                    family <span class="op">=</span> <span class="va">family_type</span>, use_robust_start <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span>      <span class="va">y_pred</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">exp</a></span><span class="op">(</span><span class="va">X_test_int</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html" class="external-link">%*%</a></span> <span class="va">model_savvy</span><span class="op">$</span><span class="va">coefficients</span><span class="op">)</span></span>
 <span>      <span class="va">mse_savvy</span> <span class="op">&lt;-</span> <span class="fu">calculate_mse</span><span class="op">(</span><span class="va">y_test</span>, <span class="va">y_pred</span><span class="op">)</span></span>
 <span>      <span class="va">ratio_mat</span><span class="op">[</span><span class="va">i</span>, <span class="va">m</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">mse_ols</span> <span class="op">/</span> <span class="va">mse_savvy</span></span>
@@ -1635,7 +1660,7 @@ full data processing and evaluation procedures, please refer to the <a href="htt
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Ziwei Chen, Vali Asimit.</p>
+  <p>Developed by Ziwei Chen, Vali Asimit, Claudio Senatore.</p>
 </div>
 
 <div class="pkgdown-footer-right">

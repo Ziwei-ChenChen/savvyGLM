@@ -7,12 +7,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>Generalized Linear Models with Slab and Shrinkage Estimators • savvyGLM</title>
 <script src="deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="deps/bootstrap-5.1.3/bootstrap.min.css" rel="stylesheet">
-<script src="deps/bootstrap-5.1.3/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.2.1/css/all.min.css" rel="stylesheet">
-<link href="deps/font-awesome-6.2.1/css/v4-shims.min.css" rel="stylesheet">
+<link href="deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
+<script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Generalized Linear Models with Slab and Shrinkage Estimators">
-<meta name="description" content="Provides a flexible framework for fitting generalized linear models (GLMs) with slab and shrinkage estimators. Methods include the Stein estimator (St), Diagonal Shrinkage (DSh), Shrinkage Ridge (SR), Generalized Slab Regression (GSR), and Shrinkage (Sh), all integrated into the iteratively reweighted least squares (IRLS) algorithm. This approach enhances estimation accuracy, convergence, and robustness in the presence of multicollinearity. The best-fitting model is selected based on the Akaike Information Criterion (AIC).">
-<meta property="og:description" content="Provides a flexible framework for fitting generalized linear models (GLMs) with slab and shrinkage estimators. Methods include the Stein estimator (St), Diagonal Shrinkage (DSh), Shrinkage Ridge (SR), Generalized Slab Regression (GSR), and Shrinkage (Sh), all integrated into the iteratively reweighted least squares (IRLS) algorithm. This approach enhances estimation accuracy, convergence, and robustness in the presence of multicollinearity. The best-fitting model is selected based on the Akaike Information Criterion (AIC).">
+<meta name="description" content="Provides a flexible framework for fitting generalized linear models (GLMs) with slab and shrinkage estimators. Methods include the Stein estimator (St), Diagonal Shrinkage (DSh), Simple Slab Regression (SR), Generalized Slab Regression (GSR), Ledoit-Wolf Linear Shrinkage (LW), Quadratic-Inverse Shrinkage (QIS), and Shrinkage (Sh), all integrated into the iteratively reweighted least squares (IRLS) algorithm. This approach enhances estimation accuracy, convergence, and robustness in the presence of multicollinearity. The best-fitting model is selected based on the Akaike Information Criterion (AIC).">
+<meta property="og:description" content="Provides a flexible framework for fitting generalized linear models (GLMs) with slab and shrinkage estimators. Methods include the Stein estimator (St), Diagonal Shrinkage (DSh), Simple Slab Regression (SR), Generalized Slab Regression (GSR), Ledoit-Wolf Linear Shrinkage (LW), Quadratic-Inverse Shrinkage (QIS), and Shrinkage (Sh), all integrated into the iteratively reweighted least squares (IRLS) algorithm. This approach enhances estimation accuracy, convergence, and robustness in the presence of multicollinearity. The best-fitting model is selected based on the Akaike Information Criterion (AIC).">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -22,7 +22,7 @@
 
     <a class="navbar-brand me-2" href="index.html">savvyGLM</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -38,6 +38,7 @@
 <li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="search.json">
 </form></li>
+<li class="nav-item"><a class="external-link nav-link" href="https://github.com/ziwei-chenchen/savvyGLM/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
       </ul>
 </div>
 
@@ -48,11 +49,12 @@
   <main id="main" class="col-md-9"><div class="section level1">
 <div class="page-header"><h1 id="savvyglm-shrinkage-methods-for-generalized-linear-models">savvyGLM: Shrinkage Methods for Generalized Linear Models<a class="anchor" aria-label="anchor" href="#savvyglm-shrinkage-methods-for-generalized-linear-models"></a>
 </h1></div>
-<p>The <code>savvyGLM</code> package offers a complete framework for fitting shrinkage estimators in <em>generalized linear models (GLMs)</em>. It integrates several shrinkage methods into the <em>Iteratively Reweighted Least Squares (IRLS)</em> algorithm to improve both convergence and estimation accuracy, particularly when standard maximum likelihood estimation is challenged by issues like multicollinearity or a high number of predictors. Shrinkage estimators introduce a small bias that produces a large reduction in variance, making the IRLS estimates more reliable than those based solely on the traditional OLS update. For further details on the shrinkage estimators employed in this package, please refer to <a href="https://openaccess.city.ac.uk/id/eprint/35005/" class="external-link"><em>Slab and Shrinkage Linear Regression Estimation</em></a>.</p>
+<p>The <code>savvyGLM</code> package offers a complete framework for fitting shrinkage estimators in <em>generalized linear models (GLMs)</em>. It integrates several shrinkage methods into the <em>Iteratively Reweighted Least Squares (IRLS)</em> algorithm to improve both convergence and estimation accuracy, particularly when standard maximum likelihood estimation is challenged by issues like multicollinearity or a high number of predictors. Shrinkage estimators introduce a small bias that produces a large reduction in variance, making the IRLS estimates more reliable than those based solely on the traditional OLS update.</p>
+<p>For further details on the core shrinkage estimators employed in this package, please refer to <a href="https://openaccess.city.ac.uk/id/eprint/35005/" class="external-link"><em>Slab and Shrinkage Linear Regression Estimation</em></a>.</p>
 <p>This package builds on theoretical work discussed in:</p>
-<p>Asimit, V., Chen, Z., Dimitrova, D., Xie, Y., &amp; Zhang, Y. (2025). <a href="http//...">Shrinkage GLM Modeling</a>.</p>
-<p>The official documentation site is available at: <a href="https://Ziwei-ChenChen.github.io/savvyGLM" class="uri">https://Ziwei-ChenChen.github.io/savvyGLM</a></p>
-<p>If you are interested in applying shrinkage methods within linear regression, please refer to the companion package <a href="https://github.com/Ziwei-ChenChen/savvySh" class="external-link"><code>savvySh</code></a>.</p>
+<p>Asimit, V., Avramescu, O., Chen, Z., Rivas, D., &amp; Senatore, C. (2026). <em>GLM Solutions via Shrinkage</em>.</p>
+<p>The official documentation site is available at: <a href="https://Ziwei-ChenChen.github.io/savvyGLM/" class="uri">https://Ziwei-ChenChen.github.io/savvyGLM/</a></p>
+<p>If you are interested in applying shrinkage methods within standard linear regression, please refer to the companion package <a href="https://CRAN.R-project.org/package=savvySh" class="external-link"><code>savvySh</code></a>.</p>
 <div class="section level2">
 <h2 id="installation-guide">Installation Guide<a class="anchor" aria-label="anchor" href="#installation-guide"></a>
 </h2>
@@ -61,7 +63,7 @@
 <code class="sourceCode R"><span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"Ziwei-ChenChen/savvyGLM"</span><span class="op">)</span></span></code></pre></div>
 <p>Once installed, load the package:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://Ziwei-ChenChen.github.io/savvyGLM">savvyGLM</a></span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://Ziwei-ChenChen.github.io/savvyGLM/">savvyGLM</a></span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="features">Features<a class="anchor" aria-label="anchor" href="#features"></a>
@@ -72,6 +74,8 @@
 <li><p><strong>Diagonal Shrinkage (DSh):</strong> Applies separate shrinkage factors to each coefficient.</p></li>
 <li><p><strong>Slab Regression (SR):</strong> Adds a penalty that shrinks the solution along a fixed direction.</p></li>
 <li><p><strong>Generalized Slab Regression (GSR):</strong> Extends SR by allowing shrinkage along multiple directions.</p></li>
+<li><p><strong>Ledoit-Wolf Linear Shrinkage (LW):</strong> Implements linear shrinkage towards a well-conditioned, one-parameter target matrix.</p></li>
+<li><p><strong>Quadratic-Inverse Shrinkage (QIS):</strong> A high-performance nonlinear shrinkage estimator for large covariance matrices.</p></li>
 <li><p><strong>Shrinkage Estimator (Sh):</strong> Uses a full shrinkage matrix estimated by solving a <em>Sylvester equation</em>. This method is optional due to its higher computational cost.</p></li>
 </ul>
 <p>These methods build on the robust features of the <code>glm2</code> package—such as step-halving—to further enhance the performance of GLMs.</p>
@@ -114,7 +118,7 @@
 <span>  x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="fl">1</span>, <span class="va">x</span><span class="op">)</span>,</span>
 <span>  y <span class="op">=</span> <span class="va">y</span>,</span>
 <span>  family <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/family.html" class="external-link">inverse.gaussian</a></span><span class="op">(</span>link <span class="op">=</span> <span class="st">"log"</span><span class="op">)</span>,</span>
-<span>  model_class <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"SR"</span>, <span class="st">"DSh"</span><span class="op">)</span>,</span>
+<span>  model_class <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"SR"</span>, <span class="st">"DSh"</span>, <span class="st">"LW"</span><span class="op">)</span>,</span>
 <span>  control <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/glm.control.html" class="external-link">glm.control</a></span><span class="op">(</span>trace <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></span>
@@ -134,17 +138,29 @@
 <h2 id="authors">Authors<a class="anchor" aria-label="anchor" href="#authors"></a>
 </h2>
 <ul>
-<li><p>Ziwei Chen – <a href="ziwei.chen.3@citystgeorges.ac.uk">ziwei.chen.3@citystgeorges.ac.uk</a></p></li>
-<li><p>Vali Asimit – <a href="asimit@citystgeorges.ac.uk">asimit@citystgeorges.ac.uk</a></p></li>
+<li>Ziwei Chen – <a href="mailto:Ziwei.Chen.3@citystgeorges.ac.uk">ziwei.chen.3@citystgeorges.ac.uk</a>
+</li>
+<li>Vali Asimit – <a href="mailto:asimit@citystgeorges.ac.uk">asimit@citystgeorges.ac.uk</a>
+</li>
+<li>Claudio Senatore – <a href="mailto:Claudio.Senatore@sas.com">Claudio.Senatore@sas.com</a>
+</li>
 </ul>
 </div>
 <div class="section level2">
 <h2 id="license">License<a class="anchor" aria-label="anchor" href="#license"></a>
 </h2>
-<p>This package is licensed under the MIT License.</p>
+<p>This package is licensed under the GPL (&gt;= 3) License.</p>
 </div>
 </div>
-  </main><aside class="col-md-3"><div class="license">
+  </main><aside class="col-md-3"><div class="links">
+<h2 data-toc-skip>Links</h2>
+<ul class="list-unstyled">
+<li><a href="https://github.com/ziwei-chenchen/savvyGLM/" class="external-link">Browse source code</a></li>
+<li><a href="https://github.com/ziwei-chenchen/savvyGLM/issues" class="external-link">Report a bug</a></li>
+</ul>
+</div>
+
+<div class="license">
 <h2 data-toc-skip>License</h2>
 <ul class="list-unstyled">
 <li><a href="LICENSE.html">Full license</a></li>
@@ -163,9 +179,9 @@
 <div class="developers">
 <h2 data-toc-skip>Developers</h2>
 <ul class="list-unstyled">
-<li>Ziwei Chen <br><small class="roles"> Author, maintainer </small>  </li>
-<li>Vali Asimit <br><small class="roles"> Author </small>  </li>
-<li><a href="authors.html">More about authors...</a></li>
+<li>Ziwei Chen <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0009-0009-6376-3850" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
+<li>Vali Asimit <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0002-7706-0066" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
+<li>Claudio Senatore <br><small class="roles"> Author </small>  </li>
 </ul>
 </div>
 
@@ -176,7 +192,7 @@
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Ziwei Chen, Vali Asimit.</p>
+  <p>Developed by Ziwei Chen, Vali Asimit, Claudio Senatore.</p>
 </div>
 
 <div class="pkgdown-footer-right">
