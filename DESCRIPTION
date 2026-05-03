@@ -29,7 +29,7 @@ BugReports: https://github.com/ziwei-chenchen/savvyGLM/issues
 Encoding: UTF-8
 RoxygenNote: 7.3.2
 Depends:
-    R (>= 4.3.0)
+    R (>= 3.6.0)
 Imports:
     stats,
     MASS,
@@ -39,7 +39,7 @@ Imports:
     glm2,
     utils,
     Matrix,
-    CVXR (>= 1.8.0)
+    CVXR
 Suggests:
     devtools,
     testthat (>= 3.0.0),
