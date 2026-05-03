@@ -1,7 +1,7 @@
 Package: savvyGLM
 Type: Package
 Title: Generalized Linear Models with Slab and Shrinkage Estimators
-Version: 0.1.1
+Version: 0.1.2
 Authors@R: 
     c(person(given = "Ziwei", family = "Chen", role = c("aut", "cre"),
              email = "Ziwei.Chen.3@citystgeorges.ac.uk",
@@ -29,7 +29,7 @@ BugReports: https://github.com/ziwei-chenchen/savvyGLM/issues
 Encoding: UTF-8
 RoxygenNote: 7.3.2
 Depends:
-    R (>= 3.6.0)
+    R (>= 4.3.0)
 Imports:
     stats,
     MASS,
