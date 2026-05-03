@@ -113,19 +113,18 @@ utils::globalVariables("n", add = TRUE)
 #'
 #' @references
 #' Marschner, I. C. (2011). \emph{glm2: Fitting Generalized Linear Models with Convergence Problems}.
-#' The R Journal, 3(2), 12–15. doi:10.32614/RJ-2011-012. Available at:
-#' \url{https://doi.org/10.32614/RJ-2011-012}.
+#' The R Journal, 3(2), 12–15. \doi{10.32614/RJ-2011-012}
 #'
 #' Asimit, V., Avramescu, O., Chen, Z., Rivas, D., & Senatore, C. (2026). \emph{GLM Solutions via Shrinkage}.
 #'
 #' Asimit, V., Cidota, M. A., Chen, Z., & Asimit, J. (2025). \emph{Slab and Shrinkage Linear Regression Estimation}.
 #' Retrieved from \url{https://openaccess.city.ac.uk/id/eprint/35005/}.
 #'
-#' Ledoit, O. and Wolf, M. (2004b). \emph{A well-conditioned estimator for large-dimensional covariance matrices}.
-#' Journal of Multivariate Analysis, 88(2):365–411.
+#' Ledoit, O. and Wolf, M. (2004). \emph{A well-conditioned estimator for large-dimensional covariance matrices}.
+#' Journal of Multivariate Analysis, 88(2):365–411. \doi{10.1016/S0047-259X(03)00096-4}
 #'
 #' Ledoit, O. and Wolf, M. (2022). \emph{Quadratic shrinkage for large covariance matrices}.
-#' Bernoulli, 28(3): 1519-1547.
+#' Bernoulli, 28(3): 1519-1547. \doi{10.3150/20-BEJ1315}
 #'
 #' @importFrom stats model.matrix model.response gaussian binomial poisson
 #' @importFrom MASS ginv
@@ -589,7 +588,7 @@ savvy_glm.fit2 <- function (x, y, weights = rep(1, nobs),
                      trace = best_result$trace,
                      warnings = best_result$warnings)
 
-    if (!is.null(best_fit$trace)) {
+    if (!is.null(best_fit$trace) && isTRUE(control$trace)) {
       cat(best_fit$trace, sep = "")
     }
     if (!is.null(best_fit$warnings)) {
