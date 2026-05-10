@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">savvyGLM</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.4</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -98,7 +98,8 @@ traditional non-penalized implementation.</p>
 in <code>glm2</code>.</p></li>
 <li><p>Replace the OLS update with one of several shrinkage estimators
 (e.g., <code>St_ost</code>, <code>DSh_ost</code>, <code>SR_ost</code>,
-<code>GSR_ost</code>, and optionally <code>Sh_ost</code>).</p></li>
+<code>GSR_ost</code>, <code>LW_ost</code>, <code>QIS_ost</code>, and
+optionally <code>Sh_ost</code>).</p></li>
 <li><p>Employ parallelization when multiple candidate methods are
 specified.</p></li>
 </ul>
@@ -111,15 +112,16 @@ includes <code>Sh</code>(since Sh is time-consuming):</p>
 <ol style="list-style-type: decimal">
 <li><p><strong>Custom Optimization Methods:</strong> Implements
 shrinkage estimators (<code>St_ost</code>, <code>DSh_ost</code>,
-<code>SR_ost</code>, <code>GSR_ost</code>, and optionally
-<code>Sh_ost</code>) that replace the standard OLS update in
-IRLS.</p></li>
+<code>SR_ost</code>, <code>GSR_ost</code>, <code>LW_ost</code>,
+<code>QIS_ost</code>, and optionally <code>Sh_ost</code>) that replace
+the standard OLS update in IRLS.</p></li>
 <li><p><strong>Flexible Model Choice:</strong> The model_class argument
 allows users to choose one or more shrinkage methods. By default, only
-<code>"St"</code>, <code>"DSh"</code>, <code>"SR"</code>, and
-<code>"GSR"</code> are evaluated. Including <code>"Sh"</code> is
-optional because solving the Sylvester equation required by
-<code>Sh_ost</code> is computationally intensive.</p></li>
+<code>"St"</code>, <code>"DSh"</code>, <code>"SR"</code>,
+<code>"GSR"</code>, <code>"LW"</code>, and <code>"QIS"</code> are
+evaluated. Including <code>"Sh"</code> is optional because solving the
+Sylvester equation required by <code>Sh_ost</code> is computationally
+intensive.</p></li>
 </ol>
 <ul>
 <li>
@@ -164,11 +166,12 @@ process.</td>
 <td><code>model_class</code></td>
 <td>A character vector specifying the shrinkage model(s) to be used.
 Allowed values are <code>"St"</code>, <code>"DSh"</code>,
-<code>"SR"</code>, <code>"GSR"</code>, and <code>"Sh"</code>. If
-multiple values are given, they are run in parallel and the best is
-chosen by AIC. If <code>"Sh"</code> is not included, it is omitted from
-the evaluation.</td>
-<td><code>c("St", "DSh", "SR", "GSR")</code></td>
+<code>"SR"</code>, <code>"GSR"</code>, <code>"LW"</code>, and
+<code>"QIS"</code> and <code>"Sh"</code>. If multiple values are given,
+they are run in parallel and the best is chosen by AIC. If
+<code>"Sh"</code> is not included, it is omitted from the
+evaluation.</td>
+<td><code>c("St", "DSh", "SR", "GSR", "LW", "QIS")</code></td>
 </tr>
 <tr class="odd">
 <td>
@@ -214,25 +217,23 @@ AIC among the methods tested.</td>
 <td><code>FALSE</code></td>
 </tr>
 <tr class="odd">
-<td><strong>Key Output</strong></td>
-<td><strong>Description</strong></td>
-<td><strong>Notes</strong></td>
-</tr>
-<tr class="even">
-<td><code>chosen_fit</code></td>
-<td>The name of the shrinkage method selected based on the lowest AIC.
-If only one method is specified in <code>model_class</code>, then
-<code>chosen_fit</code> will simply return that method’s name.</td>
-<td>Returned in the final model object.</td>
-</tr>
-<tr class="odd">
-<td>
-<code>coefficients</code>, <code>residuals</code>, etc.</td>
-<td>The usual GLM components, similar to those returned by <a href="https://stat.ethz.ch/R-manual/R-devel/library/stats/html/glm.html" class="external-link"><code>glm.fit</code></a>.</td>
-<td>See documentation for full details.</td>
+<td><code>use_robust_start</code></td>
+<td>Logical. <span style="color:blue">If <code>TRUE</code>, uses an
+optimization-based approach (via the CVXR package) to calculate robust
+starting values for fragile link functions (</span>e.g. “sqrt”<span style="color:blue">).</span>
+</td>
+<td><code>FALSE</code></td>
 </tr>
 </tbody>
 </table>
+<div class="line-block">
+<strong>Key Output</strong> |
+<strong>Description</strong> | <strong>Notes</strong> |<br><code>chosen_fit</code> | The name of the shrinkage method selected
+based on the lowest AIC. If only one method is specified in
+<code>model_class</code>, then <code>chosen_fit</code> will simply
+return that method’s name. | Returned in the final model object. |<br><code>coefficients</code>, <code>residuals</code>, etc. | The usual GLM
+components, similar to those returned by <a href="https://stat.ethz.ch/R-manual/R-devel/library/stats/html/glm.html" class="external-link"><code>glm.fit</code></a>.
+| See documentation for full details. |</div>
 <p>This vignette provides an overview of the methods implemented in
 <code>savvyGLM</code> and demonstrates how to use them on <a href="#simulation-examples">simulated data</a> and <a href="#real-data-analysis">real data</a>. We begin with a theoretical
 overview of each shrinkage class and GLM with IRLS, then walk through
@@ -534,8 +535,7 @@ equal proportions of 0’s and 1’s. We fit the models using the standard
 GLM (via <code>glm.fit2</code>) and the shrinkage-based GLM (via
 <code>savvy_glm.fit2</code>in <code>savvyGLM</code> package).</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Load packages</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://Ziwei-ChenChen.github.io/savvyGLM/">savvyGLM</a></span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://Ziwei-ChenChen.github.io/savvyGLM/">savvyGLM</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="http://www.stats.ox.ac.uk/pub/MASS4/" class="external-link">MASS</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">glm2</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -700,8 +700,7 @@ response, which allows us to evaluate the robustness of the shrinkage
 estimators under class imbalance. As before, models are fit using both
 the standard GLM and the various shrinkage-based GLM.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Load packages</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://Ziwei-ChenChen.github.io/savvyGLM/">savvyGLM</a></span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://Ziwei-ChenChen.github.io/savvyGLM/">savvyGLM</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="http://www.stats.ox.ac.uk/pub/MASS4/" class="external-link">MASS</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">glm2</span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://cvxr.rbind.io" class="external-link">CVXR</a></span><span class="op">)</span></span>
@@ -859,8 +858,7 @@ We fit the models using the standard GLM (via <code>glm.fit2</code>) and
 the shrinkage-based GLM (via <code>savvy_glm.fit2</code>in
 <code>savvyGLM</code> package).</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Load packages</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://Ziwei-ChenChen.github.io/savvyGLM/">savvyGLM</a></span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://Ziwei-ChenChen.github.io/savvyGLM/">savvyGLM</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="http://www.stats.ox.ac.uk/pub/MASS4/" class="external-link">MASS</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">glm2</span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://cvxr.rbind.io" class="external-link">CVXR</a></span><span class="op">)</span></span>
@@ -1012,8 +1010,7 @@ Models are then fit using both the standard GLM (via
 <code>glm.fit2</code>) and the shrinkage-based GLM (via
 <code>savvy_glm.fit2</code>in <code>savvyGLM</code> package).</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Load packages</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://Ziwei-ChenChen.github.io/savvyGLM/">savvyGLM</a></span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://Ziwei-ChenChen.github.io/savvyGLM/">savvyGLM</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="http://www.stats.ox.ac.uk/pub/MASS4/" class="external-link">MASS</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">glm2</span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://cvxr.rbind.io" class="external-link">CVXR</a></span><span class="op">)</span></span>
@@ -1165,8 +1162,7 @@ both the standard GLM (via <code>glm.fit2</code>) and the
 shrinkage-based GLM (via <code>savvy_glm.fit2</code>in
 <code>savvyGLM</code> package).</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Load packages</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://Ziwei-ChenChen.github.io/savvyGLM/">savvyGLM</a></span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://Ziwei-ChenChen.github.io/savvyGLM/">savvyGLM</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="http://www.stats.ox.ac.uk/pub/MASS4/" class="external-link">MASS</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">glm2</span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://cvxr.rbind.io" class="external-link">CVXR</a></span><span class="op">)</span></span>
@@ -1206,12 +1202,7 @@ shrinkage-based GLM (via <code>savvy_glm.fit2</code>in
 <span>  <span class="va">beta_true</span> <span class="op">&lt;-</span> <span class="fu">theta_func</span><span class="op">(</span><span class="va">p_val</span> <span class="op">+</span> <span class="fl">1</span><span class="op">)</span></span>
 <span>  <span class="va">mu_y</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/vector.html" class="external-link">as.vector</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">exp</a></span><span class="op">(</span><span class="va">X_intercept</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html" class="external-link">%*%</a></span> <span class="va">beta_true</span><span class="op">)</span><span class="op">)</span></span>
 <span>  <span class="va">y</span> <span class="op">&lt;-</span>  <span class="fu"><a href="https://rdrr.io/r/stats/GammaDist.html" class="external-link">rgamma</a></span><span class="op">(</span><span class="va">n_val</span>, shape <span class="op">=</span> <span class="va">mu_y</span>, scale <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
-<span>  <span class="va">retry_count</span> <span class="op">&lt;-</span> <span class="fl">0</span></span>
-<span>  <span class="kw">while</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/any.html" class="external-link">any</a></span><span class="op">(</span><span class="va">y</span> <span class="op">&lt;=</span> <span class="fl">0</span><span class="op">)</span> <span class="op">&amp;&amp;</span> <span class="va">retry_count</span> <span class="op">&lt;</span> <span class="fl">100</span><span class="op">)</span> <span class="op">{</span></span>
-<span>    <span class="va">bad_idx</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="va">y</span> <span class="op">&lt;=</span> <span class="fl">0</span><span class="op">)</span></span>
-<span>    <span class="va">y</span><span class="op">[</span><span class="va">bad_idx</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/GammaDist.html" class="external-link">rgamma</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">bad_idx</span><span class="op">)</span>, shape <span class="op">=</span> <span class="va">mu_y</span><span class="op">[</span><span class="va">bad_idx</span><span class="op">]</span>, scale <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
-<span>    <span class="va">retry_count</span> <span class="op">&lt;-</span> <span class="va">retry_count</span> <span class="op">+</span> <span class="fl">1</span></span>
-<span>  <span class="op">}</span></span>
+<span>  <span class="va">y</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">pmax</a></span><span class="op">(</span><span class="va">y</span>, <span class="fl">1e-4</span><span class="op">)</span></span>
 <span>  </span>
 <span>  <span class="va">fit_ols</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/glm2/man/glm.fit2.html" class="external-link">glm.fit2</a></span><span class="op">(</span><span class="va">X_intercept</span>, <span class="va">y</span>, control <span class="op">=</span> <span class="va">control_list</span>, family <span class="op">=</span> <span class="va">family_type</span><span class="op">)</span></span>
 <span>  <span class="va">l2_matrix</span><span class="op">[</span><span class="st">"OLS"</span>, <span class="va">j</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://www.cvxgrp.org/CVXR/reference/math_atoms.html" class="external-link">norm</a></span><span class="op">(</span><span class="va">fit_ols</span><span class="op">$</span><span class="va">coefficients</span> <span class="op">-</span> <span class="va">beta_true</span>, type <span class="op">=</span> <span class="st">"2"</span><span class="op">)</span></span>
@@ -1242,7 +1233,7 @@ for Gamma GLM)</caption>
 <tbody>
 <tr class="odd">
 <td align="left">OLS</td>
-<td align="right">0.4067</td>
+<td align="right">0.4068</td>
 <td align="right">0.3339</td>
 <td align="right">0.2600</td>
 <td align="right">0.2623</td>
@@ -1258,7 +1249,7 @@ for Gamma GLM)</caption>
 </tr>
 <tr class="odd">
 <td align="left">GSR</td>
-<td align="right">0.2540</td>
+<td align="right">0.2568</td>
 <td align="right">0.2633</td>
 <td align="right">0.2333</td>
 <td align="right">0.1989</td>
@@ -1266,7 +1257,7 @@ for Gamma GLM)</caption>
 </tr>
 <tr class="even">
 <td align="left">St</td>
-<td align="right">0.2406</td>
+<td align="right">0.2222</td>
 <td align="right">0.2534</td>
 <td align="right">0.2022</td>
 <td align="right">0.1861</td>
@@ -1274,7 +1265,7 @@ for Gamma GLM)</caption>
 </tr>
 <tr class="odd">
 <td align="left">DSh</td>
-<td align="right">0.2701</td>
+<td align="right">0.2592</td>
 <td align="right">0.2912</td>
 <td align="right">0.2399</td>
 <td align="right">0.2381</td>
@@ -1282,17 +1273,17 @@ for Gamma GLM)</caption>
 </tr>
 <tr class="even">
 <td align="left">LW</td>
-<td align="right">0.3683</td>
-<td align="right">0.2895</td>
+<td align="right">0.3664</td>
+<td align="right">0.2905</td>
 <td align="right">0.3023</td>
 <td align="right">0.2252</td>
 <td align="right">0.2911</td>
 </tr>
 <tr class="odd">
 <td align="left">QIS</td>
-<td align="right">0.3691</td>
-<td align="right">0.2860</td>
-<td align="right">0.3001</td>
+<td align="right">0.3671</td>
+<td align="right">0.2871</td>
+<td align="right">0.2999</td>
 <td align="right">0.2409</td>
 <td align="right">0.2990</td>
 </tr>
@@ -1327,6 +1318,7 @@ Fitting the models using both the standard GLM (via
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="http://www.stats.ox.ac.uk/pub/MASS4/" class="external-link">MASS</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">glm2</span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://yihui.org/knitr/" class="external-link">knitr</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://cvxr.rbind.io" class="external-link">CVXR</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">123</span><span class="op">)</span></span>
 <span><span class="va">n_val</span> <span class="op">&lt;-</span> <span class="fl">500</span></span>
@@ -1370,25 +1362,17 @@ Fitting the models using both the standard GLM (via
 <span>  <span class="va">beta_true</span> <span class="op">&lt;-</span> <span class="fu">theta_func</span><span class="op">(</span><span class="va">p_val</span> <span class="op">+</span> <span class="fl">1</span><span class="op">)</span></span>
 <span>  <span class="va">mu_y</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/vector.html" class="external-link">as.vector</a></span><span class="op">(</span><span class="op">(</span><span class="va">X_intercept</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html" class="external-link">%*%</a></span> <span class="va">beta_true</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span></span>
 <span>  <span class="va">y</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/GammaDist.html" class="external-link">rgamma</a></span><span class="op">(</span><span class="va">n_val</span>, shape <span class="op">=</span> <span class="va">mu_y</span>, scale <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
-<span>  </span>
-<span>  <span class="va">retry_count</span> <span class="op">&lt;-</span> <span class="fl">0</span></span>
-<span>  <span class="kw">while</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/any.html" class="external-link">any</a></span><span class="op">(</span><span class="va">y</span> <span class="op">&lt;=</span> <span class="fl">0</span><span class="op">)</span> <span class="op">&amp;&amp;</span> <span class="va">retry_count</span> <span class="op">&lt;</span> <span class="fl">100</span><span class="op">)</span> <span class="op">{</span></span>
-<span>    <span class="va">bad_idx</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="va">y</span> <span class="op">&lt;=</span> <span class="fl">0</span><span class="op">)</span></span>
-<span>    <span class="va">y</span><span class="op">[</span><span class="va">bad_idx</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/GammaDist.html" class="external-link">rgamma</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">bad_idx</span><span class="op">)</span>, shape <span class="op">=</span> <span class="va">mu_y</span><span class="op">[</span><span class="va">bad_idx</span><span class="op">]</span>, scale <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
-<span>    <span class="va">retry_count</span> <span class="op">&lt;-</span> <span class="va">retry_count</span> <span class="op">+</span> <span class="fl">1</span></span>
-<span>  <span class="op">}</span></span>
+<span>  <span class="va">y</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">pmax</a></span><span class="op">(</span><span class="va">y</span>, <span class="fl">1e-4</span><span class="op">)</span></span>
 <span>  </span>
 <span>  <span class="va">starting_values</span> <span class="op">&lt;-</span> <span class="fu">findStartingValues</span><span class="op">(</span><span class="va">X_intercept</span>, <span class="va">y</span><span class="op">)</span></span>
-<span>  </span>
+<span></span>
 <span>  <span class="va">fit_ols</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/glm2/man/glm.fit2.html" class="external-link">glm.fit2</a></span><span class="op">(</span><span class="va">X_intercept</span>, <span class="va">y</span>, start <span class="op">=</span> <span class="va">starting_values</span>,</span>
 <span>                      control <span class="op">=</span> <span class="va">control_list</span>, family <span class="op">=</span> <span class="va">family_type</span><span class="op">)</span></span>
 <span>  <span class="va">l2_matrix</span><span class="op">[</span><span class="st">"OLS"</span>, <span class="va">j</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://www.cvxgrp.org/CVXR/reference/math_atoms.html" class="external-link">norm</a></span><span class="op">(</span><span class="va">fit_ols</span><span class="op">$</span><span class="va">coefficients</span> <span class="op">-</span> <span class="va">beta_true</span>, type <span class="op">=</span> <span class="st">"2"</span><span class="op">)</span></span>
 <span></span>
 <span>  <span class="kw">for</span> <span class="op">(</span><span class="va">m</span> <span class="kw">in</span> <span class="va">model_names</span><span class="op">[</span><span class="op">-</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span> <span class="op">{</span></span>
-<span>    <span class="co"># Added use_parallel = FALSE to dramatically speed up vignette building</span></span>
 <span>    <span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/savvy_glm.fit2.html">savvy_glm.fit2</a></span><span class="op">(</span><span class="va">X_intercept</span>, <span class="va">y</span>, model_class <span class="op">=</span> <span class="va">m</span>, control <span class="op">=</span> <span class="va">control_list</span>, </span>
-<span>                          family <span class="op">=</span> <span class="va">family_type</span>, use_robust_start <span class="op">=</span> <span class="cn">TRUE</span>, </span>
-<span>                          use_parallel <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span>                          family <span class="op">=</span> <span class="va">family_type</span>, use_robust_start <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span>    <span class="va">l2_matrix</span><span class="op">[</span><span class="va">m</span>, <span class="va">j</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://www.cvxgrp.org/CVXR/reference/math_atoms.html" class="external-link">norm</a></span><span class="op">(</span><span class="va">fit</span><span class="op">$</span><span class="va">coefficients</span> <span class="op">-</span> <span class="va">beta_true</span>, type <span class="op">=</span> <span class="st">"2"</span><span class="op">)</span></span>
 <span>  <span class="op">}</span></span>
 <span><span class="op">}</span></span></code></pre></div>
@@ -1415,33 +1399,33 @@ for Gamma GLM)</caption>
 <td align="left">OLS</td>
 <td align="right">108.1097</td>
 <td align="right">78.2093</td>
-<td align="right">56.4163</td>
-<td align="right">46.8951</td>
-<td align="right">41.9629</td>
+<td align="right">56.4152</td>
+<td align="right">46.8995</td>
+<td align="right">42.0866</td>
 </tr>
 <tr class="even">
 <td align="left">SR</td>
 <td align="right">108.1052</td>
 <td align="right">78.2082</td>
 <td align="right">56.3660</td>
-<td align="right">46.8295</td>
-<td align="right">41.9684</td>
+<td align="right">46.8440</td>
+<td align="right">42.0451</td>
 </tr>
 <tr class="odd">
 <td align="left">GSR</td>
 <td align="right">104.5311</td>
 <td align="right">77.1232</td>
-<td align="right">55.9971</td>
+<td align="right">55.9970</td>
 <td align="right">46.7169</td>
-<td align="right">42.1281</td>
+<td align="right">42.3391</td>
 </tr>
 <tr class="even">
 <td align="left">St</td>
 <td align="right">102.2954</td>
-<td align="right">76.2955</td>
-<td align="right">55.7526</td>
-<td align="right">46.3217</td>
-<td align="right">41.5515</td>
+<td align="right">76.2913</td>
+<td align="right">55.7534</td>
+<td align="right">46.3595</td>
+<td align="right">41.7950</td>
 </tr>
 <tr class="odd">
 <td align="left">DSh</td>
@@ -1449,15 +1433,15 @@ for Gamma GLM)</caption>
 <td align="right">77.2780</td>
 <td align="right">56.6020</td>
 <td align="right">46.8909</td>
-<td align="right">42.1011</td>
+<td align="right">42.4146</td>
 </tr>
 <tr class="even">
 <td align="left">LW</td>
 <td align="right">105.0065</td>
 <td align="right">76.7574</td>
-<td align="right">56.2635</td>
-<td align="right">46.6498</td>
-<td align="right">41.9816</td>
+<td align="right">56.2725</td>
+<td align="right">46.6663</td>
+<td align="right">42.0670</td>
 </tr>
 <tr class="odd">
 <td align="left">QIS</td>
@@ -1465,15 +1449,15 @@ for Gamma GLM)</caption>
 <td align="right">77.2196</td>
 <td align="right">55.2965</td>
 <td align="right">47.2840</td>
-<td align="right">42.0942</td>
+<td align="right">42.1305</td>
 </tr>
 <tr class="even">
 <td align="left">Sh</td>
 <td align="right">107.9788</td>
 <td align="right">78.1691</td>
-<td align="right">56.4011</td>
-<td align="right">46.8882</td>
-<td align="right">41.9786</td>
+<td align="right">56.4000</td>
+<td align="right">46.8926</td>
+<td align="right">42.0904</td>
 </tr>
 </tbody>
 </table>
@@ -1523,8 +1507,7 @@ paper: GLM Solutions via Shrinkage.</p>
 <h3 id="fl-dataset-with-log-link-function">FL dataset with <em>log</em> Link Function<a class="anchor" aria-label="anchor" href="#fl-dataset-with-log-link-function"></a>
 </h3>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Load required packages</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://Ziwei-ChenChen.github.io/savvyGLM/">savvyGLM</a></span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://Ziwei-ChenChen.github.io/savvyGLM/">savvyGLM</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="http://www.stats.ox.ac.uk/pub/MASS4/" class="external-link">MASS</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">glm2</span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://cvxr.rbind.io" class="external-link">CVXR</a></span><span class="op">)</span></span>
@@ -1533,7 +1516,7 @@ paper: GLM Solutions via Shrinkage.</p>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1234</span><span class="op">)</span></span>
 <span><span class="va">years</span> <span class="op">&lt;-</span> <span class="fl">2014</span><span class="op">:</span><span class="fl">2015</span></span>
-<span><span class="va">model_names</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"OLS"</span>, <span class="st">"SR"</span>, <span class="st">"GSR"</span>, <span class="st">"St"</span>, <span class="st">"DSh"</span><span class="op">)</span></span>
+<span><span class="va">model_names</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"OLS"</span>, <span class="st">"SR"</span>, <span class="st">"GSR"</span>, <span class="st">"St"</span>, <span class="st">"DSh"</span>, <span class="st">"LW"</span>, <span class="st">"QIS"</span><span class="op">)</span></span>
 <span><span class="va">N</span> <span class="op">&lt;-</span> <span class="fl">10</span></span>
 <span><span class="va">control_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>maxit <span class="op">=</span> <span class="fl">250</span>, epsilon <span class="op">=</span> <span class="fl">1e-6</span>, trace <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span><span class="va">family_type</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/family.html" class="external-link">Gamma</a></span><span class="op">(</span>link <span class="op">=</span> <span class="st">"log"</span><span class="op">)</span></span>
@@ -1570,8 +1553,7 @@ paper: GLM Solutions via Shrinkage.</p>
 <span>    <span class="va">y_pred_glm2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">exp</a></span><span class="op">(</span><span class="va">X_test_int</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html" class="external-link">%*%</a></span> <span class="va">model_glm2</span><span class="op">$</span><span class="va">coefficients</span><span class="op">)</span></span>
 <span>    <span class="va">mse_ols</span> <span class="op">&lt;-</span> <span class="fu">calculate_mse</span><span class="op">(</span><span class="va">y_test</span>, <span class="va">y_pred_glm2</span><span class="op">)</span></span>
 <span>    <span class="kw">for</span> <span class="op">(</span><span class="va">m</span> <span class="kw">in</span> <span class="va">model_names</span><span class="op">[</span><span class="op">-</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span> <span class="op">{</span></span>
-<span>      <span class="va">model_savvy</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/savvy_glm.fit2.html">savvy_glm.fit2</a></span><span class="op">(</span><span class="va">X_train_int</span>, <span class="va">y_train</span>, model_class <span class="op">=</span> <span class="va">m</span>, control <span class="op">=</span> <span class="va">control_list</span>,</span>
-<span>                                    family <span class="op">=</span> <span class="va">family_type</span>, use_robust_start <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span>      <span class="va">model_savvy</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/savvy_glm.fit2.html">savvy_glm.fit2</a></span><span class="op">(</span><span class="va">X_train_int</span>, <span class="va">y_train</span>, model_class <span class="op">=</span> <span class="va">m</span>, control <span class="op">=</span> <span class="va">control_list</span>, family <span class="op">=</span> <span class="va">family_type</span><span class="op">)</span></span>
 <span>      <span class="va">y_pred</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">exp</a></span><span class="op">(</span><span class="va">X_test_int</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html" class="external-link">%*%</a></span> <span class="va">model_savvy</span><span class="op">$</span><span class="va">coefficients</span><span class="op">)</span></span>
 <span>      <span class="va">mse_savvy</span> <span class="op">&lt;-</span> <span class="fu">calculate_mse</span><span class="op">(</span><span class="va">y_test</span>, <span class="va">y_pred</span><span class="op">)</span></span>
 <span>      <span class="va">ratio_mat</span><span class="op">[</span><span class="va">i</span>, <span class="va">m</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">mse_ols</span> <span class="op">/</span> <span class="va">mse_savvy</span></span>
@@ -1599,7 +1581,7 @@ paper: GLM Solutions via Shrinkage.</p>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1234</span><span class="op">)</span></span>
 <span><span class="va">years</span> <span class="op">&lt;-</span> <span class="fl">2014</span><span class="op">:</span><span class="fl">2023</span></span>
-<span><span class="va">model_names</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"OLS"</span>, <span class="st">"SR"</span>, <span class="st">"GSR"</span>, <span class="st">"St"</span>, <span class="st">"DSh"</span><span class="op">)</span></span>
+<span><span class="va">model_names</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"OLS"</span>, <span class="st">"SR"</span>, <span class="st">"GSR"</span>, <span class="st">"St"</span>, <span class="st">"DSh"</span>, <span class="st">"LW"</span>, <span class="st">"QIS"</span><span class="op">)</span></span>
 <span><span class="va">N</span> <span class="op">&lt;-</span> <span class="fl">100</span></span>
 <span><span class="va">control_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>maxit <span class="op">=</span> <span class="fl">250</span>, epsilon <span class="op">=</span> <span class="fl">1e-6</span>, trace <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span><span class="va">family_type</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/family.html" class="external-link">Gamma</a></span><span class="op">(</span>link <span class="op">=</span> <span class="st">"sqrt"</span><span class="op">)</span></span>
@@ -1636,8 +1618,7 @@ paper: GLM Solutions via Shrinkage.</p>
 <span>    <span class="va">y_pred_glm2</span> <span class="op">&lt;-</span> <span class="op">(</span><span class="va">X_test_int</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html" class="external-link">%*%</a></span> <span class="va">model_glm2</span><span class="op">$</span><span class="va">coefficients</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span></span>
 <span>    <span class="va">mse_ols</span> <span class="op">&lt;-</span> <span class="fu">calculate_mse</span><span class="op">(</span><span class="va">y_test</span>, <span class="va">y_pred_glm2</span><span class="op">)</span></span>
 <span>    <span class="kw">for</span> <span class="op">(</span><span class="va">m</span> <span class="kw">in</span> <span class="va">model_names</span><span class="op">[</span><span class="op">-</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span> <span class="op">{</span></span>
-<span>      <span class="va">model_savvy</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/savvy_glm.fit2.html">savvy_glm.fit2</a></span><span class="op">(</span><span class="va">X_train_int</span>, <span class="va">y_train</span>, model_class <span class="op">=</span> <span class="va">m</span>, control <span class="op">=</span> <span class="va">control_list</span>,</span>
-<span>                                    family <span class="op">=</span> <span class="va">family_type</span>, use_robust_start <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span>      <span class="va">model_savvy</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/savvy_glm.fit2.html">savvy_glm.fit2</a></span><span class="op">(</span><span class="va">X_train_int</span>, <span class="va">y_train</span>, model_class <span class="op">=</span> <span class="va">m</span>, control <span class="op">=</span> <span class="va">control_list</span>, family <span class="op">=</span> <span class="va">family_type</span><span class="op">)</span></span>
 <span>      <span class="va">y_pred</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">exp</a></span><span class="op">(</span><span class="va">X_test_int</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html" class="external-link">%*%</a></span> <span class="va">model_savvy</span><span class="op">$</span><span class="va">coefficients</span><span class="op">)</span></span>
 <span>      <span class="va">mse_savvy</span> <span class="op">&lt;-</span> <span class="fu">calculate_mse</span><span class="op">(</span><span class="va">y_test</span>, <span class="va">y_pred</span><span class="op">)</span></span>
 <span>      <span class="va">ratio_mat</span><span class="op">[</span><span class="va">i</span>, <span class="va">m</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">mse_ols</span> <span class="op">/</span> <span class="va">mse_savvy</span></span>

@@ -31,7 +31,8 @@ utils::globalVariables("n", add = TRUE)
 #' @param intercept A logical value indicating whether an intercept should be included in the model, default is \code{TRUE}. As for \code{\link{glm.fit}}.
 #' @param use_parallel Logical. If \code{TRUE}, enables parallel execution of the fitting process.
 #'   Defaults to \code{TRUE}. Set to \code{FALSE} for serial execution.
-#' @param use_robust_start Logical. If \code{TRUE}, uses an optimization-based approach (via the \pkg{CVXR} package) to calculate robust starting values for fragile link functions (e.g., "log", "sqrt"). Defaults to \code{FALSE} to save computational time, as standard initialization works well for most typical datasets.
+#' @param use_robust_start Logical. If \code{TRUE}, uses an optimization-based approach (via the \pkg{CVXR} package) to calculate robust starting values for fragile link functions (e.g., "sqrt"). 
+#'  Defaults to \code{FALSE} to save computational time, as standard initialization works well for most typical datasets.
 #'
 #' @details
 #' \code{savvy_glm.fit2} extends the classical Generalized Linear Model (GLM) fitting procedure by evaluating a collection of shrinkage-based updates during each iteration of the IRLS algorithm.

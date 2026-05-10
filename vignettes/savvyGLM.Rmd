@@ -27,7 +27,7 @@ In summary, our package modifies `glm.fit2` from `glm2` to:
 
 -   Leverage robust features, such as step-halving, already present in `glm2`.
 
--   Replace the OLS update with one of several shrinkage estimators (e.g., `St_ost`, `DSh_ost`, `SR_ost`, `GSR_ost`, and optionally `Sh_ost`).
+-   Replace the OLS update with one of several shrinkage estimators (e.g., `St_ost`, `DSh_ost`, `SR_ost`, `GSR_ost`, `LW_ost`, `QIS_ost`, and optionally `Sh_ost`).
 
 -   Employ parallelization when multiple candidate methods are specified.
 
@@ -35,9 +35,9 @@ In summary, our package modifies `glm.fit2` from `glm2` to:
 
 `savvyGLM` provides five classes of shrinkage methods for GLMs, although by default four are evaluated unless the user explicitly includes `Sh`(since Sh is time-consuming):
 
-1.  **Custom Optimization Methods:** Implements shrinkage estimators (`St_ost`, `DSh_ost`, `SR_ost`, `GSR_ost`, and optionally `Sh_ost`) that replace the standard OLS update in IRLS.
+1.  **Custom Optimization Methods:** Implements shrinkage estimators (`St_ost`, `DSh_ost`, `SR_ost`, `GSR_ost`, `LW_ost`, `QIS_ost`, and optionally `Sh_ost`) that replace the standard OLS update in IRLS.
 
-2.  **Flexible Model Choice:** The model_class argument allows users to choose one or more shrinkage methods. By default, only `"St"`, `"DSh"`, `"SR"`, and `"GSR"` are evaluated. Including `"Sh"` is optional because solving the Sylvester equation required by `Sh_ost` is computationally intensive.
+2.  **Flexible Model Choice:** The model_class argument allows users to choose one or more shrinkage methods. By default, only `"St"`, `"DSh"`, `"SR"`, `"GSR"`, `"LW"`, and `"QIS"` are evaluated. Including `"Sh"` is optional because solving the Sylvester equation required by `Sh_ost` is computationally intensive.
 
 -   **Parallel Evaluation:** When multiple candidate methods are specified, the function evaluates them in parallel (if use_parallel = TRUE) and selects the final model based on the lowest Akaike Information Criterion (AIC).
 
@@ -48,13 +48,15 @@ In summary, our package modifies `glm.fit2` from `glm2` to:
 | `x` | A numeric matrix of predictors. As for [`glm.fit`](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/glm.html). | **No default; user must supply.** |
 | `y` | A numeric vector of responses. As for [`glm.fit`](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/glm.html). | **No default; user must supply.** |
 | `weights` | An optional vector of weights to be used in the fitting process. | `rep(1, nobs)` |
-| `model_class` | A character vector specifying the shrinkage model(s) to be used. Allowed values are `"St"`, `"DSh"`, `"SR"`, `"GSR"`, and `"Sh"`. If multiple values are given, they are run in parallel and the best is chosen by AIC. If `"Sh"` is not included, it is omitted from the evaluation. | `c("St", "DSh", "SR", "GSR")` |
+| `model_class` | A character vector specifying the shrinkage model(s) to be used. Allowed values are `"St"`, `"DSh"`, `"SR"`, `"GSR"`, `"LW"`, and `"QIS"` and `"Sh"`. If multiple values are given, they are run in parallel and the best is chosen by AIC. If `"Sh"` is not included, it is omitted from the evaluation. | `c("St", "DSh", "SR", "GSR", "LW", "QIS")` |
 | `start`, `etastart`, `mustart` | Optional starting values for the parameters, the linear predictor, and the mean, respectively. | `NULL` |
 | `offset` | An optional offset to be included in the model. | `rep(0, nobs)` |
 | `family` | A function specifying the conditional distribution of $Y \mid X$, e.g., $Y \mid X \sim \text{family}(g^{-1}(X\beta))$. (e.g., `gaussian()`, `binomial()`, `poisson()`). | `gaussian()` |
 | `control` | A list of parameters for controlling the fitting process (e.g., `maxit`, `epsilon`). Similar to [`glm.control`](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/glm.control.html). | `list()` |
 | `intercept` | A logical value indicating whether an intercept should be included in the model. | `TRUE` |
 | `use_parallel` | Logical. If `TRUE`, multiple methods in `model_class` are evaluated in parallel. If only one method is specified, it is run directly. The best model is chosen by the lowest AIC among the methods tested. | `FALSE` |
+| `use_robust_start` | Logical. [If `TRUE`, uses an optimization-based approach (via the CVXR package) to calculate robust starting values for fragile link functions (]{style="color:blue"}e.g. "sqrt"[).]{style="color:blue"} | `FALSE` |
+
 | **Key Output** | **Description** | **Notes** |
 | `chosen_fit` | The name of the shrinkage method selected based on the lowest AIC. If only one method is specified in `model_class`, then `chosen_fit` will simply return that method's name. | Returned in the final model object. |
 | `coefficients`, `residuals`, etc. | The usual GLM components, similar to those returned by [`glm.fit`](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/glm.html). | See documentation for full details. |
@@ -167,7 +169,6 @@ For each scenario, we fit the GLM using the standard IRLS update (i.e., OLS-base
 In this simulation, balanced binary responses are generated using the logit link. Covariates are sampled from a multivariate normal distribution with a Toeplitz covariance matrix determined by various correlation coefficients. To ensure a balanced dataset, a larger dataset is first generated, and then a subset is selected to achieve roughly equal proportions of 0's and 1's. We fit the models using the standard GLM (via `glm.fit2`) and the shrinkage-based GLM (via `savvy_glm.fit2`in `savvyGLM` package).
 
 ```{r, warning=FALSE}
-# Load packages
 library(savvyGLM)
 library(MASS)
 library(glm2)
@@ -235,7 +236,6 @@ kable(l2_table, digits = 4, caption = "L2 Distance Between Estimated and True Co
 For imbalanced LR, the simulation settings are similar except that the target proportion for the negative class is reduced (for example, only 5% of the responses are 0's). This results in a skewed binary response, which allows us to evaluate the robustness of the shrinkage estimators under class imbalance. As before, models are fit using both the standard GLM and the various shrinkage-based GLM.
 
 ```{r, warning=FALSE}
-# Load packages
 library(savvyGLM)
 library(MASS)
 library(glm2)
@@ -305,7 +305,6 @@ kable(l2_table, digits = 4, caption = "L2 Distance Between Estimated and True Co
 For Poisson GLMs with the log link, the mean response is modeled as $\mu = \exp(\eta)$ with $\eta = X_{\text{intercept}} \, \beta_{\text{true}}$. In this simulation, covariates are generated from a multivariate normal distribution with a Toeplitz covariance matrix. The responses are simulated from a Poisson distribution with rate $\mu = \exp(\eta)$. We fit the models using the standard GLM (via `glm.fit2`) and the shrinkage-based GLM (via `savvy_glm.fit2`in `savvyGLM` package).
 
 ```{r,warning=FALSE}
-# Load packages
 library(savvyGLM)
 library(MASS)
 library(glm2)
@@ -369,7 +368,6 @@ kable(l2_table, digits = 4, caption = "L2 Distance Between Estimated and True Co
 For the Poisson GLM with the sqrt link, the mean response is defined as $\mu = \eta^2$ with $\eta = X_{\text{intercept}} \, \beta_{\text{true}}$. The simulation procedure is similar to the log link case; however, the responses are generated with Poission distribution with $\lambda$ $\mu=\eta^2$. To address potential numerical issues (such as non-positive responses). Models are then fit using both the standard GLM (via `glm.fit2`) and the shrinkage-based GLM (via `savvy_glm.fit2`in `savvyGLM` package).
 
 ```{r,warning=FALSE}
-# Load packages
 library(savvyGLM)
 library(MASS)
 library(glm2)
@@ -431,7 +429,6 @@ kable(l2_table, digits = 4, caption = "L2 Distance Between Estimated and True Co
 In Gamma GLMs with the log link, the mean response is given by $\mu = \exp(\eta)$ with $\eta = X_{\text{intercept}} \, \beta_{\text{true}}$. Covariates are generated as before, and responses are drawn from a Gamma distribution with *shape* $\mu =\exp(\eta)$. A retry mechanism is used to ensure that all simulated responses are positive, which is required by the Gamma model. Models are fit using both the standard GLM (via `glm.fit2`) and the shrinkage-based GLM (via `savvy_glm.fit2`in `savvyGLM` package).
 
 ```{r,warning=FALSE}
-# Load packages
 library(savvyGLM)
 library(MASS)
 library(glm2)
@@ -472,12 +469,7 @@ for (j in seq_along(rho_vals)) {
   beta_true <- theta_func(p_val + 1)
   mu_y <- as.vector(exp(X_intercept %*% beta_true))
   y <-  rgamma(n_val, shape = mu_y, scale = 1)
-  retry_count <- 0
-  while(any(y <= 0) && retry_count < 100) {
-    bad_idx <- which(y <= 0)
-    y[bad_idx] <- rgamma(length(bad_idx), shape = mu_y[bad_idx], scale = 1)
-    retry_count <- retry_count + 1
-  }
+  y <- pmax(y, 1e-4)
   
   fit_ols <- glm.fit2(X_intercept, y, control = control_list, family = family_type)
   l2_matrix["OLS", j] <- norm(fit_ols$coefficients - beta_true, type = "2")
@@ -505,6 +497,7 @@ library(savvyGLM)
 library(MASS)
 library(glm2)
 library(knitr)
+library(CVXR)
 
 set.seed(123)
 n_val <- 500
@@ -548,25 +541,17 @@ for (j in seq_along(rho_vals)) {
   beta_true <- theta_func(p_val + 1)
   mu_y <- as.vector((X_intercept %*% beta_true)^2)
   y <- rgamma(n_val, shape = mu_y, scale = 1)
-  
-  retry_count <- 0
-  while(any(y <= 0) && retry_count < 100) {
-    bad_idx <- which(y <= 0)
-    y[bad_idx] <- rgamma(length(bad_idx), shape = mu_y[bad_idx], scale = 1)
-    retry_count <- retry_count + 1
-  }
+  y <- pmax(y, 1e-4)
   
   starting_values <- findStartingValues(X_intercept, y)
-  
+
   fit_ols <- glm.fit2(X_intercept, y, start = starting_values,
                       control = control_list, family = family_type)
   l2_matrix["OLS", j] <- norm(fit_ols$coefficients - beta_true, type = "2")
 
   for (m in model_names[-1]) {
-    # Added use_parallel = FALSE to dramatically speed up vignette building
     fit <- savvy_glm.fit2(X_intercept, y, model_class = m, control = control_list, 
-                          family = family_type, use_robust_start = TRUE, 
-                          use_parallel = FALSE)
+                          family = family_type, use_robust_start = TRUE)
     l2_matrix[m, j] <- norm(fit$coefficients - beta_true, type = "2")
   }
 }
@@ -606,7 +591,6 @@ Here, we just provide two cases and for a detailed account of the full data proc
 ## FL dataset with *log* Link Function
 
 ```{r, eval=FALSE, warning=FALSE}
-# Load required packages
 library(savvyGLM)
 library(MASS)
 library(glm2)
@@ -616,7 +600,7 @@ library(knitr)
 
 set.seed(1234)
 years <- 2014:2015
-model_names <- c("OLS", "SR", "GSR", "St", "DSh")
+model_names <- c("OLS", "SR", "GSR", "St", "DSh", "LW", "QIS")
 N <- 10
 control_list <- list(maxit = 250, epsilon = 1e-6, trace = FALSE)
 family_type <- Gamma(link = "log")
@@ -653,8 +637,7 @@ for (yr in years) {
     y_pred_glm2 <- exp(X_test_int %*% model_glm2$coefficients)
     mse_ols <- calculate_mse(y_test, y_pred_glm2)
     for (m in model_names[-1]) {
-      model_savvy <- savvy_glm.fit2(X_train_int, y_train, model_class = m, control = control_list,
-                                    family = family_type, use_robust_start = TRUE)
+      model_savvy <- savvy_glm.fit2(X_train_int, y_train, model_class = m, control = control_list, family = family_type)
       y_pred <- exp(X_test_int %*% model_savvy$coefficients)
       mse_savvy <- calculate_mse(y_test, y_pred)
       ratio_mat[i, m] <- mse_ols / mse_savvy
@@ -684,7 +667,7 @@ library(knitr)
 
 set.seed(1234)
 years <- 2014:2023
-model_names <- c("OLS", "SR", "GSR", "St", "DSh")
+model_names <- c("OLS", "SR", "GSR", "St", "DSh", "LW", "QIS")
 N <- 100
 control_list <- list(maxit = 250, epsilon = 1e-6, trace = FALSE)
 family_type <- Gamma(link = "sqrt")
@@ -721,8 +704,7 @@ for (yr in years) {
     y_pred_glm2 <- (X_test_int %*% model_glm2$coefficients)^2
     mse_ols <- calculate_mse(y_test, y_pred_glm2)
     for (m in model_names[-1]) {
-      model_savvy <- savvy_glm.fit2(X_train_int, y_train, model_class = m, control = control_list,
-                                    family = family_type, use_robust_start = TRUE)
+      model_savvy <- savvy_glm.fit2(X_train_int, y_train, model_class = m, control = control_list, family = family_type)
       y_pred <- exp(X_test_int %*% model_savvy$coefficients)
       mse_savvy <- calculate_mse(y_test, y_pred)
       ratio_mat[i, m] <- mse_ols / mse_savvy

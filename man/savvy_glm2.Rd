@@ -54,7 +54,8 @@ As in \code{\link[glm2]{glm2}}, the alternative method "model.frame" returns the
 \item{use_parallel}{A logical value specifying whether to evaluate multiple shrinkage methods in parallel.
 Defaults to \code{FALSE}. Setting this to \code{FALSE} forces sequential evaluation.}
 
-\item{use_robust_start}{Logical. If \code{TRUE}, uses an optimization-based approach (via the \pkg{CVXR} package) to calculate robust starting values for fragile link functions (e.g., "log", "sqrt"). Defaults to \code{FALSE} to save computational time, as standard initialization works well for most typical datasets.}
+\item{use_robust_start}{Logical. If \code{TRUE}, uses an optimization-based approach (via the \pkg{CVXR} package) to calculate robust starting values for fragile link functions (e.g., "sqrt"). 
+Defaults to \code{FALSE} to save computational time, as standard initialization works well for most typical datasets.}
 
 \item{...}{Additional arguments to be passed to the low level regression fitting functions. As for \code{\link[glm2]{glm2}}.}
 }

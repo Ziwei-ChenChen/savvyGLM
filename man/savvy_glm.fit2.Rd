@@ -41,7 +41,8 @@ When the user does not explicitly supply a value for \code{model_class}, the def
 \item{use_parallel}{Logical. If \code{TRUE}, enables parallel execution of the fitting process.
 Defaults to \code{TRUE}. Set to \code{FALSE} for serial execution.}
 
-\item{use_robust_start}{Logical. If \code{TRUE}, uses an optimization-based approach (via the \pkg{CVXR} package) to calculate robust starting values for fragile link functions (e.g., "log", "sqrt"). Defaults to \code{FALSE} to save computational time, as standard initialization works well for most typical datasets.}
+\item{use_robust_start}{Logical. If \code{TRUE}, uses an optimization-based approach (via the \pkg{CVXR} package) to calculate robust starting values for fragile link functions (e.g., "sqrt"). 
+Defaults to \code{FALSE} to save computational time, as standard initialization works well for most typical datasets.}
 }
 \value{
 The value returned by \code{savvy_glm.fit2} has the same structure as the value returned by \code{glm.fit}. It includes the following components:
